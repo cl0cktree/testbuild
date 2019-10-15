@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="kr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+
+		<link rel="apple-touch-icon" sizes="57x57" href="./favicon.png">
+		<link rel="apple-touch-icon" sizes="60x60" href="./favicon.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="./favicon.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="./favicon.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="./favicon.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="./favicon.png">
+		<link rel="apple-touch-icon" sizes="144x144" href="./favicon.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="./favicon.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="./favicon.png">
+
+		<link rel="icon" type="image/png" sizes="192x192" href="./favicon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="./favicon.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="./favicon.png">
+
+		<link rel="shortcut icon" type="image/x-icon" sizes="192x192" href="./favicon.ico">
+		<link rel="shortcut icon" type="image/x-icon" sizes="32x32" href="./favicon.ico">
+		<link rel="shortcut icon" type="image/x-icon" sizes="96x96" href="./favicon.ico">
+		<link rel="shortcut icon" type="image/x-icon" sizes="16x16" href="./favicon.ico">
+
+		<link rel="manifest" href="/manifest.json">
+		<meta name="msapplication-TileColor" content="#ffffff">
+		<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+		<meta name="theme-color" content="#ffffff">
+    <title>Number of this week's Lotto a first-place winner</title>
+    <style>
+      body{margin:0;padding:0;border:0;background:#000;}
+      div{overflow:hidden;margin:0;padding:0;border:0;position:relative;display:block;}
+      .section{width:100%;height:100%;margin:0;padding:0;}
+      .article{width:100%;min-height:777px;max-height:888px;margin:0;padding:0;}
+      .article .contents{width:100%;min-height:777px;max-height:888px;color:#fff;text-align:center;}
+      .article .contents h1{line-height:100px;}
+      .article .contents .contents_box{position:absolute;background:#fff;width:100%;height:100px;top:50%;transform:translateY(-50%);text-align:center;color:#000;font-size:25px;line-height:100px;}
+      .article .contents .contents_box div{display:inline-block;margin-left:20px;}
+      .article .contents .contents_box .price{width:421px;text-align:left;}
+      .article .contents .contents_box .bonus{width:136px;text-align:left;}
+      .article .contents .contents_box span{width:40px;height:40px;display:inline-block;border:1px solid #000;border-radius:50%;line-height:40px;margin-left:10px;color:#fff;text-align:center;}
+      
+      .article .play{text-align:center;width:100%;height:100px;position:absolute;top:90%;transform:translateY(-90%);}
+      .article .play button{display:inline-block;background:rgba(241, 34, 34,1);color:#fff;box-sizing:border-box;width:200px;line-height:50px;border:2px solid #fff;border-radius:22px;font-size:24px;letter-spacing:2px;cursor:pointer;}
+      .article .add{width:100%;height:100px;background:#fff;position:fixed;bottom:0;}
+    </style>
+    <script src="jquery-3.2.1.min.js"></script>
+  </head>
+  <body>
+    <div class="section" id="section">
+      <div class="article" id="article">
+        <div class="contents" id="contents">
+          <h1>축하합니다.</h1>
+          <div class="contents_box">
+            <div class="price">
+              당첨번호
+            </div>
+            <div class="bonus">
+              보너스
+            </div>
+          </div>
+        </div>
+        <div class="play">
+          <button>
+            번호추첨
+          </button>
+        </div>
+        <div class="add">
+
+        </div>
+      </div>
+    </div>
+
+    <script defer type="text/javascript">
+      $(function(){
+          function roll_number(){
+            var rel1 = [8,15,21,32,33,42];
+            var rel2 = [8,12,22,23,34,43];
+            var rel3 = [8,10,20,33,42,44];
+            var rel4 = [9,13,23,24,35,44];
+            var rel5 = [9,13,22,23,33,42];
+            var rel6 = [5,11,12,14,33,44];
+            var rel7 = [5,12,13,32,33,42];
+            var rel8 = [7,10,20,33,42,44];
+            var rel9 = [7,11,21,22,33,42];
+            var rel10 = [7,11,21,22,35,44];
+            var rel11 = [2,5,7,15,22,23];
+            var rel12 = [2,5,15,22,23,32];
+            var rel13 = [2,5,15,22,23,42];
+            var rel14 = [2,5,15,23,32,42];
+            var rel15 = [2,5,15,24,25,32];
+            var rel16 = [11,12,13,15,17,20];
+            var rel17 = [13,14,32,33,42,43];
+            var rel18 = [15,20,22,23,32,33];
+            var rel19 = [15,20,22,23,24,25];
+            var rel20 = [15,22,23,32,33,43];
+            var rel21 = [4,16,32,33,34,35];
+            var rel22 = [4,16,20,33,34,44];
+            var rel23 = [4,8,16,20,22,44];
+            var rel24 = [4,8,16,20,32,33];
+            var rel25 = [4,16,20,32,33,42];
+
+            var rel26 = [1,2,3,4,5,6];
+            var rel27 = [2,3,4,5,6,7];
+            var rel28 = [3,4,5,6,7,8];
+            var rel29 = [4,5,6,7,8,9];
+            var rel30 = [5,6,7,8,9,10];
+            var rel31 = [6,7,8,9,10,11];
+            var rel32 = [7,8,9,10,11,12];
+            var rel33 = [8,9,10,11,12,13];
+            var rel34 = [9,10,11,12,13,14];
+            var rel35 = [10,11,12,13,14,15];
+            var rel36 = [11,12,13,14,15,16];
+            var rel37 = [12,13,14,15,16,17];
+            var rel38 = [13,14,15,16,17,18];
+            var rel39 = [14,15,16,17,18,19];
+            var rel40 = [15,16,17,18,19,20];
+            var rel41 = [35,36,37,38,39,40];
+            var rel42 = [36,37,38,39,40,41];
+            var rel43 = [37,38,39,40,41,42];
+            var rel44 = [38,39,40,41,42,43];
+            var rel45 = [39,40,41,42,43,44];
+            var rel46 = [40,41,42,43,44,45];
+
+            var full_num=Array(45).fill().map(function(currentValue,index){return index + 1});
+            //console.log(full_num);
+            var shu=[];
+            while(full_num.length>0){
+              var val_m=full_num.splice(Math.floor(Math.random()*full_num.length),1)[0];
+              shu.push(val_m)
+            }
+            //onsole.log(val_m);
+            var bon=shu[shu.length - 1];
+            var lotto_num=shu.slice(0,6).sort(function(p,c){
+              return p-c;
+            });
+            if((lotto_num!==rel1)&&(lotto_num!==rel2)&&(lotto_num!==rel3)&&(lotto_num!==rel4)&&(lotto_num!==rel5)&&(lotto_num!==rel6)&&(lotto_num!==rel7)&&(lotto_num!==rel8)&&(lotto_num!==rel9)&&(lotto_num!==rel10)&&(lotto_num!==rel11)&&(lotto_num!==rel12)&&(lotto_num!==rel13)&&(lotto_num!==rel14)&&(lotto_num!==rel15)&&(lotto_num!==rel16)&&(lotto_num!==rel17)&&(lotto_num!==rel18)&&(lotto_num!==rel19)&&(lotto_num!==rel20)&&(lotto_num!==rel21)&&(lotto_num!==rel22)&&(lotto_num!==rel23)&&(lotto_num!==rel24)&&(lotto_num!==rel25))
+            {
+                //$('.contents_box').html('당첨번호 6개 - '+lotto_num+' / 보너스 - '+bon)
+                var price_out=$('.price');
+                var bonus_out=$('.bonus');
+
+                for(var i=0;i<lotto_num.length;++i){
+                  var ball = document.createElement('span');
+                  ball.textContent=lotto_num[i];
+                  price_out.append(ball);
+                  if(ball.textContent<10){
+                    $(ball).css({'background':'#F2C459','color':'#000'});
+                  }else if(ball.textContent<20){
+                    $(ball).css({'background':'#2571AF'});
+                  }else if(ball.textContent<30){
+                    $(ball).css({'background':'#EA2828'});
+                  }else if(ball.textContent<40){
+                    $(ball).css({'background':'#888'});
+                  }else if(ball.textContent<46){
+                    $(ball).css({'background':'#4FA712'});
+                  }
+                }
+                var ball = document.createElement('span');
+                ball.textContent=bon;
+                bonus_out.append(ball);
+                if(ball.textContent<10){
+                  $(ball).css({'background':'#F2C459','color':'#000'});
+                }else if(ball.textContent<20){
+                  $(ball).css({'background':'#2571AF'});
+                }else if(ball.textContent<30){
+                  $(ball).css({'background':'#EA2828'});
+                }else if(ball.textContent<40){
+                  $(ball).css({'background':'#888'});
+                }else if(ball.textContent<46){
+                  $(ball).css({'background':'#4FA712'});
+                }
+                console.log('roll1');
+            }else if ((lotto_num!==rel26)&&(lotto_num!==rel27)&&(lotto_num!==rel28)&&(lotto_num!==rel29)&&(lotto_num!==rel30)&&(lotto_num!==rel31)&&(lotto_num!==rel32)&&(lotto_num!==rel33)&&(lotto_num!==rel34)&&(lotto_num!==rel35)&&(lotto_num!==rel36)&&(lotto_num!==rel37)&&(lotto_num!==rel38)&&(lotto_num!==rel39)&&(lotto_num!==rel40)&&(lotto_num!==rel41)&&(lotto_num!==rel42)&&(lotto_num!==rel43)&&(lotto_num!==rel44)&&(lotto_num!==rel45)&&(lotto_num!==rel46)){
+              var price_out=$('.price');
+                var bonus_out=$('.bonus');
+
+                for(var i=0;i<lotto_num.length;++i){
+                  var ball = document.createElement('span');
+                  ball.textContent=lotto_num[i];
+                  price_out.append(ball);
+                  if(ball.textContent<10){
+                    $(ball).css({'background':'#F2C459','color':'#000'});
+                  }else if(ball.textContent<20){
+                    $(ball).css({'background':'#2571AF'});
+                  }else if(ball.textContent<30){
+                    $(ball).css({'background':'#EA2828'});
+                  }else if(ball.textContent<40){
+                    $(ball).css({'background':'#888'});
+                  }else if(ball.textContent<46){
+                    $(ball).css({'background':'#4FA712'});
+                  }
+                }
+                var ball = document.createElement('span');
+                ball.textContent=bon;
+                bonus_out.append(ball);
+                if(ball.textContent<10){
+                  $(ball).css({'background':'#F2C459','color':'#000'});
+                }else if(ball.textContent<20){
+                  $(ball).css({'background':'#2571AF'});
+                }else if(ball.textContent<30){
+                  $(ball).css({'background':'#EA2828'});
+                }else if(ball.textContent<40){
+                  $(ball).css({'background':'#888'});
+                }else if(ball.textContent<46){
+                  $(ball).css({'background':'#4FA712'});
+                }
+                console.log('roll2');
+            }else{
+              $('button').click;//window.location.reload(true);
+              console.log('reroll');
+            }
+            //$('.contents_box').html('당첨번호 6개 - '+lotto_num+' / 보너스 - '+bon);
+          };
+          $('button').on('click mousedown mouseup',function(e){
+            if(e.type=='mousedown'){
+              $(this).css({'color':'#999','font-size':'23px','letter-spacing':'1px'});
+            }else if(e.type=='mouseup'){
+              $(this).css({'color':'#fff','font-size':'24px','letter-spacing':'2px'});
+            }
+            if(e.type=='click'){
+              $('.price, .bonus').children('span').remove('');
+            roll_number();
+            }
+          });
+      });
+    </script>
+  </body>
+</html>

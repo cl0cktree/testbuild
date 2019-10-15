@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="kr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Test snap scroll</title>
+    <style>
+      body{margin:0;padding:0;border:0;background:rgba(10,100,255,1);}
+      div{overflow:hidden;margin:0;padding:0;border:0;box-sizing:border-box;position:relative;display:block;}
+      nav{overflow:hidden;margin:0;padding:0;border:0;box-sizing:border-box;position:relative;display:block;}
+      ul{overflow:hidden;margin:0;padding:0;border:0;position:relative;display:block;width:100%;height:50px;}
+      li{list-style:none;float:left;margin:0;padding:0;border:0;position:relative;display:block;width:25%;height:50px;line-height:50px;text-align:center;transition:background 0.2s;cursor:pointer;}
+      li:hover{background:rgba(0,0,0,0.5);}
+      .heaader{position:fixed;width:100%;height:50px;top:0;left:0;background:rgba(255,255,255,0.7);z-index:2;}
+      .section{width:100%;height:100%;min-height:800px;margin-top:50px;}
+      .article{width:100%;max-width:1280px;min-height:757px;position:relative;margin:0 auto;background:rgba(255,255,255,1);z-index:1;text-align:center;font-size:30px;}
+      .art_1{background:red;}
+      .art_2{background:orange;}
+      .art_3{background:yellow;}
+      .art_4{background:#00a000;}
+
+    </style>
+    <!-- <script src="jquery-3.2.1.min.js"></script> -->
+    <script src="jquery-1.10.2.js"></script>
+    <script src="TweenMax.min.js"></script>
+  </head>
+  <body>
+    <nav class="heaader">
+      <ul class="navi">
+        <li>
+          article1
+        </li>
+        <li>
+          article2
+        </li>
+        <li>
+          article3
+        </li>
+        <li>
+          article4
+        </li>
+      </ul>
+    </nav>
+    <div class="section" id="section">
+      <div class="article art_1" id="article_1">
+        article1
+      </div>
+      <div class="article art_2" id="article_2">
+        article2
+      </div>
+      <div class="article art_3" id="article_3">
+        article3
+      </div>
+      <div class="article art_4" id="article_4">
+        article4
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      $(function(){
+        var tar;
+        var sec=$('.section');
+  	    var art=$('.art_');
+        var article=$('.article');
+        var header_h=$('nav').height();
+        var menu_idx;
+        var art_idx;
+        var i=1;
+        var leng=article.length-1;
+        var wh;
+        var tl;
+        var sce=false;
+        var count=0;
+
+        $('body, html').stop().animate({ scrollTop: $("body").offset().top-header_h },200);
+
+        $('nav').on('click','li',function(){
+          menu_idx=$(this).index();
+          art_idx=article.eq(menu_idx);
+          tar=$('.section').children('div').eq(menu_idx);
+
+          console.log(menu_idx);
+          if ($(this).eq(menu_idx)) {
+            TweenMax.to(
+              $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
+            count=menu_idx;
+          }
+
+          //-----------각각의 요소를 따로 수동으로 줘야할 시 이용---
+          // console.log(this);
+          // if ($(this).is('li:nth-child(1)')) {
+          //   TweenMax.to(
+          //     $('body, html'), 0.3, {scrollTop:$('.section').children('div:nth-child(1)').offset().top-header_h, ease:Expo.easeInOut});
+          //   count=0;
+          // }else if ($(this).is('li:nth-child(2)')) {
+          //   TweenMax.to(
+          //     $('body, html'), 0.3, {scrollTop:$('.section').children('div:nth-child(2)').offset().top-header_h, ease:Expo.easeInOut});
+          //   count=1;
+          // }else if ($(this).is('li:nth-child(3)')) {
+          //   TweenMax.to(
+          //     $('body, html'), 0.3, {scrollTop:$('.section').children('div:nth-child(3)').offset().top-header_h, ease:Expo.easeInOut});
+          //   count=2;
+          // }else if ($(this).is('li:nth-child(4)')) {
+          //   TweenMax.to(
+          //     $('body, html'), 0.3, {scrollTop:$('.section').children('div:nth-child(4)').offset().top-header_h, ease:Expo.easeInOut});
+          //   count=3;
+          // }
+          //--------------------------------------------------
+
+
+
+        });
+
+        sec.on('mousewheel touchstart touchmove touchend touchcancle','.article',function(e){
+          event.preventDefault();
+
+          var wd=e.originalEvent.wheelDelta;
+          var art_h=$('.article').height();
+          var wt=$(window).scrollTop();
+          var wot=$(window).scrollTop(wt);
+          var xstart;
+          var ystart;
+          var xmove;
+          var ymove;
+          var xvalue;
+          var yvalue;
+
+          tl=$(this).index();
+          art_idx=sec.children('.article').eq(tl);
+          wh=$(this).height();
+
+          if (e.type=='mousewheel') {
+            if (wd>1 && sce==false && count>=1) {
+              console.log(this+'/ count = '+count+' / index = '+tl+' / art_idx '+art_idx+' / length = '+leng+' / article-Height = '+art_h);
+              sce = true;
+              count--;
+
+              TweenMax.to(
+                $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
+                  sce = false;
+                }, ease:Expo.easeInOut});
+
+            }else if (wd<1 && sce==false && count<=leng) {
+              console.log(this+'/ count = '+count+' / index = '+tl+' / art_idx '+art_idx+' / length = '+leng+' / article-Height = '+art_h);
+              sce = true;
+              if (count<leng) {
+                count++;
+              }else{
+                count=leng;
+              }
+
+              TweenMax.to(
+                $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
+                  sce = false;
+                }, ease:Expo.easeInOut});
+            }
+          }
+          // else if (e.type=='touchstart') {
+          //   event.preventDefault();
+    			// 	xstart=event.originalEvent.touches[0].pageX;
+    			// 	ystart=event.originalEvent.touches[0].pageY;
+          // }else if (e.type=='touchend'){
+          //   event.preventDefault();
+    			// 	event.stopPropagation();
+    			// 	xmove=event.originalEvent.changedTouches[0].pageX;
+    			// 	ymove=event.originalEvent.changedTouches[0].pageY;
+          //   var xvalue = xstart-xmove;
+    			// 	var yvalue = ystart-ymove;
+          //
+          //   if (yvalue>0) {
+          //     console.log('count = '+count+' / index = '+tl+' / length = '+leng+' / article-Height = '+art_h);
+          //     sce = true;
+          //     if (count<leng) {
+          //       count++;
+          //     }else{
+          //       count=leng;
+          //     }
+          //
+          //     TweenMax.to(
+          //       $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
+          //         sce = false;
+          //       }, ease:Expo.easeInOut});
+          //   }else if (yvalue<0) {
+          //     console.log('count = '+count+' / index = '+tl+' / length = '+leng+' / article-Height = '+art_h);
+          //     sce = true;
+          //     count--;
+          //
+          //     TweenMax.to(
+          //       $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
+          //         sce = false;
+          //       }, ease:Expo.easeInOut});
+          //   }
+          //
+          // }
+
+
+        });
+
+        $('.article').on('mouseover',function(){
+          var tl=$('.section').children('div').index(this);
+          console.log('overindex = '+tl);
+        });
+      });
+
+
+
+    </script>
+  </body>
+</html>

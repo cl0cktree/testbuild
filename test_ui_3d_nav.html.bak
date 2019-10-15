@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="kr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Test 3D nav</title>
+    <style>
+      body{margin:0;padding:0;border:0;background:#000;}
+      div{overflow:hidden;margin:0;padding:0;border:0;position:relative;display:block;}
+      .section{width:100%;height:100%;min-height:800px;}
+      .article{width:50%;height:50%;position:absolute;top:50%;left:50%;margin-top:-25%;margin-left:-25%;background:rgba(255,255,255,0.4);z-index:10;}
+      .contents{width:100%;height:100%;top:0;left:0;bottom:0;right:0;position:absolute;background:rgba(0,0,0,0.2);z-index:2;transform-style : preserve-3d; preserve-3d;perspective:0px;}
+      .contents_box{width:50%;height:50%;top:25%;left:25%;position:absolute;background:rgba(0,255,255,0.4);
+        border-radius:0%;z-index:3;
+      /*
+        transform-style : preserve-3d; preserve-3d;perspective:0px;
+        transform:perspective(0px) translate3d(0px, 0px, 100px) rotatez(0deg);
+        transform-origin: 50% 50%;
+      */
+      }
+
+      /* .contents_box:hover{animation-duration:2.5s;animation-name:r3d;} */
+      .test_text{width:50%;height:50%;display:inline-block;top:25%;left:25%;position:absolute;color:yellow;text-align:center;line-height:300%;z-index:4;background:rgba(10,10,10,0.6);
+
+        /*
+        transform-style : preserve-3d;
+        transform:perspective(0px) translate3d(0px, 0px, 100px) rotatez(0deg);
+        transform-origin: 50% 50%;
+        */
+      }
+      .t1{transform-style:preserve-3d;perspective:100px;z-index:100;}
+      .t2{transform-style:preserve-3d;perspective:100px;z-index:100;}
+      .on1{
+        animation-duration:2.5s;animation-name:r3d1;
+      }
+      .on2{
+        animation-duration:2.5s;animation-name:r3d2;
+      }
+
+	  .bubble{display:inline-block;position:absolute;box-sizing:border-box;background:rgba(255,255,255,0.1);border-radius:50%;
+		z-index:-10000;}
+
+      @keyframes r3d1{
+      from{transform:rotate3d(0,0,0,100deg);/*(x,y,z)*/}
+        to{transform:rotate3d(0,100,100,360deg);}
+      }
+      @keyframes r3d2{
+      from{transform:rotate3d(0,0,0,0deg);/*(x,y,z)*/}
+        to{transform:rotate3d(0,100,100,-360deg);}
+      }
+	  @keyframes bubble-act{
+		from{bottom:0%;}
+		to{bottom:100%;}
+	  }
+    </style>
+
+  </head>
+  <body>
+    <div class="section" id="section">
+      <div class="article" id="article">
+        <div class="contents" id="contents">
+          <div class="contents_box t1" id="t1">
+            <span class="test_text">
+              Test 3D 1
+            </span>
+          </div>
+          <div class="contents_box t2" id="t2">
+            <span class="test_text">
+              Test 3D 2
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var t1=document.getElementById('t1');
+      var t2=document.getElementById('t2');
+	    var art=document.getElementById('article');
+      var con=document.getElementById('contents');
+
+      function add(){
+
+        t1.childNodes[1].classList.add('on1');
+        t2.childNodes[1].classList.add('on2');
+      }
+      function rem(){
+
+        t1.childNodes[1].classList.remove('on1');
+        t2.childNodes[1].classList.remove('on2');
+      }
+
+      con.addEventListener('mouseover', add);
+      con.addEventListener('mouseleave', rem);
+/*
+	  setInterval(function(){
+		var pb1=Math.floor(Math.random()*40)+10;
+
+		var bl1=Math.floor(Math.random()*96)+2;
+
+		var bubble1='<span class="bubble" id="bubble1" style="width:'+pb1+'px;height:'+pb1+'px;left:'+bl1+'%;border:1px solid rgba(255,255,255,0.2);animation:bubble-act 1.5s linear infinite;"></span>';
+
+		var bo1=document.getElementById('bubble1');
+
+		art.insertAdjacentHTML('beforeend',bubble1);
+
+		if (bo1)
+		{
+			bo1.remove(art.bo1);
+		}
+	  },1500);
+
+	  setInterval(function(){
+		var pb2=Math.floor(Math.random()*40)+10;
+
+		var bl2=Math.floor(Math.random()*92)+8;
+
+		var bubble2='<span class="bubble" id="bubble2" style="width:'+pb2+'px;height:'+pb2+'px;left:'+bl2+'%;border:1px solid rgba(255,255,255,0.2);animation:bubble-act 1.75s linear infinite;"></span>';
+
+		var bo2=document.getElementById('bubble2');
+
+		art.insertAdjacentHTML('beforeend',bubble2);
+
+		if (bo2)
+		{
+			bo2.remove(art.bo2);
+		}
+	  },1750);
+	  setInterval(function(){
+		var pb3=Math.floor(Math.random()*40)+10;
+
+		var bl3=Math.floor(Math.random()*80)+10;
+
+		var bubble3='<span class="bubble" id="bubble3" style="width:'+pb3+'px;height:'+pb3+'px;left:'+bl3+'%;border:1px solid rgba(255,255,255,0.2);animation:bubble-act 2s linear infinite;"></span>';
+
+		var bo3=document.getElementById('bubble3');
+
+		art.insertAdjacentHTML('beforeend',bubble3);
+
+		if (bo3)
+		{
+			bo3.remove(art.bo3);
+		}
+	  },2000);
+
+	  setInterval(function(){
+		var pb4=Math.floor(Math.random()*40)+10;
+
+		var bl4=Math.floor(Math.random()*90)+5;
+
+		var bubble4='<span class="bubble" id="bubble4" style="width:'+pb4+'px;height:'+pb4+'px;left:'+bl4+'%;border:1px solid rgba(255,255,255,0.2);animation:bubble-act 2.25s linear infinite;"></span>';
+
+		var bo4=document.getElementById('bubble4');
+
+		art.insertAdjacentHTML('beforeend',bubble4);
+
+		if (bo4)
+		{
+			bo4.remove(art.bo4);
+		}
+	  },2250);
+
+	  setInterval(function(){
+		var pb5=Math.floor(Math.random()*40)+10;
+
+		var bl5=Math.floor(Math.random()*88)+6;
+
+		var bubble5='<span class="bubble" id="bubble5" style="width:'+pb5+'px;height:'+pb5+'px;left:'+bl5+'%;border:1px solid rgba(255,255,255,0.2);animation:bubble-act 2.5s linear infinite;"></span>';
+
+		var bo5=document.getElementById('bubble5');
+
+		art.insertAdjacentHTML('beforeend',bubble5);
+
+		if (bo5)
+		{
+			bo5.remove(art.bo5);
+		}
+
+	  },2500);
+*/
+/*
+		function bubble_math(){
+			setInterval(function(){
+				var pb=Math.floor(Math.random()*40)+10;
+				var bl=Math.floor(Math.random()*96)+2;
+				var bt=Math.floor(Math.random()*3)+2;
+				var hbt=bt/2;
+				var btm=hbt*1000;
+			},1000);
+		};
+		bubble_math();
+		for (i=1;i<6 ;++i )
+		{	
+			
+			setInterval(function(){
+				
+				var bubble='<span class="bubble" id="bubble'+i+'" style="width:'+pb+'px;height:'+pb+'px;left:'+bl+'%;border:1px solid rgba(255,255,255,0.2);animation:bubble-act '+hbt+'s linear infinite;"></span>';					
+				var bo=document.getElementById('bubble'+i);
+					
+				art.insertAdjacentHTML('beforeend',bubble);				
+				setInterval(function(){
+					if (bo)
+					{
+						bo.remove(art.bo);
+					};	
+				},btm);	
+				console.log(btm);
+			},100);	
+			
+		};
+*/		
+	setInterval(function(){
+		for (i=1; i<8; ++i)
+		{
+			(function(i){				
+				setTimeout(()=>{
+					var pb=Math.floor(Math.random()*40)+10;
+					var bl=Math.floor(Math.random()*92)+4;
+					var bt=Math.floor(Math.random()*3)+2;
+					var hbt=bt/2;
+					var btm=hbt*1000;
+					var bubble='<span class="bubble" id="bubble'+i+'" style="width:'+pb+'px;height:'+pb+'px;left:'+bl+'%;border:1px solid rgba(255,255,255,0.2);animation:bubble-act '+hbt+'s linear infinite;"></span>';
+					var bo=document.getElementById('bubble'+i);
+					art.insertAdjacentHTML('beforeend',bubble);
+					setTimeout(function(){
+						if (bo)
+						{
+							bo.remove(art.bo);
+						}						
+					},btm);					
+				},i*270);				
+			})(i);			
+		};
+	},2500);
+    </script>
+  </body>
+</html>
