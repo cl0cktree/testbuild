@@ -6,7 +6,7 @@
     <style>
       body{margin:0;padding:0;border:0;background:#000;}
       div{overflow:hidden;margin:0;padding:0;border:0;position:relative;display:block;}
-	  canvas{width:100%;height:100vh;}
+	  canvas{width:100%;}
       svg{
         background:rgba(0,130,255,0);display:block;box-sizing:border-box;position:absolute;width:100%;left:-1.5%;top:0%;z-index:1;fill:#000;border-radius:25%;
       }
@@ -150,7 +150,7 @@
   <body>
     <div class="section" id="section">
       <div class="article" id="article">
-        <div class="canvas_sec">
+        <div class="canvas_sec" id="canvas_sec">
           <!-- <canvas id="canvas1">
           </canvas> -->
         </div>
@@ -551,45 +551,101 @@
         };
         console.log('ie9');
       }else{
-        for (var i=1; i<8; ++i)
-        {
-          (function(i){
-            setTimeout(function(){
-              setInterval(function(){
-                var pb=Math.floor(Math.random()*40)+10;
-                var bl=Math.floor(Math.random()*92)+4;
-                var bt=Math.floor(Math.random()*3)+3;
-                var hbt=bt/2;
-                var hpb=pb*0.5;
-                //var btm=hbt*1000;
-                //var bubble='<span class="bubble" id="bubble'+i+'" style="width:'+pb+'px;height:'+pb+'px;left:'+bl+'%;border:1px solid rgba(255,255,255,0.2);animation:bubble-act '+hbt+'s linear infinite;"></span>';
-                var bubble='<canvas class="bubble" id="bubble'+i+'" style="width:'+pb+'px;height:'+pb+'px;left:'+bl+'%;animation:bubble-act '+hbt+'s linear infinite;border:1px solid rgba(255,255,255,0.2);"></canvas>';
-                var bo=$('#bubble'+i);
-                var can_bo=document.getElementsByClassName('canvas_sec')[0];
-                can_bo.insertAdjacentHTML('beforeend',bubble);
+        const sec=document.getElementById('section');
+        const art=document.getElementById('article');
+        const con=document.getElementById('contents');
+        const canvas_sec=document.getElementById('canvas_sec');
+        const circleArray = [];
+		let loopCancel;
+		const canvas = document.createElement('canvas');
+		const context = canvas.getContext('2d');
+		canvas_sec.appendChild(canvas);
 
-                var canvas_ar = document.getElementById('bubble'+i);
-                var can_con = canvas_ar.getContext('2d');
-                function arc(){
-                  can_con.fillStyle = "rgba( 255, 255, 255, 1 )";
-                  can_con.strokeStyle = "rgba( 255, 255, 255, 0.2 )";
-                  can_con.clearRect(0,0, 300, 300);
-                  can_con.beginPath();
-                  can_con.arc(2*pb,2*pb,4*pb,0,2*Math.PI);
-                  can_con.stroke();
-                  can_con.fill();
-                }
-                arc();
+		function toRadian(d) {
+		return d * Math.PI / 180;
+		}
 
-                if (bo)
-                {
-                  //bo.remove(art.bo);
-                  bo.remove(can_bo.bo);
-                };
-              },2500);
-            },i*270);
-          })(i);
-        };
+		class Circle {
+			constructor(info) {
+				this.index = info.index;
+				this.x = info.x;
+				this.y = info.y;
+				this.speed = info.speed;
+				this.radius = info.radius;
+				this.startAngle = info.startAngle;
+				this.endAngle = info.endAngle;
+				this.clockwise = info.clockwise;
+				this.draw();
+			}
+
+			draw() {
+				context.beginPath();
+				context.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, toRadian(360), this.clockwise);
+				context.fillStyle = 'rgba(255, 255, 255, 0.4)';
+				context.fill();
+                context.strokeStyle = 'rgba(255, 255, 255, 1)';
+                context.lineWidth = '2';
+				context.stroke();
+				context.closePath();
+				context.fillStyle = '#fff';
+				context.font = '30px bold sans-serif';
+				context.textAlign = "center";
+				context.fillText(this.index, this.x, this.y+10);
+			}
+		}
+
+		function setLayout() {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		}
+
+		function init() {
+			setLayout();
+			let x;
+			let y;
+			let speed;
+			let circle;
+
+			for (let i = 0; i < 10; i++) {
+				x = (Math.random() * window.innerWidth * 0.6)+(Math.random() * window.innerWidth * 0.4);
+				y = Math.random() * window.innerHeight * 0.9; //높이 random생성.
+				//y = window.innerHeight+100; //처음부터 맨 아래에서 생성하고 싶은 경우 사용.
+				speed = Math.random()*8 + 2;
+				circle = new Circle({
+					index: i,
+					x: x,
+					y: y,
+					speed: speed,
+					radius : Math.random() * 80 + 20,
+					startAngle : 360,
+					endAngle : 350,
+							clockwise : false
+				});
+				circleArray.push(circle);
+			}
+
+			render();
+		}
+
+
+		function render() {
+			context.clearRect(0, 0, canvas.width, canvas.height);
+			let circle;
+			for (let i = 0; i < circleArray.length; i++) {
+				circle = circleArray[i];
+				circle.y -= circle.speed;
+				if (circle.y < -circle.radius) {
+					circle.y = canvas.height;
+					circle.x = (Math.random() * window.innerWidth * 0.6)+(Math.random() * window.innerWidth * 0.4);
+					circle.radius = Math.random() * 80 + 20;
+				}
+				circle.draw();
+			}
+			loopCancel=requestAnimationFrame(render);
+		}
+		init();
+
+		window.addEventListener('resize', setLayout);
         console.log('ch/eg/mo/o/ff/ie11');
       };
 
@@ -638,118 +694,115 @@
       });
 //=============================partycle canvas구현 sample====================================
 
-	const circleArray = [];
-	let loopCancel;
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    document.body.appendChild(canvas);
+	// const circleArray = [];
+	// let loopCancel;
+    // const canvas = document.createElement('canvas');
+    // const context = canvas.getContext('2d');
+    // document.body.appendChild(canvas);
 
-	function toRadian(d) {
-      return d * Math.PI / 180;
-    }
+	// function toRadian(d) {
+    //   return d * Math.PI / 180;
+    // }
 
-	class Circle {
-		constructor(info) {
-			this.index = info.index;
-			this.x = info.x;
-			this.y = info.y;
-			this.speed = info.speed;
-			this.radius = info.radius;
-			this.startAngle = info.startAngle;
-			this.endAngle = info.endAngle;
-			this.clockwise = info.clockwise;
-			this.draw();
-		}
+	// class Circle {
+	// 	constructor(info) {
+	// 		this.index = info.index;
+	// 		this.x = info.x;
+	// 		this.y = info.y;
+	// 		this.speed = info.speed;
+	// 		this.radius = info.radius;
+	// 		this.startAngle = info.startAngle;
+	// 		this.endAngle = info.endAngle;
+	// 		this.clockwise = info.clockwise;
+	// 		this.draw();
+	// 	}
 
-		draw() {
-			context.beginPath();
-			context.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, toRadian(360), this.clockwise);
-			context.fillStyle = 'rgba(255, 255, 255, 0.4)';
-			context.fill();
-			context.strokeStyle = 'rgba(255, 255, 255, 1)';
-			context.stroke();
-			context.closePath();
-			context.fillStyle = '#fff';
-			context.font = '30px bold sans-serif';
-			context.textAlign = "center";
-			context.fillText(this.index, this.x, this.y+10);
-			//context.moveTo(this.x, window.innerHeight+100);
-		}
-	}
+	// 	draw() {
+	// 		context.beginPath();
+	// 		context.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, toRadian(360), this.clockwise);
+	// 		context.fillStyle = 'rgba(255, 255, 255, 0.4)';
+	// 		context.fill();
+	// 		context.strokeStyle = 'rgba(255, 255, 255, 1)';
+	// 		context.stroke();
+	// 		context.closePath();
+	// 		context.fillStyle = '#fff';
+	// 		context.font = '30px bold sans-serif';
+	// 		context.textAlign = "center";
+	// 		context.fillText(this.index, this.x, this.y+10);
+	// 		//context.moveTo(this.x, window.innerHeight+100);
+	// 	}
+	// }
 
-	function setLayout() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-	}
+	// function setLayout() {
+    //     canvas.width = window.innerWidth;
+    //     canvas.height = window.innerHeight;
+	// }
 
-    function init() {
-        setLayout();
-        let x;
-        let y;
-        let speed;
-		let circle;
+    // function init() {
+    //     setLayout();
+    //     let x;
+    //     let y;
+    //     let speed;
+	// 	let circle;
 
-		for (let i = 0; i < 100; i++) {
-			x = (Math.random() * window.innerWidth * 0.6)+(Math.random() * window.innerWidth * 0.4);
-			y = Math.random() * window.innerHeight * 0.9; //높이 random생성.
-            //y = window.innerHeight+100; //처음부터 맨 아래에서 생성하고 싶은 경우 사용.
-            speed = Math.random()*3 + 2;
-            circle = new Circle({
-                index: i,
-                x: x,
-                y: y,
-                speed: speed,
-                radius : Math.random() * 80 + 20,
-                startAngle : 360,
-                endAngle : 350,
-				clockwise : false,
-				
-            });
-            circleArray.push(circle);
-        }
+	// 	for (let i = 0; i < 100; i++) {
+	// 		x = (Math.random() * window.innerWidth * 0.6)+(Math.random() * window.innerWidth * 0.4);
+	// 		y = Math.random() * window.innerHeight * 0.9; //높이 random생성.
+    //         //y = window.innerHeight+100; //처음부터 맨 아래에서 생성하고 싶은 경우 사용.
+    //         speed = Math.random()*3 + 2;
+    //         circle = new Circle({
+    //             index: i,
+    //             x: x,
+    //             y: y,
+    //             speed: speed,
+    //             radius : Math.random() * 80 + 20,
+    //             startAngle : 360,
+    //             endAngle : 350,
+	// 			clockwise : false
+    //         });
+    //         circleArray.push(circle);
+    //     }
 
-        render();
-    }
+    //     render();
+    // }
 
 
-    function render() {
-		context.clearRect(0, 0, canvas.width, canvas.height);
-        let circle;
-        for (let i = 0; i < circleArray.length; i++) {
-            circle = circleArray[i];
-            circle.y -= circle.speed;
-			if (circle.y < -circle.radius) {
-				circle.y = canvas.height;
-				circle.x = (Math.random() * window.innerWidth * 0.6)+(Math.random() * window.innerWidth * 0.4);
-				circle.radius = Math.random() * 80 + 20;
-				//scancelAnimationFrame(loopCancel);
-				//loopCancel=requestAnimationFrame(render);
-			}
-			circle.draw();
-        }
-		loopCancel=requestAnimationFrame(render);
-    }
-
-	// function render() {
+    // function render() {
 	// 	context.clearRect(0, 0, canvas.width, canvas.height);
     //     let circle;
     //     for (let i = 0; i < circleArray.length; i++) {
     //         circle = circleArray[i];
     //         circle.y -= circle.speed;
 	// 		if (circle.y < -circle.radius) {
-	// 			circle.y = canvas.radius;
-	// 			//cancelAnimationFrame(loopCancel);
-	// 			//loopCancel=requestAnimationFrame(render);
+	// 			circle.y = canvas.height;
+	// 			circle.x = (Math.random() * window.innerWidth * 0.6)+(Math.random() * window.innerWidth * 0.4);
+	// 			circle.radius = Math.random() * 80 + 20;
 	// 		}
 	// 		circle.draw();
     //     }
-	// 	setTimeout(render,10);
+	// 	loopCancel=requestAnimationFrame(render);
     // }
 
+	// // function render() {
+	// // 	context.clearRect(0, 0, canvas.width, canvas.height);
+    // //     let circle;
+    // //     for (let i = 0; i < circleArray.length; i++) {
+    // //         circle = circleArray[i];
+    // //         circle.y -= circle.speed;
+	// // 		if (circle.y < -circle.radius) {
+	// // 			circle.y = canvas.radius;
+	// // 			//cancelAnimationFrame(loopCancel);
+	// // 			//loopCancel=requestAnimationFrame(render);
+	// // 		}
+	// // 		circle.draw();
+    // //     }
+	// // 	setTimeout(render,10);
+    // // }
 
-    init();
 
-    window.addEventListener('resize', setLayout);
+    // init();
+
+    // window.addEventListener('resize', setLayout);
 
     </script>
 	</body>
