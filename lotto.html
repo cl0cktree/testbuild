@@ -36,12 +36,13 @@
       .article{width:100%;min-height:777px;max-height:888px;margin:0;padding:0;}
       .article .contents{width:100%;min-height:777px;max-height:888px;color:#fff;text-align:center;}
       .article .contents h1{line-height:100px;}
+      .article .contents .add_num{margin-top:20px;line-height:100px;color:#fff;font-size:1.2rem;font-weight:500;}
+      .article .contents .add_num span:before{content:'당첨번호 6수 총 합 : '}
       .article .contents .contents_box{position:absolute;background:#fff;width:100%;height:100px;top:50%;transform:translateY(-50%);text-align:center;color:#000;font-size:25px;line-height:100px;}
       .article .contents .contents_box div{display:inline-block;margin-left:20px;}
       .article .contents .contents_box .price{width:421px;text-align:left;}
       .article .contents .contents_box .bonus{width:136px;text-align:left;}
       .article .contents .contents_box span{width:40px;height:40px;display:inline-block;border:1px solid #000;border-radius:50%;line-height:40px;margin-left:10px;color:#fff;text-align:center;}
-      
       .article .play{text-align:center;width:100%;height:100px;position:absolute;top:90%;transform:translateY(-90%);}
       .article .play button{display:inline-block;background:rgba(241, 34, 34,1);color:#fff;box-sizing:border-box;width:200px;line-height:50px;border:2px solid #fff;border-radius:22px;font-size:24px;letter-spacing:2px;cursor:pointer;}
       .article .add{width:100%;height:100px;background:#fff;position:fixed;bottom:0;}
@@ -53,6 +54,7 @@
       <div class="article" id="article">
         <div class="contents" id="contents">
           <h1>축하합니다.</h1>
+          <div class="add_num"></div>
           <div class="contents_box">
             <div class="price">
               당첨번호
@@ -127,6 +129,7 @@
             var full_num=Array(45).fill().map(function(currentValue,index){return index + 1});
             //console.log(full_num);
             var shu=[];
+
             while(full_num.length>0){
               var val_m=full_num.splice(Math.floor(Math.random()*full_num.length),1)[0];
               shu.push(val_m)
@@ -221,8 +224,35 @@
               $(this).css({'color':'#fff','font-size':'24px','letter-spacing':'2px'});
             }
             if(e.type=='click'){
+              var add_num=$('.add_num');
               $('.price, .bonus').children('span').remove('');
-            roll_number();
+              roll_number();
+              var ball_index=$('.price').find('span').length;
+              var all_add=0;
+              console.log(ball_index);
+              for(j=1;j<=ball_index;j++){
+                var add_ball=$('.price').children('span:nth-child('+j+')').text();
+                console.log(add_ball);
+                all_add=parseInt(all_add)+parseInt(add_ball);
+              }
+              if(all_add<120||all_add>160){
+                if(add_num.find('span')){
+                  add_num.children('span').remove();
+                  add_num.append('<span>'+all_add+'</span>');
+                }else{
+                  add_num.append('<span>'+all_add+'</span>');
+                }
+                $('button').click();
+                console.log('rerole')
+              }else{
+                //roll_number();
+                if(add_num.find('span')){
+                  add_num.children('span').remove();
+                  add_num.append('<span>'+all_add+'</span>');
+                }else{
+                  add_num.append('<span>'+all_add+'</span>');
+                }
+              }
             }
           });
       });
