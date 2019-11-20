@@ -42,14 +42,24 @@
       .article .contents h1{line-height:100px;}
       .article .contents .add_num{margin-top:20px;line-height:100px;color:#fff;font-size:1.2rem;font-weight:500;}
       .article .contents .add_num span:before{content:'당첨번호 6수 총 합 : '}
-      .article .contents .contents_box{position:absolute;background:#fff;width:100%;height:100px;top:50%;transform:translateY(-50%);text-align:center;color:#000;font-size:25px;line-height:100px;}
+      .article .contents .contents_box{position:absolute;background:#fff;width:100%;height:auto;top:50%;transform:translateY(-50%);color:#000;font-size:25px;line-height:100px;}
       .article .contents .contents_box div{display:inline-block;margin-left:20px;}
-      .article .contents .contents_box .price{width:421px;text-align:left;}
-      .article .contents .contents_box .bonus{width:136px;text-align:left;}
+      .article .contents .contents_box .price{width:421px;text-align:left;overflow:unset;}
+      .article .contents .contents_box .bonus{text-align:left;overflow:unset;}
+      .article .contents .contents_box h2{margin:0;padding:0;font-size:25px;font-weight:600;text-align:left;}
+      .article .contents .contents_box .title2{display:inline-block;}
       .article .contents .contents_box span{width:40px;height:40px;display:inline-block;border:1px solid #000;border-radius:50%;line-height:40px;margin-left:10px;color:#fff;text-align:center;}
       .article .play{text-align:center;width:100%;height:100px;position:absolute;top:90%;transform:translateY(-90%);}
       .article .play button{display:inline-block;background:rgba(241, 34, 34,1);color:#fff;box-sizing:border-box;width:200px;line-height:50px;border:2px solid #fff;border-radius:22px;font-size:24px;letter-spacing:2px;cursor:pointer;}
       .article .add{width:100%;height:100px;background:#fff;position:fixed;bottom:0;}
+      @media all and (min-width:321px) and (max-width:480px){
+        .contents_box .title1{display:block;}
+        .article .contents .contents_box .bonus{width:100%;}
+      }
+      @media all and (min-width:481px){
+        .contents_box .title1{display:inline-block;}
+        ..article .contents .contents_box .bonus{width:136px;}
+      }
     </style>
     <script src="jquery-3.2.1.min.js"></script>
   </head>
@@ -61,10 +71,10 @@
           <div class="add_num"></div>
           <div class="contents_box">
             <div class="price">
-              당첨번호
+              <h2 class="title1">당첨번호</h2>
             </div>
             <div class="bonus">
-              보너스
+              <h2 class="title2">보너스</h2>
             </div>
           </div>
         </div>
@@ -235,7 +245,7 @@
               var all_add=0;
               console.log(ball_index);
               for(j=1;j<=ball_index;j++){
-                var add_ball=$('.price').children('span:nth-child('+j+')').text();
+                var add_ball=$('.price').children('span:nth-of-type('+j+')').text();
                 console.log(add_ball);
                 all_add=parseInt(all_add)+parseInt(add_ball);
               }
