@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="kr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Test 3D nav</title>
+    <style>
+      body{margin:0;padding:0;width:100%;height:100%;}
+      .section{width:100%;height:100%;min-height:800px;}
+      .article{width:50%;height:50%;position:absolute;top:50%;left:50%;margin-top:-25%;margin-left:-25%;background:rgba(255,255,255,0.4);z-index:10;}
+      .contents{width:100%;height:100%;top:0;left:0;bottom:0;right:0;position:absolute;background:rgba(0,0,0,1);z-index:2;vertical-align:middle;display:table;}
+      .weather{display:table-cell;box-sizing:border-box;width:100%;height:40px;line-height:40px;color:#fff;font-size:30px;text-align:center;vertical-align:middle;}
+    </style>
+    <script src="jquery-3.2.1.min.js"></script>
+  </head>
+  <body>
+    <div class="section" id="section">
+      <div class="article" id="article">
+        <div class="contents" id="contents">
+            <span class="weather"></span>
+        </div>
+      </div>
+    </div>
+
+    <script defer type="text/javascript">
+        $(function(){
+            var art=document.getElementById('article');
+            var con=document.getElementById('contents');
+            var $weather=$('.weather');
+            
+            var ip = "";
+            var hostname = "";
+            var city = "";
+            var region = "";
+            var country = "";
+            var loc = "";
+            var org = "";
+                
+            $.getJSON("https://ipinfo.io", function(data) {
+                   ip = data.ip // 접속자 ip
+                   hostname = data.hostname // 접속자 hostname
+                   city = data.city // 접속자 도시
+                   region = data.region // 접속자 지역
+                   country = data.country // 접속자 국가
+                   loc = data.loc // 접속 위도, 경도
+                   org = data.org // ISP (인터넷 서비스 제공사업자)
+                   $weather.append('<span class="cover-city">Are you in '+city+'?</span>');
+            });
+
+            navigator.geolocation.getCurrentPosition(function(pos) {
+            	var latitude = pos.coords.latitude;
+                var longitude = pos.coords.longitude;
+                var weather_key = 'f195f622a07f18107e2cac3417855541';
+                var weather_api = 'https://api.openweathermap.org/data/2.5/forecast?id=524901&APPID='+weather_key;
+                var weather_fet = fetch('https://api.openweathermap.org/data/2.5/weather?lat='+latitude+'&lon='+longitude+'&APPID='+weather_key+'&units=metric');
+                function weather_json(){
+                    weather_fet.then(function(response){
+                        return response.json();
+                    }).then(function(json){
+                        var tempt = json.main.temp;
+                        var place = json.name;
+                        var weather_this = json.weather[0].main;
+                        console.log(weather_this);
+                        $weather.find('.cover-city').append('<br/>현재 위치는  ' + latitude + ', '+ longitude+' '+place+' 입니다.'+' 온도는 '+tempt+'º'+' / 날씨는 '+weather_this);
+                    })
+                };
+                weather_json();
+                console.log(weather_fet);
+            });
+        });
+    </script>
+	</body>
+</html>
