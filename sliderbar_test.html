@@ -139,6 +139,7 @@
                     kb_slider_status.innerHTML=slider_bar_per;
                     console.log(kb_slider_over.clientWidth);
                 };
+                return false;
             };
 
             function kb_touchStart(event){
@@ -204,7 +205,7 @@
                         console.log(kb_slider_over.clientWidth);
                     }
                 };
-                
+                return false;
             };
             function touch_func(){
                 event.preventDefault();
@@ -241,6 +242,7 @@
                     kb_slider_status.innerHTML=slider_bar_per;
                     console.log(slider_icon_point);
                 };
+                return false;
             };
 
             default_data();
