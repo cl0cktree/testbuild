@@ -44,9 +44,14 @@
             var slider_pointer_per=(slider_data_default+15)/slider_bar_width;
             var slider_data_per;
             var slider_data_unit;
+            var slider_data_ratio;
+            var slider_data_max=kb_slider_bar.getAttribute('data-max');
             var slider_data_min=kb_slider_bar.getAttribute('data-min');
-            var slider_data_max;
-            // var slider_bar_button_before=document.documentElement.style.setProperty('content',slider_data_max);
+            var minus_data_min=(slider_data_min.length-1)*-1;
+            var max_min_ratio=Math.round(slider_data_max/slider_data_min);
+            var sep_max_min=slider_data_max.slice(minus_data_min,slider_data_max.length);
+            var round_data_min=(sep_max_min)/slider_data_min;
+            // var slider_bar_button_before=document.documentElement.style.setProperty('content',slider_data_ratio);
             var bar_per_min;
             var plus_num=0;
             var frame_start;
@@ -59,6 +64,15 @@
             var animation_frame_1 = 0;
             var animation_frame_2 = 600;
 
+            // 수치 시험 용-
+            if(slider_data_min>max_min_ratio){
+                console.log('max_min_ratio.length = '+max_min_ratio.toString().length);
+                console.log('뒤에서 slider_data_min 자릿수 만큼 = '+sep_max_min);
+            }else{
+                console.log('slider_data_min.length = '+slider_data_min.length);
+                console.log('뒤에서 slider_data_min 자릿수 반올림 = '+round_data_min);
+            }
+            //-------------
             function default_data(){
                 slider_bar_width=kb_slider_bar.clientWidth;
                 slider_data_default=((kb_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-(slider_bar_button.clientWidth/2);
@@ -67,7 +81,7 @@
                 kb_slider_status.style.left=slider_data_default+'px';
                 kb_slider_over.style.width=slider_data_default+'px';
                 kb_slider_status.innerHTML=slider_data_per;
-                console.log(kb_slider_over.style.width);
+                console.log('1 = '+kb_slider_over.style.width+' / 2 = '+max_min_ratio);
             };
             function animate_frame(){
                 for(i=0;i<slider_data_default;i++){
@@ -111,7 +125,7 @@
                 slider_data_default=((kb_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-(slider_bar_button.clientWidth/2);
                 slider_pointer_per=(slider_data_default+15)/slider_bar_width;
                 slider_data_per=((kb_slider_bar.getAttribute('data-max'))*slider_pointer_per);
-                slider_data_max=Math.floor((kb_slider_bar.getAttribute('data-max'))*(slider_bar_per/1000));
+                slider_data_ratio=Math.floor((kb_slider_bar.getAttribute('data-max'))*(slider_bar_per/1000));
                 mousedown_start=false;
                 kb_slider_over.classList.add('click-transition');
                 slider_bar_button.classList.add('click-transition');
@@ -119,7 +133,7 @@
 
                 if(slider_icon_point>slider_bar_width-(slider_bar_button.clientWidth/2)){
                     slider_icon_point=slider_bar_width-(slider_bar_button.clientWidth/2);
-                    slider_data_max=kb_slider_bar.getAttribute('data-max');
+                    slider_data_ratio=kb_slider_bar.getAttribute('data-max');
                     slider_bar_button.style.left=slider_icon_point-(slider_bar_button.clientWidth/2)+'px';
                     kb_slider_status.style.left=slider_icon_point-(slider_bar_button.clientWidth/2)+'px';
                     kb_slider_over.style.width=slider_icon_point-(slider_bar_button.clientWidth/2)+'px';
@@ -133,6 +147,17 @@
                     kb_slider_status.innerHTML=slider_bar_per;
                     console.log(kb_slider_over.clientWidth);
                 }else{
+                    var sep_bar_per = slider_bar_per.toString().slice(minus_data_min,slider_data_max.length);
+                    if(sep_bar_per!==0){
+                        console.log('line-0 : '+sep_bar_per);
+                        if(((sep_bar_per)>=(slider_data_min/2))){
+                            slider_bar_per=(slider_bar_per-sep_bar_per)+1000;
+                            console.log('line-1-1 : '+sep_bar_per);
+                        }else{
+                            slider_bar_per=(slider_bar_per-sep_bar_per)+0;
+                            console.log('line-1-2 : '+sep_bar_per);
+                        }
+                    };
                     slider_bar_button.style.left=slider_icon_point-(slider_bar_button.clientWidth/2)+'px';
                     kb_slider_status.style.left=slider_icon_point-(slider_bar_button.clientWidth/2)+'px';
                     kb_slider_over.style.width=slider_icon_point-(slider_bar_button.clientWidth/2)+'px';
@@ -178,7 +203,7 @@
                 slider_bar_per=((kb_slider_bar.getAttribute('data-max')/slider_data_min)*((slider_data_min*slider_icon_point)/slider_bar_width));
                 slider_data_default=((kb_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-(slider_bar_button.clientWidth/2);
                 slider_pointer_per=(slider_data_default+15)/slider_bar_width;
-                slider_data_max=Math.floor((kb_slider_bar.getAttribute('data-max'))*(slider_bar_per/1000));
+                slider_data_ratio=Math.floor((kb_slider_bar.getAttribute('data-max'))*(slider_bar_per/1000));
                 kb_slider_over.classList.remove('click-transition');
                 slider_bar_button.classList.remove('click-transition');
 
@@ -198,6 +223,17 @@
                     kb_slider_status.innerHTML=slider_bar_per;
                 }else{
                     if(mousedown_start==true){
+                        var sep_bar_per = slider_bar_per.toString().slice(minus_data_min,slider_data_max.length);
+                        if(sep_bar_per!==0){
+                            console.log('line-0 : '+sep_bar_per);
+                            if(((sep_bar_per)>=(slider_data_min/2))){
+                                slider_bar_per=(slider_bar_per-sep_bar_per)+1000;
+                                console.log('line-1-1 : '+sep_bar_per);
+                            }else{
+                                slider_bar_per=(slider_bar_per-sep_bar_per)+0;
+                                console.log('line-1-2 : '+sep_bar_per);
+                            }
+                        };
                         slider_bar_button.style.left=slider_icon_point+'px';
                         kb_slider_status.style.left=slider_icon_point+'px';
                         kb_slider_over.style.width=slider_icon_point+'px';
@@ -218,7 +254,7 @@
                 slider_bar_per=Math.floor((kb_slider_bar.getAttribute('data-max')/(slider_data_min))*Math.floor(((slider_data_min)*(slider_icon_point))/(slider_bar_width)));
                 slider_data_default=((kb_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-(slider_bar_button.clientWidth/2);
                 slider_pointer_per=(slider_data_default+15)/slider_bar_width;
-                slider_data_max=Math.floor((kb_slider_bar.getAttribute('data-max'))*(slider_bar_per/1000));
+                slider_data_ratio=Math.floor((kb_slider_bar.getAttribute('data-max'))*(slider_bar_per/1000));
 
                 if(slider_icon_point>slider_bar_width-(slider_bar_button.clientWidth/2)){
                     slider_icon_point=slider_bar_width-(slider_bar_button.clientWidth/2);
@@ -236,6 +272,17 @@
                     kb_slider_status.innerHTML=slider_bar_per;
                     console.log(slider_icon_point);
                 }else{
+                    var sep_bar_per = slider_bar_per.toString().slice(minus_data_min,slider_data_max.length);
+                    if(sep_bar_per!==0){
+                        console.log('line-0 : '+sep_bar_per);
+                        if(((sep_bar_per)>=(slider_data_min/2))){
+                            slider_bar_per=(slider_bar_per-sep_bar_per)+1000;
+                            console.log('line-1-1 : '+sep_bar_per);
+                        }else{
+                            slider_bar_per=(slider_bar_per-sep_bar_per)+0;
+                            console.log('line-1-2 : '+sep_bar_per);
+                        }
+                    };
                     slider_bar_button.style.left=slider_icon_point-(slider_bar_button.clientWidth/2)+'px';
                     kb_slider_status.style.left=slider_icon_point-(slider_bar_button.clientWidth/2)+'px';
                     kb_slider_over.style.width=slider_icon_point-(slider_bar_button.clientWidth/2)+'px';
