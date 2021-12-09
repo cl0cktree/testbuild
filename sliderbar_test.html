@@ -32,8 +32,6 @@
             var slider_data_cal=vanila_slider_bar.getAttribute('data-cal');
             var slider_data_max=vanila_slider_bar.getAttribute('data-max');
             var slider_data_min=vanila_slider_bar.getAttribute('data-min');
-            // var slider_bar_button_num=window.getComputedStyle(slider_bar_button, ':before').content;
-            // var slider_bar_button_con=slider_bar_button.style.setProperty('before','content');
             var bar_per_min;
             var frame_start;
             var slide_icon_pageX;
@@ -48,7 +46,7 @@
             var slider_icon_point;
             var slider_bar_per=100*slider_icon_point/slider_bar_width;
             var slider_status_width=Number(vanila_slider_status.clientWidth/2);
-            var slider_bar_halfButton=Number(slider_bar_button.clientWidth/2);
+            var slider_bar_halfButton=Number(slider_bar_button.offsetWidth/2);
             var slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
             var slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
             var slider_pointer_per=(slider_data_default+slider_bar_halfButton)/slider_bar_width;
@@ -107,7 +105,7 @@
                     slider_status_width=Number(vanila_slider_status.clientWidth/2);
                     slider_bar_start=(window.innerWidth-slider_bar_width)/2;
                     slider_icon_point=slide_icon_pageX-slider_bar_start;
-                    slider_bar_per=Math.floor((slider_data_max/(slider_data_cal))*Math.floor((slider_data_cal*slider_icon_point)/(slider_bar_width)));
+                    slider_bar_per=Math.floor((slider_data_cal)*Math.floor((slider_data_max/slider_data_cal)*(slider_icon_point/slider_bar_width)));
                     slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                     slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
                     slider_pointer_per=(slider_data_default+slider_bar_halfButton)/slider_bar_width;
@@ -151,11 +149,11 @@
                         };
                         slider_icon_point=slider_bar_width-(slider_bar_halfButton/4);
                         slider_move();
-                    }else if(slider_icon_point-(slider_bar_halfButton/8)<0){
+                    }else if(slider_icon_point-(slider_bar_halfButton/4)<0){
                         if(slider_bar_per<slider_data_min){
                             slider_bar_per=slider_data_min;
                         };
-                        slider_icon_point=0+(slider_bar_halfButton/8);
+                        slider_icon_point=0+(slider_bar_halfButton/4);
                         slider_move();
                         console.log(vanila_slider_over.clientWidth);
                     }else{
@@ -172,17 +170,19 @@
                     slider_math();
                     vanila_slider_over.classList.remove('click-transition');
                     slider_bar_button.classList.remove('click-transition');
+                    console.log('slider_bar_per = '+Math.floor((slider_data_cal*slider_icon_point)/(slider_bar_width)));
+                    console.log('slider_icon_point = '+slider_icon_point+' / slider_bar_width = '+slider_bar_width+' / per = '+((slider_data_max/slider_data_cal)*(slider_icon_point/slider_bar_width)));
                     if((slider_icon_point>slider_bar_width-(slider_bar_halfButton/4))&&(mousedown_start==true)){
                         if(slider_bar_per>slider_data_max){
                             slider_bar_per=slider_data_max;
                         };
                         slider_icon_point=slider_bar_width-(slider_bar_halfButton/4);
                         slider_move();
-                    }else if((slider_icon_point-(slider_bar_halfButton/8)<0)&&(mousedown_start==true)){
+                    }else if((slider_icon_point-(slider_bar_halfButton/4)<0)&&(mousedown_start==true)){
                         if(slider_bar_per<slider_data_min){
                             slider_bar_per=slider_data_min;
                         };
-                        slider_icon_point=0+(slider_bar_halfButton/8);
+                        slider_icon_point=0+(slider_bar_halfButton/4);
                         slider_move();
                     }else{
                         if(mousedown_start==true){
@@ -202,9 +202,9 @@
                         slider_bar_per=slider_data_max;
                         slider_icon_point=slider_bar_width-(slider_bar_halfButton/4);
                         slider_move();
-                    }else if(slider_icon_point-(slider_bar_halfButton/8)<0){
+                    }else if(slider_icon_point-(slider_bar_halfButton/4)<0){
                         slider_bar_per=slider_data_min;
-                        slider_icon_point=0+(slider_bar_halfButton/8);
+                        slider_icon_point=0+(slider_bar_halfButton/4);
                         slider_move();
                         console.log(slider_icon_point);
                     }else{
@@ -285,7 +285,7 @@
 </head>
 <body>
     <div id="wrapper_slider" class="wrapper_slider">
-        <div id="container" class="vanila_slider_bar" data-min="1000" data-max="500000" data-cal="1000" data-default="50">
+        <div id="container" class="vanila_slider_bar" data-min="1000" data-max="1000000" data-cal="1000" data-default="50">
         </div>
     </div>
 </body>
