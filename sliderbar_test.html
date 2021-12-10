@@ -8,18 +8,20 @@
     <title>슬라이더바 테스트</title>
     <style>
         html,body{width:100%;height:100%;margin:0;padding:0;font-size:10px;}
+        .a-center{text-align:center!important;}
         .click-transition{transition:all 0.3s;}
-        .wrapper_slider{font-size:1rem;}
-        .wrapper_slider>div{width:88%;max-width:500px;font-size:1.6rem;}
-        .wrapper_slider .vanila_slider_bar{display:block;position:relative;height:20px;border:2px solid #fff;outline:1px solid #666;margin:8px auto 0;background:yellowgreen;border-radius:50px;}
-        .wrapper_slider .vanila_slider_over{display:block;position:relative;width:0%;max-width:500px;height:20px;background:rgb(74, 213, 231);border-radius:50px;}
-        .wrapper_slider .vanila_slider_bar .vanila_slider_button{display:block;position:absolute;width:30px;height:30px;background:#009688;border:2px solid #fff;outline:1px solid #666;border-radius:50%;left:0;top:-7px;opacity:1;cursor:pointer;}
-        .wrapper_slider .vanila_slider_bar .vanila_slider_status{display:block;position:absolute;min-width:30px;height:30px;background:transparent;left:0px;top:0;margin-top:40px;color:#000;}
+        .wrap-all{padding-top:2rem;}
+        .wrap-all .wrapper_slider{font-size:1rem;}
+        .wrap-all .wrapper_slider>div{width:88%;max-width:500px;font-size:1.6rem;}
+        .wrap-all .wrapper_slider .vanila_slider_bar{display:block;position:relative;height:20px;border:2px solid #fff;outline:1px solid #666;margin:8px auto 0;background:yellowgreen;border-radius:50px;}
+        .wrap-all .wrapper_slider .vanila_slider_over{display:block;position:relative;width:0%;max-width:500px;height:20px;background:rgb(74, 213, 231);border-radius:50px;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_button{display:block;position:absolute;width:30px;height:30px;background:#009688;border:2px solid #fff;outline:1px solid #666;border-radius:50%;left:0;top:-7px;opacity:1;cursor:pointer;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_status{display:block;position:absolute;min-width:30px;height:30px;background:transparent;left:0px;top:0;margin-top:40px;color:#000;}
     
-        .wrapper_slider>div:nth-of-type(2){position:relative;margin:4px auto 0;}
-        .wrapper_slider>div:nth-of-type(2)>span{position:absolute;font-size:1.4rem;color:#666;}
-        .wrapper_slider>div:nth-of-type(2) .slider_min{left:-20px;}
-        .wrapper_slider>div:nth-of-type(2) .slider_max{right:-20px;}
+        .wrap-all .wrapper_slider>div:nth-of-type(2){position:relative;margin:4px auto 0;}
+        .wrap-all .wrapper_slider>div:nth-of-type(2)>span{position:absolute;font-size:1.4rem;color:#666;}
+        .wrap-all .wrapper_slider>div:nth-of-type(2) .slider_min{left:-20px;}
+        .wrap-all .wrapper_slider>div:nth-of-type(2) .slider_max{right:-20px;}
     </style>
     <script defer>
         document.addEventListener("DOMContentLoaded", function(){// script 순서 상관 없이 실행.
@@ -304,8 +306,13 @@
     </script>
 </head>
 <body>
-    <div id="wrapper_slider" class="wrapper_slider">
-        <div id="container" class="vanila_slider_bar" data-min="50000" data-max="10000000" data-cal="10000" data-default="50">
+    <div class="wrap-all">
+        <h1 class="a-center">
+            슬라이더 모듈 샘플
+        </h1>
+        <div id="wrapper_slider" class="wrapper_slider">
+            <div id="container" class="vanila_slider_bar" data-min="50000" data-max="10000000" data-cal="10000" data-default="50">
+            </div>
         </div>
     </div>
 </body>
