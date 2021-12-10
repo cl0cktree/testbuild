@@ -291,13 +291,13 @@
                 //----------------------
             };
 
-            function option_min_max(){ // 최소, 최재 수 표기하는 span 생성자.
+            function Option_min_max(){ // 최소, 최대 수 표기하는 span 생성자.
                 var wrapper_slider_create=document.createElement('div');
                 var wrap_slider_path=wrapper_slider.append(wrapper_slider_create);
                 wrapper_slider_create.innerHTML+='<span class="slider_min">'+slider_data_min.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")+'</span><span class="slider_max">'+slider_data_max.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")+'</span>';
             };
             default_data();
-            option_min_max();
+            Option_min_max();
             vanila_slider_move();
         });
     </script>
