@@ -71,7 +71,7 @@
             //-----작동 script 시작----------------------------------
             vanila_slider_status.innerHTML=pattern_sep; // 최초 페이지 진입 시 현재 슬라이더 위치에 기반하여 금액 표시.
 
-            window.addEventListener('resize', function(){
+            window.addEventListener('resize', function(){ // 화면 넓이 변경 시 거기에 맞추어 초기값 다시 세팅 실행.
                 clearTimeout(resize_timer);
                 resize_timer = setTimeout(function(){
                     console.log('100 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / 200 = '+Number(vanila_slider_status.clientWidth)+' / vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
@@ -293,6 +293,7 @@
 
             function Option_min_max(){ // 최소, 최대 수 표기하는 span 생성자.
                 var wrapper_slider_create=document.createElement('div');
+                var wrap_slider_title=wrapper_slider.prepend(wrapper_slider_create);
                 var wrap_slider_path=wrapper_slider.append(wrapper_slider_create);
                 wrapper_slider_create.innerHTML+='<span class="slider_min">'+slider_data_min.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")+'</span><span class="slider_max">'+slider_data_max.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")+'</span>';
             };
