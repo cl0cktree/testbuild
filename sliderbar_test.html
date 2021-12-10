@@ -60,6 +60,8 @@
             var round_data_min=(sep_max_min)/slider_data_cal;
             var pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
             // var slider_bar_button_before=document.documentElement.style.setProperty('content',slider_data_ratio);
+            var max_sum_plus=Number(slider_data_max)+Number(slider_data_min);
+            var max_sum_minus=Number(slider_data_max)-Number(slider_data_min);
             var plus_num=0;
             var animation_frame_1 = 0;
             var animation_frame_2 = 600;
@@ -82,13 +84,25 @@
                 slider_bar_width=vanila_slider_bar.clientWidth;
                 slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                 slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
-                slider_data_per=((slider_data_max)*slider_pointer_per);
+                slider_data_per=((max_sum_plus)*slider_pointer_per);
                 slider_bar_button.style.left=slider_data_default+'px';
                 vanila_slider_status.style.left=slider_data_default_status+'px';
                 vanila_slider_over.style.width=slider_data_default+slider_bar_button.clientWidth+'px';
+                sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
+                if(sep_bar_per!==0){
+                    console.log('line-0 : '+sep_bar_per);
+                    if(((sep_bar_per)>=(slider_data_cal/2))){
+                        slider_data_per=(slider_data_per-sep_bar_per)+Number(slider_data_cal);
+                        console.log('line-1-1 : '+sep_bar_per);
+                    }else{
+                        slider_data_per=(slider_data_per-sep_bar_per)+0;
+                        console.log('line-1-2 : '+sep_bar_per);
+                    }
+                };
                 pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                 vanila_slider_status.innerHTML=pattern_sep;
                 console.log('1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / 2 = '+slider_status_width+' / vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
+                return false;
             };
 
             function vanila_slider_move(){ // 현재 미사용 - 보강 후 jQuery의 animate 기능 완성.
@@ -109,7 +123,7 @@
                     slider_status_width=Number(vanila_slider_status.clientWidth/2);
                     slider_bar_start=(window.innerWidth-slider_bar_width)/2;
                     slider_icon_point=slide_icon_pageX-slider_bar_start;
-                    slider_bar_per=Math.floor((slider_data_cal)*Math.floor((slider_data_max/slider_data_cal)*(slider_icon_point/slider_bar_width)));
+                    slider_bar_per=(Math.floor((slider_data_cal)*Math.floor((max_sum_minus/slider_data_cal)*(slider_icon_point/slider_bar_width))))+Number(slider_data_min);
                     slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                     slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
                     slider_pointer_per=(slider_data_default+slider_bar_halfButton)/slider_bar_width;
@@ -290,7 +304,7 @@
 </head>
 <body>
     <div id="wrapper_slider" class="wrapper_slider">
-        <div id="container" class="vanila_slider_bar" data-min="1000" data-max="1000000" data-cal="1000" data-default="50">
+        <div id="container" class="vanila_slider_bar" data-min="50000" data-max="10000000" data-cal="10000" data-default="50">
         </div>
     </div>
 </body>
