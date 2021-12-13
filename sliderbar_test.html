@@ -12,6 +12,7 @@
         .click-transition{transition:all 0.3s;}
         .wrap-all{padding-top:2rem;}
         .wrap-all .wrapper_slider{font-size:1rem;}
+        .wrap-all .wrapper_slider .slider_cal{display:block;max-width:500px;margin:0 auto;font-size:1.2rem;text-align:center;}
         .wrap-all .wrapper_slider>div{width:88%;max-width:500px;font-size:1.6rem;}
         .wrap-all .wrapper_slider .vanila_slider_bar{display:block;position:relative;height:20px;border:2px solid #fff;outline:1px solid #666;margin:8px auto 0;background:yellowgreen;border-radius:50px;}
         .wrap-all .wrapper_slider .vanila_slider_over{display:block;position:relative;width:0%;max-width:500px;height:20px;background:rgb(74, 213, 231);border-radius:50px;}
@@ -294,10 +295,13 @@
             };
 
             function Option_min_max(){ // 최소, 최대 수 표기하는 span 생성자.
-                var wrapper_slider_create=document.createElement('div');
-                var wrap_slider_title=wrapper_slider.prepend(wrapper_slider_create);
+                var create_slider_cal=document.createElement('span');
+                var slider_cal_pre=wrapper_slider.prepend(create_slider_cal);
+                var slider_cal=document.querySelector('.wrapper_slider span');
                 var wrap_slider_path=wrapper_slider.append(wrapper_slider_create);
                 wrapper_slider_create.innerHTML+='<span class="slider_min">'+slider_data_min.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")+'</span><span class="slider_max">'+slider_data_max.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")+'</span>';
+                slider_cal.classList.add('slider_cal');
+                slider_cal.innerHTML='단위 : '+slider_data_cal.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
             };
             default_data();
             Option_min_max();
@@ -311,7 +315,7 @@
             슬라이더 모듈 샘플
         </h1>
         <div id="wrapper_slider" class="wrapper_slider">
-            <div id="container" class="vanila_slider_bar" data-min="50000" data-max="10000000" data-cal="10000" data-default="50">
+            <div id="container" class="vanila_slider_bar" data-min="50000" data-max="5000000" data-cal="10000" data-default="50">
             </div>
         </div>
     </div>
