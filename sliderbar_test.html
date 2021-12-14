@@ -11,7 +11,7 @@
         .a-center{text-align:center!important;}
         .click-transition{transition:all 0.3s;}
         .wrap-all{padding-top:2rem;}
-        .wrap-all .wrapper_slider{font-size:1rem;margin-top:2rem;margin-bottom:6rem;}
+        .wrap-all .wrapper_slider{font-size:1rem;margin-top:2rem;margin-bottom:7rem;}
         .wrap-all .wrapper_slider .slider_cal{display:block;max-width:500px;margin:0 auto;font-size:1.2rem;text-align:center;}
         .wrap-all .wrapper_slider>div{width:88%;max-width:500px;font-size:1.6rem;}
         .wrap-all .wrapper_slider .vanila_slider_bar{display:block;position:relative;height:20px;border:2px solid #fff;outline:1px solid #666;margin:8px auto 0;background:yellowgreen;border-radius:50px;}
@@ -105,18 +105,18 @@
                     vanila_slider_over.style.width=slider_data_default+slider_bar_button.clientWidth+'px';
                     sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
                     if(sep_bar_per!==0){
-                        console.log('line-0 : '+sep_bar_per);
+                        console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per);
                         if(((sep_bar_per)>=(slider_data_cal/2))){
                             slider_data_per=(slider_data_per-sep_bar_per)+Number(slider_data_cal);
-                            console.log('line-1-1 : '+sep_bar_per);
+                            console.log('.wrapper_slider_'+i+' line-1-1 : '+sep_bar_per);
                         }else{
                             slider_data_per=(slider_data_per-sep_bar_per)+0;
-                            console.log('line-1-2 : '+sep_bar_per);
+                            console.log('.wrapper_slider_'+i+'line-1-2 : '+sep_bar_per);
                         }
                     };
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     vanila_slider_status.innerHTML=pattern_sep;
-                    console.log('1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / 2 = '+slider_status_width+' / vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
+                    console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
                     return false;
                 };
 
@@ -148,13 +148,13 @@
                     function sep_bar_auto(){ // 기본 동작 범위 안에서 동작에 사용되는 마지막 수식 공통 함수(최소 단위 밑의 자릿수가 있을 경우 반올림).
                         var sep_bar_per = slider_bar_per.toString().slice(minus_data_cal,slider_data_max.length);
                         if(sep_bar_per!==0){
-                            console.log('line-0 : '+sep_bar_per);
+                            console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per);
                             if(((sep_bar_per)>=(slider_data_cal/2))){
                                 slider_bar_per=(slider_bar_per-sep_bar_per)+Number(slider_data_cal);
-                                console.log('line-1-1 : '+sep_bar_per);
+                                console.log('.wrapper_slider_'+i+' line-1-1 : '+sep_bar_per);
                             }else{
                                 slider_bar_per=(slider_bar_per-sep_bar_per)+0;
-                                console.log('line-1-2 : '+sep_bar_per);
+                                console.log('.wrapper_slider_'+i+' line-1-2 : '+sep_bar_per);
                             }
                         };
                         return false;
