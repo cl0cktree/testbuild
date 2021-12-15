@@ -99,20 +99,25 @@
                     slider_bar_width=vanila_slider_bar.clientWidth;
                     slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                     slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
-                    slider_data_per=((max_sum_plus)*slider_pointer_per);
+                    
+                    slider_data_per=((max_sum_minus)*slider_pointer_per)+Number(slider_data_min);
+                    var sep_first_per=slider_data_cal.toString().substring(0,1);
+                    var sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
+
                     slider_bar_button.style.left=slider_data_default+'px';
                     vanila_slider_status.style.left=slider_data_default_status+'px';
                     vanila_slider_over.style.width=slider_data_default+slider_bar_button.clientWidth+'px';
-                    sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
+
+                    console.log('sep_first_per = '+sep_first_per);
                     if(sep_bar_per!==0){
-                        console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per);
-                        if(((sep_bar_per)>=(slider_data_cal/2))){
-                            slider_data_per=(slider_data_per-sep_bar_per)+Number(slider_data_cal);
-                            console.log('.wrapper_slider_'+i+' line-1-1 : '+sep_bar_per);
-                        }else{
-                            slider_data_per=(slider_data_per-sep_bar_per)+0;
-                            console.log('.wrapper_slider_'+i+'line-1-2 : '+sep_bar_per);
-                        }
+                        console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
+                        slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
+                    };
+                    if(slider_data_per>slider_data_max){
+                        slider_data_per=slider_data_max;
+                    };
+                    if(slider_data_per<0){
+                        slider_data_per=slider_data_min;
                     };
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     vanila_slider_status.innerHTML=pattern_sep;
@@ -120,8 +125,8 @@
                     return false;
                 };
 
-                function vanila_slider_move(){ // 현재 미사용 - 보강 후 jQuery의 animate 기능 완성.
-                    function animate_frame(){
+                function vanila_slider_move(){ // 슬라이더 무브 먼트 전체.
+                    function animate_frame(){ // 현재 미사용 - 보강 후 jQuery의 animate 기능 완성.
                         for(i=0;i<slider_data_default;i++){
                             animate_box = setTimeout(function(){
                                 plus_num++
@@ -142,19 +147,23 @@
                         slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                         slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
                         slider_pointer_per=(slider_data_default+slider_bar_halfButton)/slider_bar_width;
-                        slider_data_per=(slider_data_max*slider_pointer_per);
+                        // slider_data_per=(slider_data_max*slider_pointer_per); //기본 단위 맞춤 없이 사용할 경우 주석 해제 후 밑에 있는 같은 이름 변수를 주석처리 할 것.
                         slider_data_ratio=Math.floor((slider_data_max)*(slider_bar_per/Number(slider_data_cal)));
+
+                        var sep_bar_per = slider_bar_per.toString().slice(minus_data_cal,slider_data_max.length);
+                        slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal))); //기본 단위 밑으로 계산되어 나오는 숫자를 기본 단위에 맞춤.
+                        return false;
                     };
-                    function sep_bar_auto(){ // 기본 동작 범위 안에서 동작에 사용되는 마지막 수식 공통 함수(최소 단위 밑의 자릿수가 있을 경우 반올림).
+                    function sep_bar_auto(){ // 기본 동작 범위 안에서 동작에 사용되는 마지막 수식 공통 함수(최소 단위 밑의 자릿수가 있을 경우 반올림)->slider_math에 기능이 합쳐져 사용 안함.
                         var sep_bar_per = slider_bar_per.toString().slice(minus_data_cal,slider_data_max.length);
                         if(sep_bar_per!==0){
-                            console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per);
+                            console.log('.wrapper_slider_'+i+' move-line-0 : '+sep_bar_per);
                             if(((sep_bar_per)>=(slider_data_cal/2))){
                                 slider_bar_per=(slider_bar_per-sep_bar_per)+Number(slider_data_cal);
-                                console.log('.wrapper_slider_'+i+' line-1-1 : '+sep_bar_per);
+                                console.log('.wrapper_slider_'+i+' move-line-1-1 : '+sep_bar_per);
                             }else{
                                 slider_bar_per=(slider_bar_per-sep_bar_per)+0;
-                                console.log('.wrapper_slider_'+i+' line-1-2 : '+sep_bar_per);
+                                console.log('.wrapper_slider_'+i+' move-line-1-2 : '+sep_bar_per);
                             }
                         };
                         return false;
@@ -190,7 +199,7 @@
                             slider_move();
                             console.log(vanila_slider_over.clientWidth);
                         }else{
-                            sep_bar_auto();
+                            // sep_bar_auto();
                             slider_move();
                             console.log(vanila_slider_over.clientWidth);
                         };
@@ -219,7 +228,7 @@
                             slider_move();
                         }else{
                             if(mousedown_start==true){
-                                sep_bar_auto();
+                                // sep_bar_auto();
                                 slider_move();
                                 console.log(vanila_slider_over.clientWidth);
                             }
@@ -241,7 +250,7 @@
                             slider_move();
                             console.log(slider_icon_point);
                         }else{
-                            sep_bar_auto();
+                            // sep_bar_auto();
                             slider_move();
                             console.log(slider_icon_point);
                         };
