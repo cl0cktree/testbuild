@@ -16,7 +16,7 @@
         .wrap-all .wrapper_slider>div{width:88%;max-width:500px;font-size:1.6rem;}
         .wrap-all .wrapper_slider .vanila_slider_bar{display:block;position:relative;height:20px;border:2px solid #fff;outline:1px solid #666;margin:8px auto 0;background:yellowgreen;border-radius:50px;}
         .wrap-all .wrapper_slider .vanila_slider_over{display:block;position:relative;width:0%;max-width:500px;height:20px;background:rgb(74, 213, 231);border-radius:50px;}
-        .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_button{display:block;position:absolute;width:30px;height:30px;background:#009688;border:2px solid #fff;outline:1px solid #666;border-radius:50%;left:0;top:-7px;opacity:1;cursor:pointer;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_button{display:block;position:absolute;width:34px;height:34px;background:#009688;border:2px solid #fff;outline:1px solid #666;border-radius:50%;left:0;top:-7px;opacity:1;cursor:pointer;}
         .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_status{display:block;position:absolute;min-width:30px;height:30px;background:transparent;left:0px;top:0;margin-top:40px;color:#000;}
     
         .wrap-all .wrapper_slider>div:nth-of-type(2){position:relative;margin:4px auto 0;}
@@ -42,7 +42,7 @@
                 console.log('i = '+wrapper_slider);
                 var vanila_slider_bar=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_bar');
                 var wrapper_slider_create=document.createElement('div');
-                vanila_slider_bar.innerHTML+='<span class="vanila_slider_over"></span><span class="vanila_slider_button"></span><span class="vanila_slider_status"></span>';
+                vanila_slider_bar.innerHTML+='<span class="vanila_slider_over"></span><button class="vanila_slider_button"></button><span class="vanila_slider_status"></span>';
                 var slider_bar_width=vanila_slider_bar.clientWidth;
                 var vanila_slider_over=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_over');
                 var slider_bar_button=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_button');
