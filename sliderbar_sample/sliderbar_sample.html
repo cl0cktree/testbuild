@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no, address=no, email=no">
+    <title>슬라이더 모듈 샘플</title>
+    <style>
+        html,body{width:100%;height:100%;margin:0;padding:0;font-size:10px;}
+        .a-center{text-align:center!important;}
+        .click-transition{transition:all 0.3s;}
+        .wrap-all{padding-top:2rem;}
+        .wrap-all .wrapper_slider{font-size:1rem;margin-top:2rem;margin-bottom:7rem;}
+        .wrap-all .wrapper_slider .slider_cal{display:block;max-width:500px;margin:0 auto;font-size:1.2rem;text-align:center;}
+        .wrap-all .wrapper_slider>div{width:88%;max-width:500px;font-size:1.6rem;}
+        .wrap-all .wrapper_slider .vanila_slider_bar{display:block;position:relative;height:20px;border:2px solid #fff;outline:1px solid #666;margin:8px auto 0;background:yellowgreen;border-radius:50px;}
+        .wrap-all .wrapper_slider .vanila_slider_over{display:block;position:relative;width:0%;max-width:500px;height:20px;background:rgb(74, 213, 231);border-radius:50px;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_button{display:block;position:absolute;width:34px;height:34px;background:#009688;border:2px solid #fff;outline:1px solid #666;border-radius:50%;left:0;top:-7px;opacity:1;cursor:pointer;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_status{display:block;position:absolute;min-width:30px;height:30px;background:transparent;left:0px;top:0;margin-top:40px;color:#000;}
+    
+        .wrap-all .wrapper_slider>div:nth-of-type(2){position:relative;margin:4px auto 0;}
+        .wrap-all .wrapper_slider>div:nth-of-type(2)>span{position:absolute;font-size:1.4rem;color:#666;}
+        .wrap-all .wrapper_slider>div:nth-of-type(2) .slider_min{left:-20px;}
+        .wrap-all .wrapper_slider>div:nth-of-type(2) .slider_max{right:-20px;}
+    </style>
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function(){// script 순서 상관 없이 실행.
+            //---wrapper_slider 갯수 자동 인식 및 그에 맞는 class 적용.---
+            var wrapper_slider_all=document.querySelectorAll('.wrapper_slider');
+            var slider_leng=wrapper_slider_all.length;
+            console.log(slider_leng);
+            for(i=1;i<=slider_leng;i++){
+                console.log('roof = '+i);
+                wrapper_slider_all[i-1].classList.add('wrapper_slider_'+i);
+                Slider_maker();
+            };
+            //----------------------------------------------------------
+            function Slider_maker(){ //복제 가능한 함수를 만들기 위한 생성자 함수.
+                //-----초기세팅 및 선택자 지정----------------------------
+                var wrapper_slider=document.querySelector('.wrapper_slider_'+i);
+                console.log('i = '+wrapper_slider);
+                var vanila_slider_bar=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_bar');
+                var wrapper_slider_create=document.createElement('div');
+                vanila_slider_bar.innerHTML+='<span class="vanila_slider_over"></span><button class="vanila_slider_button"></button><span class="vanila_slider_status"></span>';
+                var slider_bar_width=vanila_slider_bar.clientWidth;
+                var vanila_slider_over=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_over');
+                var slider_bar_button=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_button');
+                var vanila_slider_status=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_status');
+                var slider_data_cal=vanila_slider_bar.getAttribute('data-cal');
+                var slider_data_max=vanila_slider_bar.getAttribute('data-max');
+                var slider_data_min=vanila_slider_bar.getAttribute('data-min');
+                var bar_per_min;
+                var frame_start;
+                var slide_icon_pageX;
+                var mousedown_start;
+                var slider_bar_start;
+                var slide_touch_move;
+                var animate_box;
+                var stop_animate_box;
+                var mouse_down_start;
+                var slider_data_unit;
+                var slider_data_ratio;
+                var slider_icon_point;
+                var slider_bar_per=100*slider_icon_point/slider_bar_width;
+                var slider_status_width=Number(vanila_slider_status.clientWidth/2);
+                var slider_bar_halfButton=Number(slider_bar_button.offsetWidth/2);
+                var slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
+                var slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
+                var slider_pointer_per=(slider_data_default+slider_bar_halfButton)/slider_bar_width;
+                var slider_data_per=((slider_data_max)*slider_pointer_per);
+                var minus_data_cal=(slider_data_cal.length-1)*-1;
+                var max_min_ratio=Math.round(slider_data_max/slider_data_cal);
+                var sep_max_min=slider_data_max.slice(minus_data_cal,slider_data_max.length);
+                var round_data_min=(sep_max_min)/slider_data_cal;
+                var pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                // var slider_bar_button_before=document.documentElement.style.setProperty('content',slider_data_ratio);
+                var max_sum_plus=Number(slider_data_max)+Number(slider_data_min);
+                var max_sum_minus=Number(slider_data_max)-Number(slider_data_min);
+                var plus_num=0;
+                var animation_frame_1 = 0;
+                var animation_frame_2 = 600;
+                var resize_time = 300;
+                var resize_timer = null;
+                //------------------------------------------------------/
+                //-----작동 script 시작----------------------------------
+                vanila_slider_status.innerHTML=pattern_sep; // 최초 페이지 진입 시 현재 슬라이더 위치에 기반하여 금액 표시.
+
+                window.addEventListener('resize', function(){ // 화면 넓이 변경 시 거기에 맞추어 초기값 다시 세팅 실행.
+                    clearTimeout(resize_timer);
+                    resize_timer = setTimeout(function(){
+                        console.log('100 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / 200 = '+Number(vanila_slider_status.clientWidth)+' / vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
+                        default_data();
+                    }, resize_time);
+                });
+                
+                function default_data(){ // 최초 페이지 진입시 슬라이더 동작 함수.
+                    slider_status_width=Number(vanila_slider_status.clientWidth/2);
+                    slider_bar_width=vanila_slider_bar.clientWidth;
+                    slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
+                    slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
+                    
+                    slider_data_per=((max_sum_minus)*slider_pointer_per)+Number(slider_data_min);
+                    var sep_first_per=slider_data_cal.toString().substring(0,1);
+                    var sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
+
+                    slider_bar_button.style.left=slider_data_default+'px';
+                    vanila_slider_status.style.left=slider_data_default_status+'px';
+                    vanila_slider_over.style.width=slider_data_default+slider_bar_button.clientWidth+'px';
+
+                    console.log('sep_first_per = '+sep_first_per);
+                    if(sep_bar_per!==0){
+                        console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
+                        slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
+                    };
+                    if(slider_data_per>slider_data_max){
+                        slider_data_per=slider_data_max;
+                    };
+                    if(slider_data_per<0){
+                        slider_data_per=slider_data_min;
+                    };
+                    pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                    vanila_slider_status.innerHTML=pattern_sep;
+                    console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
+                    return false;
+                };
+
+                function vanila_slider_move(){ // 슬라이더 무브 먼트 전체.
+                    function animate_frame(){ // 현재 미사용 - 보강 후 jQuery의 animate 기능 완성.
+                        for(i=0;i<slider_data_default;i++){
+                            animate_box = setTimeout(function(){
+                                plus_num++
+                                animation_frame_1=plus_num*100;
+                                slider_bar_button.style.left=plus_num+'px';
+                                vanila_slider_over.style.width=plus_num+'px';
+                                console.log(plus_num);
+                            },animation_frame_1);
+                        }
+                    };
+
+                    function slider_math(){ // 슬라이더 동작에 필요한 기본 계산 함수.
+                        slider_bar_width=vanila_slider_bar.clientWidth;
+                        slider_status_width=Number(vanila_slider_status.clientWidth/2);
+                        slider_bar_start=(window.innerWidth-slider_bar_width)/2;
+                        slider_icon_point=slide_icon_pageX-slider_bar_start;
+                        slider_bar_per=(Math.floor((slider_data_cal)*Math.floor((max_sum_minus/slider_data_cal)*(slider_icon_point/slider_bar_width))))+Number(slider_data_min);
+                        slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
+                        slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
+                        slider_pointer_per=(slider_data_default+slider_bar_halfButton)/slider_bar_width;
+                        // slider_data_per=(slider_data_max*slider_pointer_per); //기본 단위 맞춤 없이 사용할 경우 주석 해제 후 밑에 있는 같은 이름 변수를 주석처리 할 것.
+                        slider_data_ratio=Math.floor((slider_data_max)*(slider_bar_per/Number(slider_data_cal)));
+
+                        var sep_bar_per = slider_bar_per.toString().slice(minus_data_cal,slider_data_max.length);
+                        slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal))); //기본 단위 밑으로 계산되어 나오는 숫자를 기본 단위에 맞춤.
+                        return false;
+                    };
+                    function sep_bar_auto(){ // 기본 동작 범위 안에서 동작에 사용되는 마지막 수식 공통 함수(최소 단위 밑의 자릿수가 있을 경우 반올림)->slider_math에 기능이 합쳐져 사용 안함.
+                        var sep_bar_per = slider_bar_per.toString().slice(minus_data_cal,slider_data_max.length);
+                        if(sep_bar_per!==0){
+                            console.log('.wrapper_slider_'+i+' move-line-0 : '+sep_bar_per);
+                            if(((sep_bar_per)>=(slider_data_cal/2))){
+                                slider_bar_per=(slider_bar_per-sep_bar_per)+Number(slider_data_cal);
+                                console.log('.wrapper_slider_'+i+' move-line-1-1 : '+sep_bar_per);
+                            }else{
+                                slider_bar_per=(slider_bar_per-sep_bar_per)+0;
+                                console.log('.wrapper_slider_'+i+' move-line-1-2 : '+sep_bar_per);
+                            }
+                        };
+                        return false;
+                    };
+                    function slider_move(){ // 실질적 동작에 사용되는 공통 함수.
+                        slider_bar_button.style.left=slider_icon_point-slider_bar_halfButton+'px';
+                        vanila_slider_status.style.left=slider_icon_point-slider_status_width+'px';
+                        vanila_slider_over.style.width=slider_icon_point+slider_bar_halfButton+'px';
+                        pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                        vanila_slider_status.innerHTML=pattern_sep;
+                    };
+
+                    function vanila_mouseClick(event){ // 마우스 클릭 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
+                        event.preventDefault();
+                        event.stopPropagation();
+                        slide_icon_pageX=event.pageX;
+                        slider_math();
+                        mousedown_start=false;
+                        vanila_slider_over.classList.add('click-transition');
+                        slider_bar_button.classList.add('click-transition');
+                        console.log('slider_bar_per = '+(slider_data_cal*slider_icon_point)/slider_bar_width);
+                        if(slider_icon_point>slider_bar_width-(slider_bar_halfButton/4)){
+                            if(slider_bar_per>slider_data_max){
+                                slider_bar_per=slider_data_max;
+                            };
+                            slider_icon_point=slider_bar_width-(slider_bar_halfButton/4);
+                            slider_move();
+                        }else if(slider_icon_point-(slider_bar_halfButton/4)<0){
+                            if(slider_bar_per<slider_data_min){
+                                slider_bar_per=slider_data_min;
+                            };
+                            slider_icon_point=0+(slider_bar_halfButton/4);
+                            slider_move();
+                            console.log(vanila_slider_over.clientWidth);
+                        }else{
+                            // sep_bar_auto();
+                            slider_move();
+                            console.log(vanila_slider_over.clientWidth);
+                        };
+                        return false;
+                    };
+                    function mouse_func(){ // 마우스 오버, 다운, 업 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
+                        event.preventDefault();
+                        event.stopPropagation();
+                        slide_icon_pageX=event.pageX;
+                        slider_math();
+                        vanila_slider_over.classList.remove('click-transition');
+                        slider_bar_button.classList.remove('click-transition');
+                        console.log('slider_bar_per = '+Math.floor((slider_data_cal*slider_icon_point)/(slider_bar_width)));
+                        console.log('slider_icon_point = '+slider_icon_point+' / slider_bar_width = '+slider_bar_width+' / per = '+((slider_data_max/slider_data_cal)*(slider_icon_point/slider_bar_width)));
+                        if((slider_icon_point>slider_bar_width-(slider_bar_halfButton/4))&&(mousedown_start==true)){
+                            if(slider_bar_per>slider_data_max){
+                                slider_bar_per=slider_data_max;
+                            };
+                            slider_icon_point=slider_bar_width-(slider_bar_halfButton/4);
+                            slider_move();
+                        }else if((slider_icon_point-(slider_bar_halfButton/4)<0)&&(mousedown_start==true)){
+                            if(slider_bar_per<slider_data_min){
+                                slider_bar_per=slider_data_min;
+                            };
+                            slider_icon_point=0+(slider_bar_halfButton/4);
+                            slider_move();
+                        }else{
+                            if(mousedown_start==true){
+                                // sep_bar_auto();
+                                slider_move();
+                                console.log(vanila_slider_over.clientWidth);
+                            }
+                        };
+                        return false;
+                    };
+                    function touch_func(){ // 터치 스타트, 무브, 앤드, 캔슬 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
+                        event.preventDefault();
+                        event.stopPropagation();
+                        slide_icon_pageX=event.changedTouches[0].pageX;
+                        slider_math();
+                        if(slider_icon_point>slider_bar_width-(slider_bar_halfButton/4)){
+                            slider_bar_per=slider_data_max;
+                            slider_icon_point=slider_bar_width-(slider_bar_halfButton/4);
+                            slider_move();
+                        }else if(slider_icon_point-(slider_bar_halfButton/4)<0){
+                            slider_bar_per=slider_data_min;
+                            slider_icon_point=0+(slider_bar_halfButton/4);
+                            slider_move();
+                            console.log(slider_icon_point);
+                        }else{
+                            // sep_bar_auto();
+                            slider_move();
+                            console.log(slider_icon_point);
+                        };
+                        return false;
+                    };
+
+                    function vanila_mouseOut(event){ // 마우스 아웃 시 이밴트 실행시 적용되는 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
+                        // event.preventDefault();
+                        // event.stopPropagation();
+                        mousedown_start=false;
+                        console.log(mousedown_start);
+                    };
+                    function vanila_mouseDown(event){ // 마우스 다운 시 이밴트 실행시 적용되는 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
+                        // event.preventDefault();
+                        // event.stopPropagation();
+                        slider_bar_width=vanila_slider_bar.clientWidth;
+                        slide_icon_pageX=event.pageX;
+                        mousedown_start=true;
+                    };
+                    function vanila_mouseMove(event){ // 마우스 무브 시 이밴트 실행시 적용되는 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
+                        mouse_func();
+                    };
+                    function vanila_mouseUp(event){ // 마우스 업 시 이밴트 실행시 적용되는 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
+                        mousedown_start=false;
+                        mouse_func();
+                    };
+
+                    function vanila_touchStart(event){ // 터치 스타트 시 이밴트 실행시 적용되는 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
+                        // event.preventDefault();
+                        // event.stopPropagation();
+                        slider_bar_width=vanila_slider_bar.clientWidth;
+                        slide_icon_pageX=event.touches[0].pageX;
+                    };
+
+                    function vanila_touchMove(event){ // 터치 무브 시 이밴트 실행시 적용되는 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
+                        vanila_slider_over.classList.remove('click-transition');
+                        slider_bar_button.classList.remove('click-transition');
+                        touch_func();
+                    };
+
+                    function vanila_touchEnd(event){ // 터치 앤드 시 이밴트 실행시 적용되는 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
+                        vanila_slider_over.classList.add('click-transition');
+                        slider_bar_button.classList.add('click-transition');
+                        touch_func();
+                    };
+
+                    function vanila_touchCancle(event){ // 터치 캔슬 시 이밴트 실행시 적용되는 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
+                        vanila_slider_over.classList.add('click-transition');
+                        slider_bar_button.classList.add('click-transition');
+                        touch_func();
+                    };
+                    //--동작 이밴트 적용 부분--
+                    vanila_slider_bar.addEventListener('click',vanila_mouseClick,false);
+                    vanila_slider_bar.addEventListener('mousedown',vanila_mouseDown,false);
+                    vanila_slider_bar.addEventListener('mousemove',vanila_mouseMove,false);
+                    vanila_slider_bar.addEventListener('mouseup',vanila_mouseUp,false);
+                    vanila_slider_bar.addEventListener('mouseout',vanila_mouseOut,false);
+                    vanila_slider_bar.addEventListener('touchstart',vanila_touchStart,false);
+                    vanila_slider_bar.addEventListener('touchmove',vanila_touchMove,false);
+                    vanila_slider_bar.addEventListener('touchend',vanila_touchEnd,false);
+                    vanila_slider_bar.addEventListener('touchcancle',vanila_touchCancle,false);
+                    //----------------------
+                };
+
+                function Option_min_max(){ // 최소, 최대 수 표기하는 span 생성자.
+                    var create_slider_cal=document.createElement('span');
+                    var slider_cal_pre=wrapper_slider.prepend(create_slider_cal);
+                    var slider_cal=document.querySelector('.wrapper_slider_'+i+' span');
+                    var wrap_slider_path=wrapper_slider.append(wrapper_slider_create);
+                    wrapper_slider_create.innerHTML+='<span class="slider_min">'+slider_data_min.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")+'</span><span class="slider_max">'+slider_data_max.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")+'</span>';
+                    slider_cal.classList.add('slider_cal');
+                    slider_cal.innerHTML='단위 : '+slider_data_cal.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                };
+                default_data();
+                Option_min_max();
+                vanila_slider_move();
+            };
+            return false;
+        });
+    </script>
+</head>
+<body>
+    <div class="wrap-all">
+        <h1 class="a-center">
+            슬라이더 모듈 샘플
+        </h1>
+        <div class="wrapper_slider">
+            <div class="vanila_slider_bar" data-min="50000" data-max="5000000" data-cal="10000" data-default="50">
+            </div>
+        </div>
+        <div class="wrapper_slider">
+            <div class="vanila_slider_bar" data-min="10000" data-max="1000000" data-cal="5000" data-default="50">
+            </div>
+        </div>
+        <div class="wrapper_slider">
+            <div class="vanila_slider_bar" data-min="5000" data-max="100000" data-cal="1000" data-default="50">
+            </div>
+        </div>
+        <div class="wrapper_slider">
+            <div class="vanila_slider_bar" data-min="100000" data-max="10000000" data-cal="50000" data-default="50">
+            </div>
+        </div>
+        <div class="wrapper_slider">
+            <div class="vanila_slider_bar" data-min="0" data-max="1000000" data-cal="10000" data-default="50">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
