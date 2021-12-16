@@ -258,14 +258,14 @@
                     };
 
                     function vanila_mouseOut(event){ // 마우스 아웃 시 이밴트 실행시 적용되는 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
-                        event.preventDefault();
-                        event.stopPropagation();
+                        // event.preventDefault();
+                        // event.stopPropagation();
                         mousedown_start=false;
                         console.log(mousedown_start);
                     };
                     function vanila_mouseDown(event){ // 마우스 다운 시 이밴트 실행시 적용되는 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
-                        event.preventDefault();
-                        event.stopPropagation();
+                        // event.preventDefault();
+                        // event.stopPropagation();
                         slider_bar_width=vanila_slider_bar.clientWidth;
                         slide_icon_pageX=event.pageX;
                         mousedown_start=true;
@@ -279,8 +279,8 @@
                     };
 
                     function vanila_touchStart(event){ // 터치 스타트 시 이밴트 실행시 적용되는 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
-                        event.preventDefault();
-                        event.stopPropagation();
+                        // event.preventDefault();
+                        // event.stopPropagation();
                         slider_bar_width=vanila_slider_bar.clientWidth;
                         slide_icon_pageX=event.touches[0].pageX;
                     };
