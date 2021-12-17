@@ -2,14 +2,16 @@
 <html lang="kr" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test snap scroll</title>
     <style>
       body{margin:0;padding:0;border:0;background:rgba(10,100,255,1);}
       div{overflow:hidden;margin:0;padding:0;border:0;box-sizing:border-box;position:relative;display:block;}
       nav{overflow:hidden;margin:0;padding:0;border:0;box-sizing:border-box;position:relative;display:block;}
       ul{overflow:hidden;margin:0;padding:0;border:0;position:relative;display:block;width:100%;height:50px;}
-      li{list-style:none;float:left;margin:0;padding:0;border:0;position:relative;display:block;width:25%;height:50px;line-height:50px;text-align:center;transition:background 0.2s;cursor:pointer;}
-      li:hover{background:rgba(0,0,0,0.5);}
+      .navi li{list-style:none;float:left;margin:0;padding:0;border:0;position:relative;display:block;width:25%;height:50px;line-height:50px;text-align:center;transition:all 0.2s;cursor:pointer;}
+      .navi li:hover{background:rgba(0,0,0,0.5);}
+      .navi li.on{background:rgba(51, 37, 90, 0.5);color:white}
       .heaader{position:fixed;width:100%;height:50px;top:0;left:0;background:rgba(255,255,255,0.7);z-index:2;}
       .section{width:100%;height:100%;min-height:800px;margin-top:50px;}
       .article{width:100%;max-width:1280px;min-height:757px;height:100vh;position:relative;margin:0 auto;background:rgba(255,255,255,1);z-index:1;text-align:center;font-size:30px;}
@@ -26,23 +28,23 @@
   <body>
     <nav class="heaader">
       <ul class="navi">
-        <li>
+        <li data-index="1">
           article1
         </li>
-        <li>
+        <li data-index="2">
           article2
         </li>
-        <li>
+        <li data-index="3">
           article3
         </li>
-        <li>
+        <li data-index="4">
           article4
         </li>
       </ul>
     </nav>
 
     <div class="section" id="section">
-      <div class="article art_1" id="article_1" data-article="1">
+      <div class="article art_1" id="article_1" data-index="1">
         article1<br/>
         <br/>
         스크롤  실행 + header.높이값<br/>
@@ -62,19 +64,20 @@
             <input type="file" id="file" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0;">
         </form>
       </div>
-      <div class="article art_2" id="article_2" data-article="2">
+      <div class="article art_2" id="article_2" data-index="2">
         article2
       </div>
-      <div class="article art_3" id="article_3" data-article="3">
+      <div class="article art_3" id="article_3" data-index="3">
         article3
       </div>
-      <div class="article art_4" id="article_4" data-article="4">
+      <div class="article art_4" id="article_4" data-index="4">
         article4
       </div>
     </div>
 
-    <script type="text/javascript">
+    <script defer type="text/javascript">
       $(function(){
+        var page_url=this.location.href.split('#')[0];
         var tar;
         var sec=$('.section');
   	    var art=$('.art_');
@@ -87,37 +90,81 @@
         var wh;
         var tl;
         var sce=false;
-        var count=0;
-        var art_count=article.index();
+        var count;
+        var old_count;
+        var art_count=article.data('index');
+        var y_start;
+        var y_move;
+        var y_value;
+        var scroll_framespeed = 1000/60;
 
-        // $(document).ready(function(){
-
-        // });
-
-        $('nav').on('click','li',function(){
-          menu_idx=$(this).index();
-          art_idx=article.eq(menu_idx);
-          tar=$('.section').children('div').eq(menu_idx);
-
-          console.log(count);
-          if ($(this).eq(menu_idx)) {
-            TweenMax.to(
-              $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
-            count=menu_idx;
-          }
-
+        $(document).ready(function(){
+          count=Math.round(($(window).scrollTop()/$(window).height()))+1;
+          if(count>article.length){
+            count=article.length;
+          }else if(count<1){
+            count=1;
+          };
+          $('nav').find('li').removeClass('on');
+          $('nav').find('li').eq(count-1).addClass('on');
+          old_count=count;
+          
+          console.log('art_count in. is = ' + count);
+          console.log('url = '+page_url);
+          history.pushState(null,null,page_url+'/#mark_'+count);
+          
         });
-        count=($(window).scrollTop()/$(window).height())+1;
-        console.log('art_count in. is = ' + count)
+        
+        $(window).resize(function(){
+          // article.css({'height':'100vh'});
+          var scroll_delay_time_1;
+          
+		      if(!scroll_delay_time_1){
+            scroll_delay_time_1 = setTimeout(function(){
+              scroll_delay_time_1=null;
+              count=old_count;
+              // var count_old=count;
+              // if(count>=article.length){
+              //   count=article.length;
+              // }else if(count<1){
+              //   count=1;
+              // };
+              // old_count=count;
+              tar=sec.find('.art_'+count);
+              $('nav').find('li').removeClass('on');
+              $('nav').find('li').eq(count-1).addClass('on');
+              TweenMax.to(
+              $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
+              console.log('tar = '+tar+' / count = '+count);
+            },scroll_framespeed)
+          };
+        });
+        
+        $('nav').on('click','li',function(e){
+          menu_idx=$(this).data('index');
+          art_idx=article.eq(menu_idx-1);
+          tar=sec.find(article).eq(menu_idx-1);
+          console.log(menu_idx);
+          $('nav').find('li').removeClass('on');
+          $('nav').find('li').eq(menu_idx-1).addClass('on');
+          console.log(tar);
+          if(e.type="click"){
+            if ($(this).eq(menu_idx)) {
+              TweenMax.to(
+                $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
+              count=menu_idx;
+            }
+          };
+        });
         if(count==0){
-             count=$('.section').children('div').index(this);
-             console.log('art_count in. is = ' + count)
+            count=$('.section').children('div').index(this);
+            console.log('art_count in. is = ' + count);
           };
 
-        sec.on('mousewheel','.article',function(e){
+        sec.on('mousewheel touchstart touchmove touchend touchcancle','.article',function(event){
           event.preventDefault();
 
-          var wd=e.originalEvent.wheelDelta;
+          var wd=event.originalEvent.wheelDelta;
           var art_h=$('.article').height();
           var wt=$(window).scrollTop();
           var wot=$(window).scrollTop(wt);
@@ -125,40 +172,91 @@
           tl=$(this).data('article');
           wh=$(this).height();
 
-          if (e.type=='mousewheel') {
-
-            if (wd>1 && sce==false && count>=0) {
-              //console.log('count = '+count+' / index = '+tl+' / length = '+leng+' / article-Height = '+art_h);
+          function drag_y(){
+            y_move=event.originalEvent.changedTouches[0].pageY;
+            y_value = y_start-y_move;
+            if (y_value<150 && sce==false && count>0) {
               sce = true;
               count--;
-
+              $('nav').find('li').removeClass('on');
+              $('nav').find('li').eq(count).addClass('on');
               TweenMax.to(
                 $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
                   sce = false;
                 }, ease:Expo.easeInOut});
 
-            }else if (wd<1 && sce==false && count<=leng) {
-              //console.log('count = '+count+' / index = '+tl+' / length = '+leng+' / article-Height = '+art_h);
+            }else if (y_value>150 && sce==false && count<=leng) {
               sce = true;
               if (count<leng) {
                 count++;
               }else{
                 count=leng;
               }
-
+              $('nav').find('li').removeClass('on');
+              $('nav').find('li').eq(count).addClass('on');
+              TweenMax.to(
+                $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
+                  sce = false;
+                }, ease:Expo.easeInOut});
+            };
+          };
+          function wheel_y(){
+            console.log('wheel 0 = '+count);
+            if (wd>20 && sce==false && count>0) {
+              sce = true;
+              count--;
+              console.log('wheel - = '+count);
+              $('nav').find('li').removeClass('on');
+              $('nav').find('li').eq(count).addClass('on');
+              TweenMax.to(
+                $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
+                  sce = false;
+                }, ease:Expo.easeInOut});
+            }else if (wd<20 && sce==false && count<=leng) {
+              //console.log('count = '+count+' / index = '+tl+' / length = '+leng+' / article-Height = '+art_h);
+              sce = true;
+              if (count<leng) {
+                count=count+1;
+              }else{
+                count=leng;
+              }
+              console.log('wheel + = '+count);
+              $('nav').find('li').removeClass('on');
+              $('nav').find('li').eq(count).addClass('on');
               TweenMax.to(
                 $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
                   sce = false;
                 }, ease:Expo.easeInOut});
             }
+            console.log('count-ride = '+count);
+          };
+
+          if (event.type=='mousewheel') {
+            event.preventDefault();
+            event.stopPropagation();
+            wheel_y();
           }
-
+          if (event.type=='touchstart')
+          {
+            event.preventDefault();
+            event.stopPropagation();
+            y_start=event.originalEvent.touches[0].pageY;
+          }
+          else if (event.type=='touchmove'){
+            event.preventDefault();
+            event.stopPropagation();
+            y_move=event.originalEvent.changedTouches[0].pageY;
+            y_value = y_start-y_move;
+          }
+          else if (event.type=='touchend')
+          {
+            drag_y();
+          }
+          else if (event.type=='touchcancle')
+          {
+            drag_y();
+          };
         });
-
-        // $('.article').on('mouseover',function(){
-        //   var tl=$(this).data('article');
-        //   console.log('overindex = '+tl);
-        // });
       });
 
 
