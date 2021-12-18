@@ -78,6 +78,8 @@
     <script defer type="text/javascript">
       $(function(){
         var page_url=this.location.href.split('#')[0];
+        var page_url_mark=this.location.href.split('#')[1];
+        var page_mark_num;
         var tar;
         var sec=$('.section');
   	    var art=$('.art_');
@@ -107,35 +109,36 @@
           };
           $('nav').find('li').removeClass('on');
           $('nav').find('li').eq(count-1).addClass('on');
-          old_count=count;
+          history.pushState(null,null,page_url+'#mark_'+count);
+          // old_count=count;
           
           console.log('art_count in. is = ' + count);
           console.log('url = '+page_url);
-          history.pushState(null,null,page_url+'#mark_'+count);
           
         });
         
         $(window).resize(function(){
           // article.css({'height':'100vh'});
           var scroll_delay_time_1;
-          
 		      if(!scroll_delay_time_1){
             scroll_delay_time_1 = setTimeout(function(){
               scroll_delay_time_1=null;
-              count=old_count;
-              // var count_old=count;
-              // if(count>=article.length){
+              // count=old_count;
+              // count=Math.round(($(window).scrollTop()/$(window).height()))+1;
+              // if(count>article.length){
               //   count=article.length;
               // }else if(count<1){
               //   count=1;
               // };
-              // old_count=count;
-              tar=sec.find('.art_'+count);
+              // history.pushState(null,null,page_url+'#mark_'+count);
+              page_mark_num=page_url_mark.split('_')[1];
+              console.log('page_mark_num = '+page_mark_num);
+              tar=sec.find('.art_'+page_mark_num);
               $('nav').find('li').removeClass('on');
-              $('nav').find('li').eq(count-1).addClass('on');
+              $('nav').find('li').eq(page_mark_num-1).addClass('on');
               TweenMax.to(
               $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
-              console.log('tar = '+tar+' / count = '+count);
+              console.log('tar = '+tar+' / count = '+count+' / page_mark_num = '+page_mark_num);
             },scroll_framespeed)
           };
         });
@@ -153,6 +156,8 @@
               TweenMax.to(
                 $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
               count=menu_idx;
+              page_mark_num=page_url_mark.split('_')[1];
+              history.pushState(null,null,page_url+'#mark_'+count);
             }
           };
         });
@@ -199,6 +204,7 @@
                   sce = false;
                 }, ease:Expo.easeInOut});
             };
+            history.pushState(null,null,page_url+'#mark_'+(count+1));
           };
           function wheel_y(){
             console.log('wheel 0 = '+count);
@@ -228,6 +234,7 @@
                   sce = false;
                 }, ease:Expo.easeInOut});
             }
+            history.pushState(null,null,page_url+'#mark_'+(count+1));
             console.log('count-ride = '+count);
           };
 
