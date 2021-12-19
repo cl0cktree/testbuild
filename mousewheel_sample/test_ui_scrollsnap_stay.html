@@ -10,7 +10,7 @@
       nav{overflow:hidden;margin:0;padding:0;border:0;box-sizing:border-box;position:relative;display:block;}
       ul{overflow:hidden;margin:0;padding:0;border:0;position:relative;display:block;width:100%;height:50px;}
       .navi li{list-style:none;float:left;margin:0;padding:0;border:0;position:relative;display:block;width:25%;height:50px;line-height:50px;text-align:center;transition:all 0.2s;cursor:pointer;}
-      .navi li:hover{background:rgba(0,0,0,0.5);}
+      /* .navi li:hover{background:rgba(0,0,0,0.5);} */
       .navi li.on{background:rgba(51, 37, 90, 0.5);color:white}
       .heaader{position:fixed;width:100%;height:50px;top:0;left:0;background:rgba(255,255,255,0.7);z-index:2;}
       .section{width:100%;height:100%;min-height:800px;margin-top:50px;}
@@ -115,32 +115,6 @@
           console.log('art_count in. is = ' + count);
           console.log('url = '+page_url);
           
-        });
-        
-        $(window).resize(function(){
-          // article.css({'height':'100vh'});
-          var scroll_delay_time_1;
-		      if(!scroll_delay_time_1){
-            scroll_delay_time_1 = setTimeout(function(){
-              scroll_delay_time_1=null;
-              // count=old_count;
-              // count=Math.round(($(window).scrollTop()/$(window).height()))+1;
-              // if(count>article.length){
-              //   count=article.length;
-              // }else if(count<1){
-              //   count=1;
-              // };
-              // history.pushState(null,null,page_url+'#mark_'+count);
-              page_mark_num=page_url_mark.split('_')[1];
-              console.log('page_mark_num = '+page_mark_num);
-              tar=sec.find('.art_'+page_mark_num);
-              $('nav').find('li').removeClass('on');
-              $('nav').find('li').eq(page_mark_num-1).addClass('on');
-              TweenMax.to(
-              $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
-              console.log('tar = '+tar+' / count = '+count+' / page_mark_num = '+page_mark_num);
-            },scroll_framespeed)
-          };
         });
         
         $('nav').on('click','li',function(e){
@@ -262,6 +236,31 @@
           else if (event.type=='touchcancle')
           {
             drag_y();
+          };
+        });
+        $(window).resize(function(){
+          // article.css({'height':'100vh'});
+          var scroll_delay_time_1;
+		      if(!scroll_delay_time_1){
+            scroll_delay_time_1 = setTimeout(function(){
+              scroll_delay_time_1=null;
+              // count=old_count;
+              // count=Math.round(($(window).scrollTop()/$(window).height()))+1;
+              if(count>article.length){
+                count=article.length;
+              }else if(count<1){
+                count=1;
+              };
+              history.pushState(null,null,page_url+'#mark_'+count);
+              // page_mark_num=page_url_mark.split('_')[1];
+              console.log('page_mark_num = '+page_mark_num);
+              tar=sec.find('.art_'+count);
+              $('nav').find('li').removeClass('on');
+              $('nav').find('li').eq(count-1).addClass('on');
+              TweenMax.to(
+              $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
+              console.log('tar = '+tar+' / count = '+count+' / page_mark_num = '+page_mark_num);
+            },scroll_framespeed)
           };
         });
       });
