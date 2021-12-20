@@ -45,24 +45,7 @@
 
     <div class="section" id="section">
       <div class="article art_1" id="article_1" data-index="1">
-        article1<br/>
-        <br/>
-        스크롤  실행 + header.높이값<br/>
-        <br/>
-        $(window).scrollTop();<br/>
-        sub_locations.offset().top;<br/>
-        <br/>
-
-        if( 스크롤실행 하면서->$(window).scrollTop() >= sub_locations.offset().top )
-        {
-          sub_locations.css fixed
-        }
-        <form name="careers_view_file">
-            <label for="file"  style="font-size:14px;color:#999999;">
-                    <a href="javascript:;"style="font-size:14px;color:#999999;float:left;" onclick="document.getElementById('file').click();">첨부파일명.확장자</a>
-            </label>
-            <input type="file" id="file" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0;">
-        </form>
+        article1
       </div>
       <div class="article art_2" id="article_2" data-index="2">
         article2
@@ -127,8 +110,7 @@
           console.log(tar);
           if(e.type="click"){
             if ($(this).eq(menu_idx)) {
-              TweenMax.to(
-                $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
+              TweenMax.to($('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
               count=menu_idx;
               page_mark_num=page_url_mark.split('_')[1];
               history.pushState(null,null,page_url+'#article_'+count);
@@ -255,6 +237,7 @@
             },scroll_framespeed)
           };
         });
+        return false;
       });
 
 
