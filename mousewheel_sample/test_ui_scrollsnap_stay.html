@@ -109,7 +109,7 @@
           };
           $('nav').find('li').removeClass('on');
           $('nav').find('li').eq(count-1).addClass('on');
-          history.pushState(null,null,page_url+'#mark_'+count);
+          history.pushState(null,null,page_url+'#article_'+count);
           // old_count=count;
           
           console.log('art_count in. is = ' + count);
@@ -131,14 +131,14 @@
                 $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
               count=menu_idx;
               page_mark_num=page_url_mark.split('_')[1];
-              history.pushState(null,null,page_url+'#mark_'+count);
+              history.pushState(null,null,page_url+'#article_'+count);
             }
           };
         });
-        if(count==0){
-            count=$('.section').children('div').index(this);
-            console.log('art_count in. is = ' + count);
-          };
+        // if(count==0){
+        //     count=$('.section').children('div').index(this);
+        //     console.log('art_count in. is = ' + count);
+        //   };
 
         sec.on('mousewheel touchstart touchmove touchend touchcancle','.article',function(event){
           event.preventDefault();
@@ -147,69 +147,61 @@
           var art_h=$('.article').height();
           var wt=$(window).scrollTop();
           var wot=$(window).scrollTop(wt);
+          var count_val=(count-1);
 
           tl=$(this).data('article');
           wh=$(this).height();
 
+          function move_art(){
+            $('nav').find('li').removeClass('on');
+            $('nav').find('li').eq(count_val).addClass('on');
+            TweenMax.to($('body, html'), 0.3, {scrollTop:art_h*count_val,complete: function(){sce = false;}, ease:Expo.easeInOut});
+          };
+
           function drag_y(){
             y_move=event.originalEvent.changedTouches[0].pageY;
             y_value = y_start-y_move;
-            if (y_value<150 && sce==false && count>0) {
+            if (y_value<50 && sce==false && count_val>0) {
               sce = true;
               count--;
-              $('nav').find('li').removeClass('on');
-              $('nav').find('li').eq(count).addClass('on');
-              TweenMax.to(
-                $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
-                  sce = false;
-                }, ease:Expo.easeInOut});
-
-            }else if (y_value>150 && sce==false && count<=leng) {
+              count_val--;
+            }else if (y_value>50 && sce==false && count_val<=leng) {
               sce = true;
-              if (count<leng) {
+              if (count<=leng) {
                 count++;
+                count_val++;
               }else{
                 count=leng;
               }
-              $('nav').find('li').removeClass('on');
-              $('nav').find('li').eq(count).addClass('on');
-              TweenMax.to(
-                $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
-                  sce = false;
-                }, ease:Expo.easeInOut});
+            }else{
+              count=count+0;
+              count_val=count_val+0;
             };
-            history.pushState(null,null,page_url+'#mark_'+(count+1));
+            move_art();
+            history.pushState(null,null,page_url+'#article_'+(count));
           };
+          
           function wheel_y(){
             console.log('wheel 0 = '+count);
-            if (wd>20 && sce==false && count>0) {
+            if (wd>20 && sce==false && count_val>0) {
               sce = true;
               count--;
-              console.log('wheel - = '+count);
-              $('nav').find('li').removeClass('on');
-              $('nav').find('li').eq(count).addClass('on');
-              TweenMax.to(
-                $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
-                  sce = false;
-                }, ease:Expo.easeInOut});
-            }else if (wd<20 && sce==false && count<=leng) {
+              count_val--;
+              console.log('wheel - = '+count+' / wd = '+wd);
+            }else if (wd<20 && sce==false && count_val<=leng) {
               //console.log('count = '+count+' / index = '+tl+' / length = '+leng+' / article-Height = '+art_h);
               sce = true;
-              if (count<leng) {
-                count=count+1;
+              if (count<=leng) {
+                count++;
+                count_val++;
               }else{
-                count=leng;
+                count_val=leng;
               }
               console.log('wheel + = '+count);
-              $('nav').find('li').removeClass('on');
-              $('nav').find('li').eq(count).addClass('on');
-              TweenMax.to(
-                $('body, html'), 0.3, {scrollTop:art_h*count,complete: function(){
-                  sce = false;
-                }, ease:Expo.easeInOut});
             }
-            history.pushState(null,null,page_url+'#mark_'+(count+1));
-            console.log('count-ride = '+count);
+            move_art();
+            history.pushState(null,null,page_url+'#article_'+(count));
+            console.log('count-ride = '+count+' / wd = '+wd);
           };
 
           if (event.type=='mousewheel') {
@@ -251,12 +243,12 @@
               }else if(count<1){
                 count=1;
               };
-              history.pushState(null,null,page_url+'#mark_'+count);
+              history.pushState(null,null,page_url+'#article_'+count);
               // page_mark_num=page_url_mark.split('_')[1];
-              console.log('page_mark_num = '+page_mark_num);
-              tar=sec.find('.art_'+count);
+              console.log('page_mark_num = '+page_mark_num+' / count= '+count);
+              tar=sec.find('.art_'+(count));
               $('nav').find('li').removeClass('on');
-              $('nav').find('li').eq(count-1).addClass('on');
+              $('nav').find('li').eq((count-1)).addClass('on');
               TweenMax.to(
               $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
               console.log('tar = '+tar+' / count = '+count+' / page_mark_num = '+page_mark_num);
