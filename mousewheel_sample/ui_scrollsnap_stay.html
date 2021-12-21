@@ -57,7 +57,7 @@
     </div>
 
     <script defer type="text/javascript">
-      $(function(){
+      document.addEventListener("DOMContentLoaded", function(){
         var page_url=this.location.href.split('#')[0];
         var page_url_mark=this.location.href.split('#')[1];
         var page_mark_num;
@@ -94,22 +94,23 @@
         var sel_this;
         var scroll_framespeed = 1000/60;
 
-        $(document).ready(function(){
-          count=Math.round(($(window).scrollTop()/$(window).height()))+1;
-          if(count>$article.length){
-            count=$article.length;
-          }else if(count<1){
-            count=1;
-          };
-          tar=document.querySelector('.section .art_'+(count));
-          console.log(tar);
-          nav_li.classList.remove('on');
-          nav_li_all[count-1].classList.add('on');
-          window.scrollTo(0,tar.scrollHeight-nav_height);
-          history.pushState(null,null,page_url+'#article_'+count);
-          console.log('art_count in. is = ' + count);
-          console.log('url = '+page_url);
-        });
+        art_height=art.clientHeight;
+        count=Math.round(($(window).scrollTop()/$(window).height()))+1;
+        if(count>$article.length){
+          count=$article.length;
+        }else if(count<1){
+          count=1;
+        };
+        history.pushState(null,null,page_url+'#article_'+count);
+        event.preventDefault();
+        event.stopPropagation();
+        tar=(art_height*(count-1));
+        nav_li.classList.remove('on');
+        nav_li_all[count-1].classList.add('on');
+        window.scrollTo(0,tar);
+        console.log(tar);
+        console.log('art_count in. is = ' + count);
+        console.log('url = '+page_url);
         
         [].forEach.call(nav_li_all,function(sel_this){
           function nav_click(){
@@ -242,9 +243,6 @@
         });
         return false;
       });
-
-
-
     </script>
   </body>
 </html>
