@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="kr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>snap scroll sample</title>
+    <style>
+      body{margin:0;padding:0;border:0;background:rgba(10,100,255,1);}
+      div{overflow:hidden;margin:0;padding:0;border:0;box-sizing:border-box;position:relative;display:block;}
+      nav{overflow:hidden;margin:0;padding:0;border:0;box-sizing:border-box;position:relative;display:block;}
+      ul{overflow:hidden;margin:0;padding:0;border:0;position:relative;display:block;width:100%;height:50px;}
+      .navi li{list-style:none;float:left;margin:0;padding:0;border:0;position:relative;display:block;width:25%;height:50px;line-height:50px;text-align:center;transition:all 0.2s;cursor:pointer;}
+      /* .navi li:hover{background:rgba(0,0,0,0.5);} */
+      .navi li.on{background:rgba(51, 37, 90, 0.5);color:white}
+      .heaader{position:fixed;width:100%;height:50px;top:0;left:0;background:rgba(255,255,255,0.7);z-index:2;}
+      .section{width:100%;height:100%;min-height:800px;margin-top:50px;}
+      .article{width:100%;max-width:1280px;min-height:757px;height:100vh;position:relative;margin:0 auto;background:rgba(255,255,255,1);z-index:1;text-align:center;font-size:30px;}
+      .art_1{background:red;}
+      .art_2{background:orange;}
+      .art_3{background:yellow;}
+      .art_4{background:#00a000;}
+
+    </style>
+    <script src="jquery-1.10.2.js"></script>
+  </head>
+  <body>
+    <nav class="heaader">
+      <ul class="navi">
+        <li data-index="1">
+          article1
+        </li>
+        <li data-index="2">
+          article2
+        </li>
+        <li data-index="3">
+          article3
+        </li>
+        <li data-index="4">
+          article4
+        </li>
+      </ul>
+    </nav>
+
+    <div class="section" id="section">
+      <div class="article art_1" id="article_1" data-index="1">
+        article1
+      </div>
+      <div class="article art_2" id="article_2" data-index="2">
+        article2
+      </div>
+      <div class="article art_3" id="article_3" data-index="3">
+        article3
+      </div>
+      <div class="article art_4" id="article_4" data-index="4">
+        article4
+      </div>
+    </div>
+
+    <script defer type="text/javascript">
+      $(function(){
+        var page_url=this.location.href.split('#')[0];
+        var page_url_mark=this.location.href.split('#')[1];
+        var page_mark_num;
+        var tar;
+        var sec=document.querySelector('.section');
+        var art=document.querySelector('.article');
+        var art_all=document.querySelectorAll('.article');
+        var art_data_index=art.getAttribute('data-index');
+        var art_height;
+        var nav=document.querySelector('nav');
+        var nav_li=document.querySelector('nav li');
+        var nav_li_all=document.querySelectorAll('nav li');
+        var nav_height=document.querySelector('nav').clientHeight;
+        var menu_idx;
+        var art_idx;
+        var $sec=$('.section');
+  	    var $art=$('.art_');
+        var $article=$('.article');
+        var $header_h=$('nav').height();
+        var $menu_idx;
+        var $art_idx;
+        var i=1;
+        var leng=$article.length-1;
+        var wh;
+        var tl;
+        var sce=false;
+        var count;
+        var old_count;
+        var count_val;
+        var $art_count=$article.data('index');
+        var y_start;
+        var y_move;
+        var y_value;
+        var sel_this;
+        var scroll_framespeed = 1000/60;
+
+        $(document).ready(function(){
+          count=Math.round(($(window).scrollTop()/$(window).height()))+1;
+          if(count>$article.length){
+            count=$article.length;
+          }else if(count<1){
+            count=1;
+          };
+          tar=document.querySelector('.section .art_'+(count));
+          console.log(tar);
+          nav_li.classList.remove('on');
+          nav_li_all[count-1].classList.add('on');
+          window.scrollTo(0,tar.scrollHeight-nav_height);
+          history.pushState(null,null,page_url+'#article_'+count);
+          console.log('art_count in. is = ' + count);
+          console.log('url = '+page_url);
+        });
+        
+        [].forEach.call(nav_li_all,function(sel_this){
+          function nav_click(){
+            menu_idx=this.getAttribute('data-index');
+            art_idx=art[Number(menu_idx)-1];
+            art_height=art.clientHeight;
+            count_val=(menu_idx-1);
+            console.log(this);
+            document.querySelector('nav .on').classList.remove('on');
+            this.classList.add('on');
+            console.log('.art_'+menu_idx);
+            window.scrollTo(0,art_height*count_val);
+            count=menu_idx;
+            page_mark_num=page_url_mark.split('_')[1];
+            history.pushState(null,null,page_url+'#article_'+count);
+          };
+          sel_this.addEventListener("click",nav_click,false);
+        });
+        
+        function wheel_y(event){
+          event.preventDefault();
+          event.stopPropagation();
+
+          var wd=event.wheelDelta;
+          var art_h=$('.article').height();
+          art_height=art.clientHeight;
+          var wt=$(window).scrollTop();
+          var wot=$(window).scrollTop(wt);
+          count_val=(count-1);
+
+          console.log('wheel 0 = '+count);
+          if (wd>20 && sce==false && count_val>0) {
+            sce = true;
+            count--;
+            count_val--;
+            console.log('wheel - = '+count+' / wd = '+wd);
+          }else if (wd<20 && sce==false && count_val<=leng) {
+            sce = true;
+            if (count<=leng) {
+              count++;
+              count_val++;
+            }else{
+              count_val=leng;
+            }
+            console.log('wheel + = '+count);
+          }
+          move_art();
+          history.pushState(null,null,page_url+'#article_'+(count));
+          console.log('count-ride = '+count+' / wd = '+wd);
+        };
+
+        function drag_y(event){
+          var art_h=$('.article').height();
+          art_height=art.clientHeight;
+          count_val=(count-1);
+          y_value = y_start-y_move;
+          if (y_value<50 && sce==false && count_val>0) {
+            sce = true;
+            count--;
+            count_val--;
+          }else if (y_value>50 && sce==false && count_val<=leng) {
+            sce = true;
+            if (count<=leng) {
+              count++;
+              count_val++;
+            }else{
+              count=leng+1;
+            }
+          }else{
+            count=count+0;
+            count_val=count_val+0;
+          };
+          move_art();
+          history.pushState(null,null,page_url+'#article_'+(count));
+        };
+
+        function drag_start(event){
+          event.preventDefault();
+          event.stopPropagation();
+          y_start=event.touches[0].pageY;
+        };
+        function drag_move(event){
+          y_move=event.changedTouches[0].pageY;
+          // drag_y();
+        };
+        function drag_end(event){
+          y_move=event.changedTouches[0].pageY;
+          drag_y();
+        };
+        function drag_cancel(event){
+          y_move=event.changedTouches[0].pageY;
+          drag_y();
+        };
+
+        function move_art(){
+          count_val=(count-1);
+          document.querySelector('nav .on').classList.remove('on');
+          nav_li_all[count-1].classList.add('on');
+          window.scrollTo(0,art_height*count_val);
+          console.log('art_height*count_val = '+art_height*count_val)
+          sce = false;
+        };
+
+        sec.addEventListener("mousewheel",wheel_y,false);
+        sec.addEventListener("touchstart",drag_start,false);
+        sec.addEventListener("touchmove",drag_move,false);
+        sec.addEventListener("touchend",drag_end,false);
+        sec.addEventListener("touchcancle",drag_cancel,false);
+
+        $(window).resize(function(){
+          var scroll_delay_time_1;
+		      if(!scroll_delay_time_1){
+            scroll_delay_time_1 = setTimeout(function(){
+              scroll_delay_time_1=null;
+              if(count>$article.length){
+                count=$article.length;
+              }else if(count<1){
+                count=1;
+              };
+              history.pushState(null,null,page_url+'#article_'+count);
+              art_height=art.clientHeight;
+              console.log('page_mark_num = '+page_mark_num+' / count= '+count);
+              tar=art_height*(count-1);
+              nav_li.classList.remove('on');
+              nav_li_all[count-1].classList.add('on');
+              window.scrollTo(0,tar);
+              console.log('nav_height = '+nav_height+' / count = '+count+' / page_mark_num = '+page_mark_num);
+            },scroll_framespeed)
+          };
+        });
+        return false;
+      });
+
+
+
+    </script>
+  </body>
+</html>

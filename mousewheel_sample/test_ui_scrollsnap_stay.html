@@ -23,7 +23,7 @@
     </style>
     <!-- <script src="jquery-3.2.1.min.js"></script> -->
     <script src="jquery-1.10.2.js"></script>
-    <script src="TweenMax.min.js"></script>
+    <!-- <script src="TweenMax.min.js"></script> -->
   </head>
   <body>
     <nav class="heaader">
@@ -64,20 +64,25 @@
         var page_url_mark=this.location.href.split('#')[1];
         var page_mark_num;
         var tar;
-        var sec=$('.section');
-  	    var art=$('.art_');
-        var article=$('.article');
-        var header_h=$('nav').height();
-        var menu_idx;
-        var art_idx;
+        var sec=document.querySelector('.section');
+        var art=document.querySelector('.article');
+        var nav=document.querySelector('nav');
+        var nav_li=document.querySelector('nav li');
+        var nav_height=document.querySelector('nav').clientHeight;
+        var $sec=$('.section');
+  	    var $art=$('.art_');
+        var $article=$('.article');
+        var $header_h=$('nav').height();
+        var $menu_idx;
+        var $art_idx;
         var i=1;
-        var leng=article.length-1;
+        var leng=$article.length-1;
         var wh;
         var tl;
         var sce=false;
         var count;
         var old_count;
-        var art_count=article.data('index');
+        var $art_count=$article.data('index');
         var y_start;
         var y_move;
         var y_value;
@@ -85,15 +90,16 @@
 
         $(document).ready(function(){
           count=Math.round(($(window).scrollTop()/$(window).height()))+1;
-          if(count>article.length){
-            count=article.length;
+          if(count>$article.length){
+            count=$article.length;
           }else if(count<1){
             count=1;
           };
-          tar=sec.find('.art_'+(count));
+          tar=$sec.find('.art_'+(count));
           $('nav').find('li').removeClass('on');
           $('nav').find('li').eq(count-1).addClass('on');
-          TweenMax.to($('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
+          // TweenMax.to($('body, html'), 0.3, {scrollTop:tar.offset().top-$header_h, ease:Expo.easeInOut});
+          $('body, html').stop().animate({ scrollTop: tar.offset().top-$header_h},300);
           history.pushState(null,null,page_url+'#article_'+count);
           // old_count=count;
           
@@ -103,17 +109,18 @@
         });
         
         $('nav').on('click','li',function(e){
-          menu_idx=$(this).data('index');
-          art_idx=article.eq(menu_idx-1);
-          tar=sec.find(article).eq(menu_idx-1);
-          console.log(menu_idx);
+          $menu_idx=$(this).data('index');
+          $art_idx=$article.eq($menu_idx-1);
+          tar=$sec.find($article).eq($menu_idx-1);
+          console.log($menu_idx);
           $('nav').find('li').removeClass('on');
-          $('nav').find('li').eq(menu_idx-1).addClass('on');
+          $('nav').find('li').eq($menu_idx-1).addClass('on');
           console.log(tar);
           if(e.type="click"){
-            if ($(this).eq(menu_idx)) {
-              TweenMax.to($('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
-              count=menu_idx;
+            if ($(this).eq($menu_idx)) {
+              // TweenMax.to($('body, html'), 0.3, {scrollTop:tar.offset().top-$header_h, ease:Expo.easeInOut});
+              $('body, html').stop().animate({ scrollTop: tar.offset().top-$header_h},300);
+              count=$menu_idx;
               page_mark_num=page_url_mark.split('_')[1];
               history.pushState(null,null,page_url+'#article_'+count);
             }
@@ -124,7 +131,7 @@
         //     console.log('art_count in. is = ' + count);
         //   };
 
-        sec.on('mousewheel touchstart touchmove touchend touchcancle','.article',function(event){
+        $sec.on('mousewheel touchstart touchmove touchend touchcancle','.article',function(event){
           event.preventDefault();
 
           var wd=event.originalEvent.wheelDelta;
@@ -139,7 +146,9 @@
           function move_art(){
             $('nav').find('li').removeClass('on');
             $('nav').find('li').eq(count_val).addClass('on');
-            TweenMax.to($('body, html'), 0.3, {scrollTop:art_h*count_val,complete: function(){sce = false;}, ease:Expo.easeInOut});
+            $('body, html').stop().animate({scrollTop: art_h*count_val},300);
+            sce = false;
+            // TweenMax.to($('body, html'), 0.3, {scrollTop:art_h*count_val,complete: function(){sce = false;}, ease:Expo.easeInOut});
           };
 
           function drag_y(){
@@ -222,19 +231,19 @@
               scroll_delay_time_1=null;
               // count=old_count;
               // count=Math.round(($(window).scrollTop()/$(window).height()))+1;
-              if(count>article.length){
-                count=article.length;
+              if(count>$article.length){
+                count=$article.length;
               }else if(count<1){
                 count=1;
               };
               history.pushState(null,null,page_url+'#article_'+count);
               // page_mark_num=page_url_mark.split('_')[1];
               console.log('page_mark_num = '+page_mark_num+' / count= '+count);
-              tar=sec.find('.art_'+(count));
+              tar=$sec.find('.art_'+(count));
               $('nav').find('li').removeClass('on');
               $('nav').find('li').eq((count-1)).addClass('on');
-              TweenMax.to(
-              $('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
+              // TweenMax.to($('body, html'), 0.3, {scrollTop:tar.offset().top-$header_h, ease:Expo.easeInOut});
+              $('body, html').stop().animate({ scrollTop: tar.offset().top-$header_h},300);
               console.log('tar = '+tar+' / count = '+count+' / page_mark_num = '+page_mark_num);
             },scroll_framespeed)
           };
