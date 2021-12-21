@@ -90,8 +90,10 @@
           }else if(count<1){
             count=1;
           };
+          tar=sec.find('.art_'+(count));
           $('nav').find('li').removeClass('on');
           $('nav').find('li').eq(count-1).addClass('on');
+          TweenMax.to($('body, html'), 0.3, {scrollTop:tar.offset().top-header_h, ease:Expo.easeInOut});
           history.pushState(null,null,page_url+'#article_'+count);
           // old_count=count;
           
