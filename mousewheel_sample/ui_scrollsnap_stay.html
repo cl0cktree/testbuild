@@ -21,7 +21,6 @@
       .art_4{background:#00a000;}
 
     </style>
-    <script src="jquery-1.10.2.js"></script>
   </head>
   <body>
     <nav class="heaader">
@@ -73,21 +72,14 @@
         var nav_height=document.querySelector('nav').clientHeight;
         var menu_idx;
         var art_idx;
-        var $sec=$('.section');
-  	    var $art=$('.art_');
-        var $article=$('.article');
-        var $header_h=$('nav').height();
-        var $menu_idx;
-        var $art_idx;
         var i=1;
-        var leng=$article.length-1;
+        var leng=art_all.length-1;
         var wh;
         var tl;
         var sce=false;
         var count;
         var old_count;
         var count_val;
-        var $art_count=$article.data('index');
         var y_start;
         var y_move;
         var y_value;
@@ -95,9 +87,9 @@
         var scroll_framespeed = 1000/60;
 
         art_height=art.clientHeight;
-        count=Math.round(($(window).scrollTop()/$(window).height()))+1;
-        if(count>$article.length){
-          count=$article.length;
+        count=Math.round((art.offsetHeight/sec.offsetHeight))+1;
+        if(count>art_all.length){
+          count=art_all.length;
         }else if(count<1){
           count=1;
         };
@@ -133,12 +125,8 @@
         function wheel_y(event){
           event.preventDefault();
           event.stopPropagation();
-
           var wd=event.wheelDelta;
-          var art_h=$('.article').height();
           art_height=art.clientHeight;
-          var wt=$(window).scrollTop();
-          var wot=$(window).scrollTop(wt);
           count_val=(count-1);
 
           console.log('wheel 0 = '+count);
@@ -163,7 +151,6 @@
         };
 
         function drag_y(event){
-          var art_h=$('.article').height();
           art_height=art.clientHeight;
           count_val=(count-1);
           y_value = y_start-y_move;
@@ -220,13 +207,13 @@
         sec.addEventListener("touchend",drag_end,false);
         sec.addEventListener("touchcancle",drag_cancel,false);
 
-        $(window).resize(function(){
+        window.addEventListener('resize', function(){
           var scroll_delay_time_1;
 		      if(!scroll_delay_time_1){
             scroll_delay_time_1 = setTimeout(function(){
               scroll_delay_time_1=null;
-              if(count>$article.length){
-                count=$article.length;
+              if(count>art_all.length){
+                count=art_all.length;
               }else if(count<1){
                 count=1;
               };
