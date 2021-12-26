@@ -87,25 +87,30 @@
         var scroll_framespeed = 1000/60;
 
         art_height=art.clientHeight;
-        count=Math.round((art.offsetHeight/sec.offsetHeight))+1;
+        count=Math.round(((document.documentElement.scrollTop/window.innerHeight)))+1;
         if(count>art_all.length){
           count=art_all.length;
         }else if(count<1){
           count=1;
         };
         // history.pushState(null,null,page_url+'#article_'+count);
-        event.preventDefault();
-        event.stopPropagation();
-        tar=(art_height*(count-1));
-        nav_li.classList.remove('on');
-        nav_li_all[count-1].classList.add('on');
-        window.scrollTo(0,tar);
-        console.log(tar);
-        console.log('art_count in. is = ' + count);
-        console.log('url = '+page_url);
-        
+        function start_page(){
+          event.preventDefault();
+          event.stopPropagation();
+          console.log('start_count = '+document.documentElement.scrollTop/window.innerHeight);
+          tar=(art_height*(count-1));
+          nav_li.classList.remove('on');
+          nav_li_all[count-1].classList.add('on');
+          window.scrollTo(0,tar);
+          console.log(tar);
+          console.log('art_count in. is = ' + count);
+          console.log('url = '+page_url);
+        };
+        start_page();
         [].forEach.call(nav_li_all,function(sel_this){
           function nav_click(){
+            event.preventDefault();
+            event.stopPropagation();
             menu_idx=this.getAttribute('data-index');
             art_idx=art[Number(menu_idx)-1];
             art_height=art.clientHeight;
@@ -116,7 +121,7 @@
             console.log('.art_'+menu_idx);
             window.scrollTo(0,art_height*count_val);
             count=menu_idx;
-            page_mark_num=page_url_mark.split('_')[1];
+            // page_mark_num=page_url_mark.split('_')[1];
             history.pushState(null,null,page_url+'#article_'+count);
           };
           sel_this.addEventListener("click",nav_click,false);
@@ -219,12 +224,12 @@
               };
               history.pushState(null,null,page_url+'#article_'+count);
               art_height=art.clientHeight;
-              console.log('page_mark_num = '+page_mark_num+' / count= '+count);
+              console.log(' / count= '+count);
               tar=art_height*(count-1);
               nav_li.classList.remove('on');
               nav_li_all[count-1].classList.add('on');
               window.scrollTo(0,tar);
-              console.log('nav_height = '+nav_height+' / count = '+count+' / page_mark_num = '+page_mark_num);
+              console.log('nav_height = '+nav_height+' / count = '+count);
             },scroll_framespeed)
           };
         });
