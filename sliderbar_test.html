@@ -86,14 +86,6 @@
                 //-----작동 script 시작----------------------------------
                 vanila_slider_status.innerHTML=pattern_sep; // 최초 페이지 진입 시 현재 슬라이더 위치에 기반하여 금액 표시.
 
-                window.addEventListener('resize', function(){ // 화면 넓이 변경 시 거기에 맞추어 초기값 다시 세팅 실행.
-                    clearTimeout(resize_timer);
-                    resize_timer = setTimeout(function(){
-                        console.log('100 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / 200 = '+Number(vanila_slider_status.clientWidth)+' / vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
-                        default_data();
-                    }, resize_time);
-                });
-                
                 function default_data(){ // 최초 페이지 진입시 슬라이더 동작 함수.
                     slider_status_width=Number(vanila_slider_status.clientWidth/2);
                     slider_bar_width=vanila_slider_bar.clientWidth;
@@ -324,6 +316,47 @@
                     slider_cal.classList.add('slider_cal');
                     slider_cal.innerHTML='단위 : '+slider_data_cal.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                 };
+
+                function resize_data(){ // resize 시 동작 함수.
+                    slider_status_width=Number(vanila_slider_status.clientWidth/2);
+                    slider_bar_width=vanila_slider_bar.clientWidth;
+                    slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
+                    slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
+                    
+                    slider_data_per=((max_sum_minus)*slider_pointer_per)+Number(slider_data_min);
+                    var sep_first_per=slider_data_cal.toString().substring(0,1);
+                    var sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
+
+                    slider_bar_button.style.left=slider_data_default+'px';
+                    vanila_slider_status.style.left=slider_data_default_status+'px';
+                    vanila_slider_over.style.width=slider_data_default+slider_bar_button.clientWidth+'px';
+
+                    console.log('sep_first_per = '+sep_first_per);
+                    if(sep_bar_per!==0){
+                        console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
+                        slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
+                    };
+                    if(slider_data_per>slider_data_max){
+                        slider_data_per=slider_data_max;
+                    };
+                    if(slider_data_per<0){
+                        slider_data_per=slider_data_min;
+                    };
+                    pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                    vanila_slider_status.innerHTML=pattern_sep;
+                    console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
+                    return false;
+                };
+
+                window.addEventListener('resize', function(){ // 화면 넓이 변경 시 거기에 맞추어 초기값 다시 세팅 실행.
+                    clearTimeout(resize_timer);
+                    resize_timer = setTimeout(function(){
+                        console.log('100 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / 200 = '+Number(vanila_slider_status.clientWidth)+' / vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
+                        // default_data(); // 초기화 동작을 원할시 주석 제거 후 resize_data() 주석 처리.
+                        resize_data(); // 기존 값을 유지하는 동작을 원할시 주석 제거 후 default_data() 주석 처리.
+                    }, resize_time);
+                });
+
                 default_data();
                 Option_min_max();
                 vanila_slider_move();
