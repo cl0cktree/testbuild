@@ -317,21 +317,44 @@
                     slider_cal.innerHTML='단위 : '+slider_data_cal.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                 };
 
+                default_data();
+                Option_min_max();
+                vanila_slider_move();
+
                 function resize_data(){ // resize 시 동작 함수.
+                    slider_bar_width=vanila_slider_bar.clientWidth;
                     slider_status_width=Number(vanila_slider_status.clientWidth/2);
                     slider_bar_width=vanila_slider_bar.clientWidth;
                     slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                     slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
+                    slider_icon_point=Number(slider_bar_width)/Number(slider_bar_button.style.left.split('px')[0])*100;
                     
-                    slider_data_per=((max_sum_minus)*slider_pointer_per)+Number(slider_data_min);
+                    slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
                     var sep_first_per=slider_data_cal.toString().substring(0,1);
                     var sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
 
-                    slider_bar_button.style.left=slider_data_default+'px';
-                    vanila_slider_status.style.left=slider_data_default_status+'px';
-                    vanila_slider_over.style.width=slider_data_default+slider_bar_button.clientWidth+'px';
+                    if(slider_icon_point>slider_bar_width-(slider_bar_halfButton/4)){
+                        slider_bar_per=slider_data_max;
+                        slider_icon_point=slider_bar_width-(slider_bar_halfButton/4);
+                        reset_move();
+                    }else if(slider_icon_point-(slider_bar_halfButton/4)<0){
+                        slider_bar_per=slider_data_min;
+                        slider_icon_point=0+(slider_bar_halfButton/4);
+                        reset_move();
+                        // console.log(slider_icon_point);
+                    }else{
+                        // sep_bar_auto();
+                        reset_move();
+                        // console.log(slider_icon_point);
+                    };
+                    
+                    function reset_move(){
+                        slider_bar_button.style.left=slider_icon_point-slider_bar_halfButton+'px';
+                        vanila_slider_status.style.left=slider_icon_point-slider_status_width+'px';
+                        vanila_slider_over.style.width=slider_icon_point+slider_bar_halfButton+'px';
+                    };
 
-                    console.log('sep_first_per = '+sep_first_per);
+                    console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point);
                     if(sep_bar_per!==0){
                         console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
                         slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
@@ -356,10 +379,6 @@
                         resize_data(); // 기존 값을 유지하는 동작을 원할시 주석 제거 후 default_data() 주석 처리.
                     }, resize_time);
                 });
-
-                default_data();
-                Option_min_max();
-                vanila_slider_move();
             };
             return false;
         });
