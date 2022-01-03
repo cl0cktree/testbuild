@@ -51,6 +51,9 @@
                 var slider_data_max=vanila_slider_bar.getAttribute('data-max');
                 var slider_data_min=vanila_slider_bar.getAttribute('data-min');
                 var bar_per_min;
+                var old_width;
+                var new_width;
+                var old_point;
                 var frame_start;
                 var slide_icon_pageX;
                 var mousedown_start;
@@ -80,7 +83,7 @@
                 var plus_num=0;
                 var animation_frame_1 = 0;
                 var animation_frame_2 = 600;
-                var resize_time = 300;
+                var resize_time = 100;
                 var resize_timer = null;
                 //------------------------------------------------------/
                 //-----작동 script 시작----------------------------------
@@ -91,6 +94,7 @@
                     slider_bar_width=vanila_slider_bar.clientWidth;
                     slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                     slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
+                    slider_icon_point=slider_data_default;
                     
                     slider_data_per=((max_sum_minus)*slider_pointer_per)+Number(slider_data_min);
                     var sep_first_per=slider_data_cal.toString().substring(0,1);
@@ -114,6 +118,7 @@
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     vanila_slider_status.innerHTML=pattern_sep;
                     console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
+                    old_point=slider_icon_point;
                     return false;
                 };
 
@@ -327,8 +332,12 @@
                     slider_bar_width=vanila_slider_bar.clientWidth;
                     slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                     slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
-                    slider_icon_point=Number(slider_bar_width)/Number(slider_bar_button.style.left.split('px')[0])*100;
-                    
+                    // slider_icon_point=(slider_bar_width/Math.floor(max_sum_minus/slider_data_cal))*Number(slider_bar_button.style.left.split('px')[0]);
+                    slider_icon_zpoint=(Number(slider_bar_button.style.left.split('px')[0])/(slider_bar_width))*100;
+                    slider_bar_per=(Math.floor((slider_data_cal)*Math.floor((max_sum_minus/slider_data_cal)*(slider_icon_point/slider_bar_width))))+Number(slider_data_min);
+
+                    console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / slider_bar_per = '+slider_bar_per);
+
                     slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
                     var sep_first_per=slider_data_cal.toString().substring(0,1);
                     var sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
@@ -347,14 +356,14 @@
                         reset_move();
                         // console.log(slider_icon_point);
                     };
-                    
+
                     function reset_move(){
                         slider_bar_button.style.left=slider_icon_point-slider_bar_halfButton+'px';
                         vanila_slider_status.style.left=slider_icon_point-slider_status_width+'px';
                         vanila_slider_over.style.width=slider_icon_point+slider_bar_halfButton+'px';
                     };
 
-                    console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point);
+                    console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / slider_bar_per = '+slider_bar_per);
                     if(sep_bar_per!==0){
                         console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
                         slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
@@ -371,12 +380,65 @@
                     return false;
                 };
 
+                function test_re(){
+                    // slider_bar_width=vanila_slider_bar.clientWidth;
+                    new_width=vanila_slider_bar.clientWidth;
+                    slider_status_width=Number(vanila_slider_status.clientWidth/2);
+                    slider_bar_width=vanila_slider_bar.clientWidth;
+                    slider_data_default=Math.floor(old_point*(new_width/old_width));
+                    slider_data_default_status=slider_icon_point;
+                    // slider_icon_point=slider_data_default;
+                    slider_data_per=((max_sum_minus)*slider_pointer_per)+Number(slider_data_min);
+                    var sep_first_per=slider_data_cal.toString().substring(0,1);
+                    var sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
+                    
+                    console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / slider_data_default = '+slider_data_default);
+                    
+                    if(slider_data_default>slider_bar_width-(slider_bar_halfButton/4)){
+                        slider_bar_per=slider_data_max;
+                        slider_data_default=slider_bar_width-(slider_bar_halfButton/4);
+                        reset_move();
+                    }else if(slider_data_default-(slider_bar_halfButton/4)<0){
+                        slider_bar_per=slider_data_min;
+                        slider_data_default=0+(slider_bar_halfButton/4);
+                        reset_move();
+                        // console.log(slider_data_default);
+                    }else{
+                        // sep_bar_auto();
+                        reset_move();
+                        // console.log(slider_data_default);
+                    };
+
+                    function reset_move(){
+                        slider_bar_button.style.left=slider_data_default+'px';
+                        vanila_slider_status.style.left=slider_data_default+'px';
+                        vanila_slider_over.style.width=slider_data_default+slider_status_width+'px';
+                    };
+
+                    console.log('sep_first_per = '+sep_first_per);
+                    if(sep_bar_per!==0){
+                        // console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
+                        slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
+                    };
+                    if(slider_data_per>slider_data_max){
+                        slider_data_per=slider_data_max;
+                    };
+                    if(slider_data_per<0){
+                        slider_data_per=slider_data_min;
+                    };
+                    console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / slider_data_default = '+slider_data_default);
+                    pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                    vanila_slider_status.innerHTML=pattern_sep;
+                };
+
                 window.addEventListener('resize', function(){ // 화면 넓이 변경 시 거기에 맞추어 초기값 다시 세팅 실행.
+                    old_width=slider_bar_width;
                     clearTimeout(resize_timer);
                     resize_timer = setTimeout(function(){
-                        console.log('100 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / 200 = '+Number(vanila_slider_status.clientWidth)+' / vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
+                        // console.log('100 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / 200 = '+Number(vanila_slider_status.clientWidth)+' / vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
                         // default_data(); // 초기화 동작을 원할시 주석 제거 후 resize_data() 주석 처리.
-                        resize_data(); // 기존 값을 유지하는 동작을 원할시 주석 제거 후 default_data() 주석 처리.
+                        // resize_data(); // 기존 값을 유지하는 동작을 원할시 주석 제거 후 default_data() 주석 처리.
+                        test_re();
                     }, resize_time);
                 });
             };
