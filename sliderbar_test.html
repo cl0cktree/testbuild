@@ -51,9 +51,12 @@
                 var slider_data_max=vanila_slider_bar.getAttribute('data-max');
                 var slider_data_min=vanila_slider_bar.getAttribute('data-min');
                 var bar_per_min;
+                var default_width;
                 var old_width;
                 var new_width;
                 var old_point;
+                var new_point;
+                var reisze_check;
                 var frame_start;
                 var slide_icon_pageX;
                 var mousedown_start;
@@ -65,6 +68,7 @@
                 var slider_data_unit;
                 var slider_data_ratio;
                 var slider_icon_point;
+                var slider_data_reset;
                 var slider_bar_per=100*slider_icon_point/slider_bar_width;
                 var slider_status_width=Number(vanila_slider_status.clientWidth/2);
                 var slider_bar_halfButton=Number(slider_bar_button.offsetWidth/2);
@@ -77,13 +81,14 @@
                 var sep_max_min=slider_data_max.slice(minus_data_cal,slider_data_max.length);
                 var round_data_min=(sep_max_min)/slider_data_cal;
                 var pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                var clone_sep;
                 // var slider_bar_button_before=document.documentElement.style.setProperty('content',slider_data_ratio);
                 var max_sum_plus=Number(slider_data_max)+Number(slider_data_min);
                 var max_sum_minus=Number(slider_data_max)-Number(slider_data_min);
                 var plus_num=0;
                 var animation_frame_1 = 0;
                 var animation_frame_2 = 600;
-                var resize_time = 100;
+                var resize_time = 50;
                 var resize_timer = null;
                 //------------------------------------------------------/
                 //-----작동 script 시작----------------------------------
@@ -118,7 +123,8 @@
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     vanila_slider_status.innerHTML=pattern_sep;
                     console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
-                    old_point=slider_icon_point;
+                    old_point=Number(slider_bar_button.style.left.split('px')[0]);
+                    default_width=slider_bar_width;
                     return false;
                 };
 
@@ -171,6 +177,7 @@
                         vanila_slider_over.style.width=slider_icon_point+slider_bar_halfButton+'px';
                         pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                         vanila_slider_status.innerHTML=pattern_sep;
+                        clone_sep=pattern_sep;
                     };
 
                     function vanila_mouseClick(event){ // 마우스 클릭 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
@@ -200,6 +207,8 @@
                             slider_move();
                             console.log(vanila_slider_over.clientWidth);
                         };
+                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
+                        console.log('///--slider_data_default='+slider_data_default);
                         return false;
                     };
                     function mouse_func(){ // 마우스 오버, 다운, 업 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
@@ -230,6 +239,8 @@
                                 console.log(vanila_slider_over.clientWidth);
                             }
                         };
+                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
+                        console.log('///--slider_data_default='+slider_data_default);
                         return false;
                     };
                     function touch_func(){ // 터치 스타트, 무브, 앤드, 캔슬 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
@@ -251,6 +262,8 @@
                             slider_move();
                             console.log(slider_icon_point);
                         };
+                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
+                        console.log('///--slider_data_default='+slider_data_default);
                         return false;
                     };
 
@@ -326,13 +339,13 @@
                 Option_min_max();
                 vanila_slider_move();
 
-                function resize_data(){ // resize 시 동작 함수.
+                function resize_data_zero(){ // resize 시 동작 함수.
                     slider_bar_width=vanila_slider_bar.clientWidth;
                     slider_status_width=Number(vanila_slider_status.clientWidth/2);
                     slider_bar_width=vanila_slider_bar.clientWidth;
                     slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                     slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
-                    // slider_icon_point=(slider_bar_width/Math.floor(max_sum_minus/slider_data_cal))*Number(slider_bar_button.style.left.split('px')[0]);
+                    slider_icon_point=(slider_bar_width/Math.floor(max_sum_minus/slider_data_cal))*Number(slider_bar_button.style.left.split('px')[0]);
                     slider_icon_zpoint=(Number(slider_bar_button.style.left.split('px')[0])/(slider_bar_width))*100;
                     slider_bar_per=(Math.floor((slider_data_cal)*Math.floor((max_sum_minus/slider_data_cal)*(slider_icon_point/slider_bar_width))))+Number(slider_data_min);
 
@@ -380,39 +393,71 @@
                     return false;
                 };
 
-                function test_re(){
-                    // slider_bar_width=vanila_slider_bar.clientWidth;
+                function resize_data(){
                     new_width=vanila_slider_bar.clientWidth;
-                    slider_status_width=Number(vanila_slider_status.clientWidth/2);
+                    slider_status_width=Number(vanila_slider_status.clientWidth/4);
                     slider_bar_width=vanila_slider_bar.clientWidth;
-                    slider_data_default=Math.floor(old_point*(new_width/old_width));
                     slider_data_default_status=slider_icon_point;
-                    // slider_icon_point=slider_data_default;
+                    slider_data_reset;
+                    reisze_check=false;
                     slider_data_per=((max_sum_minus)*slider_pointer_per)+Number(slider_data_min);
                     var sep_first_per=slider_data_cal.toString().substring(0,1);
                     var sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
+                    if((new_point==undefined)||(new_point==null)){
+                        if((default_width!==old_width)){
+                        slider_data_reset=old_point;
+                        console.log('m---old_width/old_point---');
+                        }else{
+                            if(new_width>old_width){
+                                slider_data_reset=Math.floor(old_point*(new_width/old_width))+(slider_bar_halfButton/2);
+                                console.log('m---new_width_1/old_point---'+slider_data_reset);
+                            }else{
+                                slider_data_reset=Math.floor(old_point*(new_width/old_width));
+                                console.log('m---new_width_2/old_point---'+slider_data_reset);
+                            }
+                        };
+                        reisze_check=true;
+                    }else{
+                        // slider_data_reset=0;
+                        if((default_width!==old_width)){
+                            if((new_point==undefined)||(new_point==null)){//알맞은 조건 찾을 것 - resize 후 거기서 이밴트 발생 시 다시 resize 시 값 고정되며 멈춤.
+                                slider_data_reset=Math.floor(new_point*(new_width/old_width))+(slider_bar_halfButton/2);
+                            }else{
+                                slider_data_reset=new_point;
+                            };
+                            console.log('m---old_width/new_point---');
+                        }else{
+                            if(new_width>old_width){
+                                slider_data_reset=Math.floor(new_point*(new_width/old_width))+(slider_bar_halfButton/2);
+                                console.log('m---new_width_1/new_point---'+slider_data_reset);
+                            }else{
+                                slider_data_reset=Math.floor(new_point*(new_width/old_width));
+                                console.log('m---new_width_2/new_point---'+slider_data_reset);
+                            };
+                        };
+                        reisze_check=true;
+                    }
+                    console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / new_point = '+new_point);
                     
-                    console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / slider_data_default = '+slider_data_default);
-                    
-                    if(slider_data_default>slider_bar_width-(slider_bar_halfButton/4)){
+                    if(slider_data_reset>slider_bar_width-(slider_bar_halfButton/4)){
                         slider_bar_per=slider_data_max;
-                        slider_data_default=slider_bar_width-(slider_bar_halfButton/4);
+                        slider_data_reset=slider_bar_width-(slider_bar_halfButton/4);
                         reset_move();
-                    }else if(slider_data_default-(slider_bar_halfButton/4)<0){
+                    }else if(slider_data_reset-(slider_bar_halfButton/4)<0){
                         slider_bar_per=slider_data_min;
-                        slider_data_default=0+(slider_bar_halfButton/4);
+                        slider_data_reset=0+(slider_bar_halfButton/4);
                         reset_move();
-                        // console.log(slider_data_default);
+                        // console.log(slider_data_reset);
                     }else{
                         // sep_bar_auto();
                         reset_move();
-                        // console.log(slider_data_default);
+                        // console.log(slider_data_reset);
                     };
 
                     function reset_move(){
-                        slider_bar_button.style.left=slider_data_default+'px';
-                        vanila_slider_status.style.left=slider_data_default+'px';
-                        vanila_slider_over.style.width=slider_data_default+slider_status_width+'px';
+                        slider_bar_button.style.left=slider_data_reset+'px';
+                        vanila_slider_status.style.left=slider_data_reset-slider_status_width+'px';
+                        vanila_slider_over.style.width=slider_data_reset+slider_bar_halfButton+'px';
                     };
 
                     console.log('sep_first_per = '+sep_first_per);
@@ -426,19 +471,23 @@
                     if(slider_data_per<0){
                         slider_data_per=slider_data_min;
                     };
-                    console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / slider_data_default = '+slider_data_default);
+                    console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / clone_sep = '+clone_sep);
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-                    vanila_slider_status.innerHTML=pattern_sep;
+                    if((clone_sep==undefined)||(clone_sep==null)){
+                        vanila_slider_status.innerHTML=pattern_sep;
+                    }else{
+                        vanila_slider_status.innerHTML=clone_sep;
+                    }
                 };
 
                 window.addEventListener('resize', function(){ // 화면 넓이 변경 시 거기에 맞추어 초기값 다시 세팅 실행.
                     old_width=slider_bar_width;
                     clearTimeout(resize_timer);
+                    console.log('<--new_point='+new_point);
                     resize_timer = setTimeout(function(){
                         // console.log('100 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / 200 = '+Number(vanila_slider_status.clientWidth)+' / vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
                         // default_data(); // 초기화 동작을 원할시 주석 제거 후 resize_data() 주석 처리.
-                        // resize_data(); // 기존 값을 유지하는 동작을 원할시 주석 제거 후 default_data() 주석 처리.
-                        test_re();
+                        resize_data(); // 기존 값을 유지하는 동작을 원할시 주석 제거 후 default_data() 주석 처리.
                     }, resize_time);
                 });
             };
