@@ -210,8 +210,12 @@
                             slider_move();
                             console.log(vanila_slider_over.clientWidth);
                         };
-                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
-                        console.log('///--slider_data_default='+slider_data_default);
+                        if ((slider_data_reset==undefined)||(slider_data_reset==null)){
+                            new_point=Number(slider_bar_button.style.left.split('px')[0]);
+                        }else{
+                            new_point=slider_data_reset;
+                        };
+                        console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
                         return false;
                     };
                     function mouse_func(){ // 마우스 오버, 다운, 업 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
@@ -242,8 +246,12 @@
                                 console.log(vanila_slider_over.clientWidth);
                             }
                         };
-                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
-                        console.log('///--slider_data_default='+slider_data_default);
+                        if ((slider_data_reset==undefined)||(slider_data_reset==null)){
+                            new_point=Number(slider_bar_button.style.left.split('px')[0]);
+                        }else{
+                            new_point=slider_data_reset;
+                        };
+                        console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
                         return false;
                     };
                     function touch_func(){ // 터치 스타트, 무브, 앤드, 캔슬 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
@@ -265,8 +273,12 @@
                             slider_move();
                             console.log(slider_icon_point);
                         };
-                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
-                        console.log('///--slider_data_default='+slider_data_default);
+                        if ((slider_data_reset==undefined)||(slider_data_reset==null)){
+                            new_point=Number(slider_bar_button.style.left.split('px')[0]);
+                        }else{
+                            new_point=slider_data_reset;
+                        };
+                        console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
                         return false;
                     };
 
