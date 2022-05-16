@@ -427,20 +427,24 @@
                         if((default_width!==old_width)){
                             if(new_point!==old_point){//알맞은 조건 찾을 것 - resize 후 거기서 이밴트 발생 시 다시 resize 시 값 고정되며 멈춤.
                                 slider_data_reset=new_point;
-                                
-                                console.log('m---old_width/new_point--->'+slider_data_reset);
+                                // new_point=old_point;
+                                console.log('--- old_point1 = '+old_point+' / new_point = '+new_point);
+                                // console.log('m---old_width/new_point--->'+slider_data_reset);
                             }else{
                                 // slider_data_reset=old_point;
                                 slider_data_reset=Math.floor(old_point*(new_width/old_width));
-                                console.log('m---old_width/old_point--->'+slider_data_reset);
+                                console.log('--- old_point2 = '+old_point+' / new_point = '+new_point);
+                                // console.log('m---old_width/old_point--->'+slider_data_reset);
                             };
                         }else{
                             if(new_width>old_width){
                                 slider_data_reset=Math.floor(new_point*(new_width/old_width))+(slider_bar_halfButton/2);
-                                console.log('m---new_width_1/new_point---'+(new_width/old_width));
+                                console.log('--- old_point3 = '+old_point+' / new_point = '+new_point);
+                                // console.log('m---new_width_1/new_point---'+(new_width/old_width));
                             }else{
                                 slider_data_reset=Math.floor(new_point*(new_width/old_width));
-                                console.log('m---new_width_2/new_point---'+(new_width/old_width));
+                                console.log('--- old_point4 = '+old_point+' / new_point = '+new_point);
+                                // console.log('m---new_width_2/new_point---'+(new_width/old_width));
                             };
                         };
                         reisze_check=true;
