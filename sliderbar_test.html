@@ -39,7 +39,7 @@
             function Slider_maker(){ //복제 가능한 함수를 만들기 위한 생성자 함수.
                 //-----초기세팅 및 선택자 지정----------------------------
                 var wrapper_slider=document.querySelector('.wrapper_slider_'+i);
-                console.log('i = '+wrapper_slider);
+                // console.log('i = '+wrapper_slider);
                 var vanila_slider_bar=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_bar');
                 var wrapper_slider_create=document.createElement('div');
                 vanila_slider_bar.innerHTML+='<span class="vanila_slider_over"></span><button class="vanila_slider_button"></button><span class="vanila_slider_status"></span>';
@@ -89,7 +89,7 @@
                 var plus_num=0;
                 var animation_frame_1 = 0;
                 var animation_frame_2 = 600;
-                var resize_time = 120/1000;
+                var resize_time = 1000/120;
                 var resize_timer = null;
                 //------------------------------------------------------/
                 //-----작동 script 시작----------------------------------
@@ -110,9 +110,9 @@
                     vanila_slider_status.style.left=slider_data_default_status+'px';
                     vanila_slider_over.style.width=slider_data_default+slider_bar_button.clientWidth+'px';
 
-                    console.log('sep_first_per = '+sep_first_per);
+                    // console.log('sep_first_per = '+sep_first_per);
                     if(sep_bar_per!==0){
-                        console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
+                        // console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
                         slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
                     };
                     if(slider_data_per>slider_data_max){
@@ -123,7 +123,7 @@
                     };
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     vanila_slider_status.innerHTML=pattern_sep;
-                    console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
+                    // console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
                     old_point=Number(slider_bar_button.style.left.split('px')[0]);
                     default_width=slider_bar_width;
                     return false;
@@ -137,7 +137,7 @@
                                 animation_frame_1=plus_num*100;
                                 slider_bar_button.style.left=plus_num+'px';
                                 vanila_slider_over.style.width=plus_num+'px';
-                                console.log(plus_num);
+                                // console.log(plus_num);
                             },animation_frame_1);
                         }
                     };
@@ -163,13 +163,13 @@
                     function sep_bar_auto(){ // 기본 동작 범위 안에서 동작에 사용되는 마지막 수식 공통 함수(최소 단위 밑의 자릿수가 있을 경우 반올림)->slider_math에 기능이 합쳐져 사용 안함.
                         var sep_bar_per = slider_bar_per.toString().slice(minus_data_cal,slider_data_max.length);
                         if(sep_bar_per!==0){
-                            console.log('.wrapper_slider_'+i+' move-line-0 : '+sep_bar_per);
+                            // console.log('.wrapper_slider_'+i+' move-line-0 : '+sep_bar_per);
                             if(((sep_bar_per)>=(slider_data_cal/2))){
                                 slider_bar_per=(slider_bar_per-sep_bar_per)+Number(slider_data_cal);
-                                console.log('.wrapper_slider_'+i+' move-line-1-1 : '+sep_bar_per);
+                                // console.log('.wrapper_slider_'+i+' move-line-1-1 : '+sep_bar_per);
                             }else{
                                 slider_bar_per=(slider_bar_per-sep_bar_per)+0;
-                                console.log('.wrapper_slider_'+i+' move-line-1-2 : '+sep_bar_per);
+                                // console.log('.wrapper_slider_'+i+' move-line-1-2 : '+sep_bar_per);
                             }
                         };
                         return false;
@@ -191,7 +191,7 @@
                         mousedown_start=false;
                         vanila_slider_over.classList.add('click-transition');
                         slider_bar_button.classList.add('click-transition');
-                        console.log('slider_bar_per = '+(slider_data_cal*slider_icon_point)/slider_bar_width);
+                        // console.log('slider_bar_per = '+(slider_data_cal*slider_icon_point)/slider_bar_width);
                         if(slider_icon_point>slider_bar_width-(slider_bar_halfButton/4)){
                             if(slider_bar_per>slider_data_max){
                                 slider_bar_per=slider_data_max;
@@ -204,15 +204,15 @@
                             };
                             slider_icon_point=0+(slider_bar_halfButton/4);
                             slider_move();
-                            console.log(vanila_slider_over.clientWidth);
+                            // console.log(vanila_slider_over.clientWidth);
                         }else{
                             // sep_bar_auto();
                             slider_move();
-                            console.log(vanila_slider_over.clientWidth);
+                            // console.log(vanila_slider_over.clientWidth);
                         };
                         
                         new_point=Number(slider_bar_button.style.left.split('px')[0]);
-                        console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
+                        // console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
                         return false;
                     };
                     function mouse_func(){ // 마우스 오버, 다운, 업 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
@@ -222,8 +222,8 @@
                         slider_math();
                         vanila_slider_over.classList.remove('click-transition');
                         slider_bar_button.classList.remove('click-transition');
-                        console.log('slider_bar_per = '+Math.floor((slider_data_cal*slider_icon_point)/(slider_bar_width)));
-                        console.log('slider_icon_point = '+slider_icon_point+' / slider_icon_move = '+slider_icon_move+' / slider_bar_width = '+slider_bar_width+' / per = '+((slider_data_max/slider_data_cal)*(slider_icon_point/slider_bar_width)));
+                        // console.log('slider_bar_per = '+Math.floor((slider_data_cal*slider_icon_point)/(slider_bar_width)));
+                        // console.log('slider_icon_point = '+slider_icon_point+' / slider_icon_move = '+slider_icon_move+' / slider_bar_width = '+slider_bar_width+' / per = '+((slider_data_max/slider_data_cal)*(slider_icon_point/slider_bar_width)));
                         if((slider_icon_point>slider_bar_width-(slider_bar_halfButton/4))&&(mousedown_start==true)){
                             if(slider_bar_per>slider_data_max){
                                 slider_bar_per=slider_data_max;
@@ -240,12 +240,12 @@
                             if(mousedown_start==true){
                                 // sep_bar_auto();
                                 slider_move();
-                                console.log(vanila_slider_over.clientWidth);
+                                // console.log(vanila_slider_over.clientWidth);
                             }
                         };
                         
                         new_point=Number(slider_bar_button.style.left.split('px')[0]);
-                        console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
+                        // console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
                         return false;
                     };
                     function touch_func(){ // 터치 스타트, 무브, 앤드, 캔슬 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
@@ -261,15 +261,15 @@
                             slider_bar_per=slider_data_min;
                             slider_icon_point=0+(slider_bar_halfButton/4);
                             slider_move();
-                            console.log(slider_icon_point);
+                            // console.log(slider_icon_point);
                         }else{
                             // sep_bar_auto();
                             slider_move();
-                            console.log(slider_icon_point);
+                            // console.log(slider_icon_point);
                         };
                         
                         new_point=Number(slider_bar_button.style.left.split('px')[0]);
-                        console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
+                        // console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
                         return false;
                     };
 
@@ -354,7 +354,7 @@
                     slider_icon_point=slider_icon_move;
                     slider_bar_per=(Math.floor((slider_data_cal)*Math.floor((max_sum_minus/slider_data_cal)*(slider_icon_point/new_width))))+Number(slider_data_min);
 
-                    console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / slider_bar_per = '+slider_bar_per);
+                    // console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / slider_bar_per = '+slider_bar_per);
 
                     slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
                     var sep_first_per=slider_data_cal.toString().substring(0,1);
@@ -381,9 +381,9 @@
                         vanila_slider_over.style.width=slider_icon_point+slider_bar_halfButton+'px';
                     };
 
-                    console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / slider_bar_per = '+slider_bar_per);
+                    // console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / slider_bar_per = '+slider_bar_per);
                     if(sep_bar_per!==0){
-                        console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
+                        // console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
                         slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
                     };
                     if(slider_data_per>slider_data_max){
@@ -394,7 +394,7 @@
                     };
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     vanila_slider_status.innerHTML=pattern_sep;
-                    console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
+                    // console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
                     return false;
                 };
 
@@ -425,8 +425,20 @@
                         reisze_check=true;
                     }else{
                         if((default_width!==old_width)){
-                            if(new_point!==old_point){//알맞은 조건 찾을 것 - resize 후 거기서 이밴트 발생 시 다시 resize 시 값 고정되며 멈춤.
-                                slider_data_reset=new_point;
+                            if(new_point!==old_point){//알맞은 조건 찾을 것 - resize 후 거기서 이밴트 발생 시 다시 resize 시 값 고정되며 멈춤.                                
+                                if(slider_data_reset==new_point){
+                                    slider_data_reset=new_point;
+                                }else{
+                                    if(new_width>old_width){ //---바의 길이에서 기준을 삼는 것이 아니라, 금액의 비율값으로 기준 삼아 수정필요---.
+                                        slider_data_reset=Math.floor(new_point*(new_width/old_width))+(slider_bar_halfButton/2);
+                                        console.log('--- old_point3 = '+old_point+' / new_point = '+new_point);
+                                        // console.log('m---new_width_1/new_point---'+(new_width/old_width));
+                                    }else{
+                                        slider_data_reset=Math.floor(new_point*(new_width/old_width));
+                                        console.log('--- old_point4 = '+old_point+' / new_point = '+new_point);
+                                        // console.log('m---new_width_2/new_point---'+(new_width/old_width));
+                                    };
+                                }
                                 // new_point=old_point;
                                 console.log('--- old_point1 = '+old_point+' / new_point = '+new_point);
                                 // console.log('m---old_width/new_point--->'+slider_data_reset);
@@ -437,6 +449,7 @@
                                 // console.log('m---old_width/old_point--->'+slider_data_reset);
                             };
                         }else{
+                            
                             if(new_width>old_width){
                                 slider_data_reset=Math.floor(new_point*(new_width/old_width))+(slider_bar_halfButton/2);
                                 console.log('--- old_point3 = '+old_point+' / new_point = '+new_point);
@@ -494,7 +507,7 @@
                 window.addEventListener('resize', function(){ // 화면 넓이 변경 시 거기에 맞추어 초기값 다시 세팅 실행.
                     old_width=slider_bar_width;
                     clearTimeout(resize_timer);
-                    console.log('<--new_point='+new_point);
+                    // console.log('<--new_point='+new_point);
                     resize_timer = setTimeout(function(){
                         // console.log('100 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / 200 = '+Number(vanila_slider_status.clientWidth)+' / vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
                         // default_data(); // 초기화 동작을 원할시 주석 제거 후 resize_data() 주석 처리.
@@ -517,6 +530,7 @@
             <div class="vanila_slider_bar" data-min="50000" data-max="5000000" data-cal="10000" data-default="50">
             </div>
         </div>
+<!--         
         <div class="wrapper_slider">
             <div class="vanila_slider_bar" data-min="10000" data-max="1000000" data-cal="5000" data-default="50">
             </div>
@@ -533,6 +547,7 @@
             <div class="vanila_slider_bar" data-min="0" data-max="1000000" data-cal="10000" data-default="50">
             </div>
         </div>
+         -->
     </div>
 </body>
 </html>
