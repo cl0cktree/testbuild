@@ -89,7 +89,7 @@
                 var plus_num=0;
                 var animation_frame_1 = 0;
                 var animation_frame_2 = 600;
-                var resize_time = 1000/120;
+                var resize_time = 600;
                 var resize_timer = null;
                 //------------------------------------------------------/
                 //-----작동 script 시작----------------------------------
@@ -429,22 +429,41 @@
                                 if(slider_data_reset==new_point){
                                     slider_data_reset=new_point;
                                 }else{
-                                    if(new_width>old_width){ //---바의 길이에서 기준을 삼는 것이 아니라, 금액의 비율값으로 기준 삼아 수정필요---.
-                                        slider_data_reset=Math.floor(new_point*(new_width/old_width))+(slider_bar_halfButton/2);
-                                        console.log('--- old_point3 = '+old_point+' / new_point = '+new_point);
+                                    if(new_width>old_width){ //---바의 길이에서 기준을 삼는 것이 아니라, 금액의 비율값으로 기준 삼아 수정필요. 혹은 start,old,new로 세분화 할 것.---.
+                                        if(new_point!==old_point){
+                                            slider_data_reset=new_point;
+                                            console.log('--- old_pointC = '+old_point+' / new_point = '+new_point);
+                                        }else{
+                                            slider_data_reset=Math.floor(new_point*(new_width/old_width))+(slider_bar_halfButton/2);
+                                            console.log('--- old_pointD = '+old_point+' / new_point = '+new_point);
+                                        }
+                                        // console.log('--- old_point1 = '+old_point+' / new_point = '+new_point);
                                         // console.log('m---new_width_1/new_point---'+(new_width/old_width));
                                     }else{
-                                        slider_data_reset=Math.floor(new_point*(new_width/old_width));
-                                        console.log('--- old_point4 = '+old_point+' / new_point = '+new_point);
+                                        if(new_point!==old_point){
+                                            slider_data_reset=new_point;
+                                            console.log('--- old_pointA = '+old_point+' / new_point = '+new_point);
+                                        }else{
+                                            slider_data_reset=new_point;
+                                            // slider_data_reset=Math.floor(new_point*(new_width/old_width))+(slider_bar_halfButton/2);
+                                            console.log('--- old_pointB = '+old_point+' / new_point = '+new_point);
+                                        }                                        
+                                        console.log('--- old_point1 = '+old_point+' / new_point = '+new_point);
                                         // console.log('m---new_width_2/new_point---'+(new_width/old_width));
                                     };
                                 }
                                 // new_point=old_point;
-                                console.log('--- old_point1 = '+old_point+' / new_point = '+new_point);
+                                // console.log('--- old_point3 = '+old_point+' / new_point = '+new_point);
                                 // console.log('m---old_width/new_point--->'+slider_data_reset);
                             }else{
                                 // slider_data_reset=old_point;
-                                slider_data_reset=Math.floor(old_point*(new_width/old_width));
+                                if(new_point!==old_point){
+                                    slider_data_reset=new_point;
+                                    console.log('--- old_pointD = '+old_point+' / new_point = '+new_point);
+                                }else{
+                                    slider_data_reset=Math.floor(old_point*(new_width/old_width));
+                                    console.log('--- old_pointF = '+old_point+' / new_point = '+new_point);
+                                }                                
                                 console.log('--- old_point2 = '+old_point+' / new_point = '+new_point);
                                 // console.log('m---old_width/old_point--->'+slider_data_reset);
                             };
@@ -483,7 +502,7 @@
                         vanila_slider_over.style.width=slider_data_reset+slider_bar_halfButton+'px';
                     };
 
-                    console.log('sep_first_per = '+sep_first_per);
+                    // console.log('sep_first_per = '+sep_first_per);
                     if(sep_bar_per!==0){
                         // console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
                         slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
@@ -504,6 +523,54 @@
                     // console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / new_point = '+new_point);
                 };
 
+                function resize_data_num(){
+                    slider_bar_width=vanila_slider_bar.clientWidth;
+                    slider_status_width=Number(vanila_slider_status.clientWidth/2);
+                    slider_bar_start=(window.innerWidth-slider_bar_width)/2;
+                    slider_icon_point=slide_icon_pageX-slider_bar_start;
+                    slider_icon_move=Number(slider_bar_button.style.left.split('px')[0])+slider_bar_halfButton;
+
+                    slider_bar_per=(Math.floor((slider_data_cal)*Math.floor((max_sum_minus/slider_data_cal)*(slider_icon_point/slider_bar_width))))+Number(slider_data_min);
+                    slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
+                    slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
+                    slider_pointer_per=(slider_data_default+slider_bar_halfButton)/slider_bar_width;
+                    // slider_data_per=(slider_data_max*slider_pointer_per); //기본 단위 맞춤 없이 사용할 경우 주석 해제 후 밑에 있는 같은 이름 변수를 주석처리 할 것.
+                    slider_data_ratio=Math.floor((slider_data_max)*(slider_bar_per/Number(slider_data_cal)));
+
+                    var sep_bar_per = slider_bar_per.toString().slice(minus_data_cal,slider_data_max.length);
+                    slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal))); //기본 단위 밑으로 계산되어 나오는 숫자를 기본 단위에 맞춤.
+                    return false;
+
+                    // slider_math();
+                    reisze_check=true;
+                    reset_move();
+                    function reset_move(){
+                        slider_bar_button.style.left=slider_data_reset+'px';
+                        vanila_slider_status.style.left=slider_data_reset-slider_status_width+'px';
+                        vanila_slider_over.style.width=slider_data_reset+slider_bar_halfButton+'px';
+                    };
+
+                    // console.log('sep_first_per = '+sep_first_per);
+                    if(sep_bar_per!==0){
+                        // console.log('.wrapper_slider_'+i+' line-0 : '+sep_bar_per+' / minus_data_cal = '+minus_data_cal+' / slider_data_cal = '+slider_data_cal);
+                        slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal)));
+                    };
+                    if(slider_data_per>slider_data_max){
+                        slider_data_per=slider_data_max;
+                    };
+                    if(slider_data_per<0){
+                        slider_data_per=slider_data_min;
+                    };
+                    // console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / clone_sep = '+clone_sep);
+                    pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                    if((clone_sep==undefined)||(clone_sep==null)){
+                        vanila_slider_status.innerHTML=pattern_sep;
+                    }else{
+                        vanila_slider_status.innerHTML=clone_sep;
+                    };
+                    // console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / new_point = '+new_point);
+                }
+
                 window.addEventListener('resize', function(){ // 화면 넓이 변경 시 거기에 맞추어 초기값 다시 세팅 실행.
                     old_width=slider_bar_width;
                     clearTimeout(resize_timer);
@@ -511,7 +578,7 @@
                     resize_timer = setTimeout(function(){
                         // console.log('100 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / 200 = '+Number(vanila_slider_status.clientWidth)+' / vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
                         // default_data(); // 초기화 동작을 원할시 주석 제거 후 resize_data() 주석 처리.
-                        resize_data(); // 기존 값을 유지하는 동작을 원할시 주석 제거 후 default_data() 주석 처리.
+                        resize_data_num(); // 기존 값을 유지하는 동작을 원할시 주석 제거 후 default_data() 주석 처리.
                         // resize_data_zero();
                     }, resize_time);
                     return false;
