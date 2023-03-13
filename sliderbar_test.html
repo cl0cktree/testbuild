@@ -38,27 +38,27 @@
             //----------------------------------------------------------
             function Slider_maker(){ //복제 가능한 함수를 만들기 위한 생성자 함수.
                 //-----초기세팅 및 선택자 지정----------------------------
-                var wrapper_slider=document.querySelector('.wrapper_slider_'+i);
+                var wrapper_slider=document.querySelector('.wrapper_slider_'+i); // -- 각 .wrapper_slider 선택 및 넘버링.
                 // console.log('i = '+wrapper_slider);
-                var vanila_slider_bar=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_bar');
-                var wrapper_slider_create=document.createElement('div');
+                var vanila_slider_bar=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_bar'); // -- 슬라이더바 아이디 지정 및 선택.
+                var wrapper_slider_create=document.createElement('div'); // -- .slider_min, .slider_max 를 감싸는 div.
                 vanila_slider_bar.innerHTML+='<span class="vanila_slider_over"></span><button class="vanila_slider_button"></button><span class="vanila_slider_status"></span>';
-                var slider_bar_width=vanila_slider_bar.clientWidth;
+                var slider_bar_width=vanila_slider_bar.clientWidth; // -- 각 .vanila_slider_bar 넓이값.
                 var vanila_slider_over=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_over');
                 var slider_bar_button=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_button');
                 var vanila_slider_status=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_status');
-                var slider_data_cal=vanila_slider_bar.getAttribute('data-cal');
-                var slider_data_max=vanila_slider_bar.getAttribute('data-max');
-                var slider_data_min=vanila_slider_bar.getAttribute('data-min');
+                var slider_data_cal=vanila_slider_bar.getAttribute('data-cal'); // -- 값의 최소 기준 단위.
+                var slider_data_max=vanila_slider_bar.getAttribute('data-max'); // -- 슬라이더의 최대값.
+                var slider_data_min=vanila_slider_bar.getAttribute('data-min'); // -- 슬라리더의 최소값.
                 var bar_per_min;
-                var default_width;
-                var old_width;
-                var new_width;
-                var old_point;
-                var new_point;
-                var reisze_check;
+                var default_width; // -- 최초의 슬라이더 넓이값.
+                var old_width; // -- 이전의 슬라이더 넓이값.
+                var new_width; // -- 현재의 슬라이더 넓이값.
+                var old_point; // -- 이전의 슬라이더 버튼의 위치값.
+                var new_point; // -- 현재의 슬라이더 버튼의 위치값.
+                var reisze_check; // -- resize 여부 체크용 변수.
                 var frame_start;
-                var slide_icon_pageX;
+                var slide_icon_pageX; // -- .vanila_slider_button 위치값.
                 var mousedown_start;
                 var slider_bar_start;
                 var slide_touch_move;
