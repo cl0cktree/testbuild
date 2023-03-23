@@ -58,6 +58,9 @@
                 var new_point; // -- 현재의 슬라이더 버튼의 위치값.
                 var reisze_check; // -- resize 여부 체크용 변수.
                 var trans_val; // -- resize와 각 이밴트에서 발생하는 new_point 값을 공유하여 넣을 변수.
+                var trans_val_button; // -- slider_bar_button의 현재 값을 갖는 변수.
+                var trans_val_status; // -- vanila_slider_status의 현재 값을 갖는 변수.
+                var trans_val_over; // -- vanila_slider_over의 현재 값을 갖는 변수.
                 var frame_start;
                 var slide_icon_pageX; // -- .vanila_slider_button 위치값.
                 var mousedown_start; // -- 마우스 이밴트 시작 시점 변수.
@@ -176,9 +179,14 @@
                         return false;
                     };
                     function slider_move(){ // 실질적 동작에 사용되는 공통 함수.
-                        slider_bar_button.style.left=slider_icon_point-slider_bar_halfButton+'px';
-                        vanila_slider_status.style.left=slider_icon_point-slider_status_width+'px';
-                        vanila_slider_over.style.width=slider_icon_point+slider_bar_halfButton+'px';
+                        trans_val_button=slider_icon_point-slider_bar_halfButton+'px';
+                        trans_val_status=slider_icon_point-slider_status_width+'px';
+                        trans_val_over=slider_icon_point+slider_bar_halfButton+'px';
+
+                        slider_bar_button.style.left=trans_val_button;
+                        vanila_slider_status.style.left=trans_val_status;
+                        vanila_slider_over.style.width=trans_val_over;
+
                         pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                         vanila_slider_status.innerHTML=pattern_sep;
                         clone_sep=pattern_sep;
@@ -377,9 +385,13 @@
                     };
 
                     function reset_move(){
-                        slider_bar_button.style.left=slider_icon_point-slider_bar_halfButton+'px';
-                        vanila_slider_status.style.left=slider_icon_point-slider_status_width+'px';
-                        vanila_slider_over.style.width=slider_icon_point+slider_bar_halfButton+'px';
+                        trans_val_button=slider_icon_point-slider_bar_halfButton+'px';
+                        trans_val_status=slider_icon_point-slider_status_width+'px';
+                        trans_val_over=slider_icon_point+slider_bar_halfButton+'px';
+
+                        slider_bar_button.style.left=trans_val_button;
+                        vanila_slider_status.style.left=trans_val_status;
+                        vanila_slider_over.style.width=trans_val_over;
                     };
 
                     // console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / slider_bar_per = '+slider_bar_per);
@@ -498,9 +510,13 @@
                     };
 
                     function reset_move(){
-                        slider_bar_button.style.left=slider_data_reset+'px';
-                        vanila_slider_status.style.left=slider_data_reset-slider_status_width+'px';
-                        vanila_slider_over.style.width=slider_data_reset+slider_bar_halfButton+'px';
+                        trans_val_button=slider_data_reset+'px';
+                        trans_val_status=slider_data_reset-slider_status_width+'px';
+                        trans_val_over=slider_data_reset+slider_bar_halfButton+'px';
+
+                        slider_bar_button.style.left=trans_val_button;
+                        vanila_slider_status.style.left=trans_val_status;
+                        vanila_slider_over.style.width=trans_val_over;
                     };
 
                     // console.log('sep_first_per = '+sep_first_per);
