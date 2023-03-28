@@ -61,6 +61,8 @@
                 var trans_val_button; // -- slider_bar_button의 현재 값을 갖는 변수.
                 var trans_val_status; // -- vanila_slider_status의 현재 값을 갖는 변수.
                 var trans_val_over; // -- vanila_slider_over의 현재 값을 갖는 변수.
+                var trans_per; // -- 이전 넓이와 현재 넓이의 비율을 담는 변수.
+                var per_value; // -- resize 시와 이벤트 입력 시의 버튼 위치의 비율 공유를 위한 변수.
                 var frame_start;
                 var slide_icon_pageX; // -- .vanila_slider_button 위치값.
                 var mousedown_start; // -- 마우스 이밴트 시작 시점 변수.
@@ -74,7 +76,7 @@
                 var slider_icon_point;
                 var slider_icon_move;
                 var slider_data_reset;
-                var slider_bar_per=100*slider_icon_point/slider_bar_width;
+                var slider_bar_per=100*slider_icon_point/slider_bar_width; // -- 현재 버튼의 위치에 비례하여 출력 되는 증감되는 비용 계산에 사용 됨. resize 시 비율 계산과 값이 교체 되므로 중요함.
                 var slider_status_width=Number(vanila_slider_status.clientWidth/2);
                 var slider_bar_halfButton=Number(slider_bar_button.offsetWidth/2);
                 var slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
@@ -179,9 +181,10 @@
                         return false;
                     };
                     function slider_move(){ // 실질적 동작에 사용되는 공통 함수.
-                        trans_val_button=slider_icon_point-slider_bar_halfButton+'px';
-                        trans_val_status=slider_icon_point-slider_status_width+'px';
-                        trans_val_over=slider_icon_point+slider_bar_halfButton+'px';
+                        trans_per=slider_icon_point;
+                        trans_val_button=trans_per-slider_bar_halfButton+'px';
+                        trans_val_status=trans_per-slider_status_width+'px';
+                        trans_val_over=trans_per+slider_bar_halfButton+'px';
 
                         slider_bar_button.style.left=trans_val_button;
                         vanila_slider_status.style.left=trans_val_status;
@@ -190,6 +193,8 @@
                         pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                         vanila_slider_status.innerHTML=pattern_sep;
                         clone_sep=pattern_sep;
+
+                        console.log('evn - trans_val_button = '+trans_val_button+' / trans_val_status = '+trans_val_status+' / trans_val_over = '+trans_val_over);
                     };
 
                     function vanila_mouseClick(event){ // 마우스 클릭 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
@@ -419,6 +424,7 @@
                     slider_data_reset;
                     reisze_check=false;
                     slider_data_per=((max_sum_minus)*slider_pointer_per)+Number(slider_data_min);
+                    trans_per=Math.floor(new_point*(new_width/old_width));
                     var sep_first_per=slider_data_cal.toString().substring(0,1);
                     var sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
                     slider_data_reset='';
@@ -447,7 +453,7 @@
                                             slider_data_reset=new_point;
                                             console.log('--- old_pointC = '+old_point+' / new_point = '+new_point);
                                         }else{
-                                            slider_data_reset=Math.floor(new_point*(new_width/old_width))+(slider_bar_halfButton/2);
+                                            slider_data_reset=trans_per+(slider_bar_halfButton/2);
                                             console.log('--- old_pointD = '+old_point+' / new_point = '+new_point);
                                         }
                                         // console.log('--- old_point1 = '+old_point+' / new_point = '+new_point);
@@ -460,7 +466,7 @@
                                             slider_data_reset=new_point;
                                             // slider_data_reset=Math.floor(new_point*(new_width/old_width))+(slider_bar_halfButton/2);
                                             console.log('--- old_pointB = '+old_point+' / new_point = '+new_point);
-                                        }                                        
+                                        }
                                         console.log('--- old_point1 = '+old_point+' / new_point = '+new_point);
                                         // console.log('m---new_width_2/new_point---'+(new_width/old_width));
                                     };
@@ -476,18 +482,18 @@
                                 }else{
                                     slider_data_reset=Math.floor(old_point*(new_width/old_width));
                                     console.log('--- old_pointF = '+old_point+' / new_point = '+new_point);
-                                }                                
+                                }
                                 console.log('--- old_point2 = '+old_point+' / new_point = '+new_point);
                                 // console.log('m---old_width/old_point--->'+slider_data_reset);
                             };
                         }else{
                             
                             if(new_width>old_width){
-                                slider_data_reset=Math.floor(new_point*(new_width/old_width))+(slider_bar_halfButton/2);
+                                slider_data_reset=trans_per+(slider_bar_halfButton/2);
                                 console.log('--- old_point3 = '+old_point+' / new_point = '+new_point);
                                 // console.log('m---new_width_1/new_point---'+(new_width/old_width));
                             }else{
-                                slider_data_reset=Math.floor(new_point*(new_width/old_width));
+                                slider_data_reset=trans_per;
                                 console.log('--- old_point4 = '+old_point+' / new_point = '+new_point);
                                 // console.log('m---new_width_2/new_point---'+(new_width/old_width));
                             };
@@ -510,6 +516,7 @@
                     };
 
                     function reset_move(){
+                        
                         trans_val_button=slider_data_reset+'px';
                         trans_val_status=slider_data_reset-slider_status_width+'px';
                         trans_val_over=slider_data_reset+slider_bar_halfButton+'px';
@@ -517,6 +524,8 @@
                         slider_bar_button.style.left=trans_val_button;
                         vanila_slider_status.style.left=trans_val_status;
                         vanila_slider_over.style.width=trans_val_over;
+
+                        console.log('resize - trans_val_button = '+trans_val_button+' / trans_val_status = '+trans_val_status+' / trans_val_over = '+trans_val_over);
                     };
 
                     // console.log('sep_first_per = '+sep_first_per);
