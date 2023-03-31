@@ -198,6 +198,9 @@
                         vanila_slider_status.innerHTML=pattern_sep;
                         clone_sep=pattern_sep;
 
+                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
+                        input_point=slider_data_reset;
+
                         console.log('evn - trans_val_button = '+trans_val_button+' / trans_val_status = '+trans_val_status+' / trans_val_over = '+trans_val_over);
                     };
 
@@ -228,8 +231,8 @@
                             slider_move();
                             // console.log(vanila_slider_over.clientWidth);
                         };
-                        input_point=trans_val_button;
-                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
+                        // input_point=trans_val_button;
+                        // new_point=Number(slider_bar_button.style.left.split('px')[0]);
                         // console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
                         return false;
                     };
@@ -261,8 +264,8 @@
                                 // console.log(vanila_slider_over.clientWidth);
                             }
                         };
-                        input_point=trans_val_button;
-                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
+                        // input_point=trans_val_button;
+                        // new_point=Number(slider_bar_button.style.left.split('px')[0]);
                         // console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
                         return false;
                     };
@@ -285,8 +288,8 @@
                             slider_move();
                             // console.log(slider_icon_point);
                         };
-                        input_point=trans_val_button;
-                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
+                        // input_point=trans_val_button;
+                        // new_point=Number(slider_bar_button.style.left.split('px')[0]);
                         // console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
                         return false;
                     };
