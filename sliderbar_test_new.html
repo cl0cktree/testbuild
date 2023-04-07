@@ -62,9 +62,9 @@
                 var trans_val_button; // -- slider_bar_button의 현재 값을 갖는 변수.
                 var trans_val_status; // -- vanila_slider_status의 현재 값을 갖는 변수.
                 var trans_val_over; // -- vanila_slider_over의 현재 값을 갖는 변수.
-                var re_val_button;
-                var re_val_status;
-                var re_val_over;
+                var re_val_button; // -- slider_bar_button의 resize 값을 갖는 변수.
+                var re_val_status; // -- vanila_slider_status의 resize 값을 갖는 변수.
+                var re_val_over; // -- vanila_slider_over의 resize 값을 갖는 변수.
                 var trans_per; // -- 이전 넓이와 현재 넓이의 비율을 담는 변수.
                 var per_value; // -- resize 시와 이벤트 입력 시의 버튼 위치의 비율 공유를 위한 변수.
                 var frame_start;
@@ -198,9 +198,34 @@
                         vanila_slider_status.innerHTML=pattern_sep;
                         clone_sep=pattern_sep;
 
-                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
-                        input_point=slider_data_reset;
+                        // input_point=slider_data_reset;
+                        // trans_val_button=slider_icon_point-slider_bar_halfButton+'px';
+                        // trans_val_status=slider_icon_point-slider_status_width+'px';
+                        // trans_val_over=slider_icon_point+slider_bar_halfButton+'px';
 
+                        if((re_val_button!==null)||(re_val_button!==undefined)){
+                            slider_bar_button.style.left=re_val_button;
+                            vanila_slider_status.style.left=re_val_status;
+                            vanila_slider_over.style.width=re_val_over;
+
+                            // slider_bar_button.style.left=trans_val_button;
+                            // vanila_slider_status.style.left=trans_val_status;
+                            // vanila_slider_over.style.width=trans_val_over;
+
+                            console.log('ch1 = '+trans_val_button+' / '+trans_val_status+' / '+trans_val_over);
+                        }else{
+                            slider_bar_button.style.left=trans_val_button;
+                            vanila_slider_status.style.left=trans_val_status;
+                            vanila_slider_over.style.width=trans_val_over;
+
+                            // slider_bar_button.style.left=re_val_button;
+                            // vanila_slider_status.style.left=re_val_status;
+                            // vanila_slider_over.style.width=re_val_over;
+
+                            console.log('ch2 = '+re_val_button+' / '+re_val_status+' / '+re_val_over);
+                        }
+
+                        new_point=Number(slider_bar_button.style.left.split('px')[0]);
                         console.log('evn - trans_val_button = '+trans_val_button+' / trans_val_status = '+trans_val_status+' / trans_val_over = '+trans_val_over);
                     };
 
