@@ -12,8 +12,24 @@
 <body>
     <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+    <div id="root">
 
+    </div>
 </body>
-<script>
+<script defer>
+    let btn_count=0;
 
+    const count_h1 = React.createElement('h1',{id:'count_h1',style:{color:'skyblue',fontSize:'3rem'}},'click : ');
+    const count_clk = React.createElement('span',{id:'count_clk'},null);
+    const root_body = document.getElementById('root');
+    const btn = React.createElement('button',{onClick:handleClick},'click!');
+    const container = React.createElement('div',{id:'container'},[count_h1,count_clk,btn]);
+
+    ReactDOM.render(container,root_body);
+
+    function handleClick(){
+        btn_count++;
+        count_clk.innerHTML = btn_count;
+        console.log('it is work! ' +btn_count);
+    };
 </script>

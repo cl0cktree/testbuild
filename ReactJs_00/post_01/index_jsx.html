@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="format-detection"
+      content="telephone=no, address=no, email=no"
+    />
+    <title>react 00</title>
+    <style></style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script>
+    let btn_count = 0;
+    const sun_f = function handleClick(sum) {
+      btn_count++;
+      const sum = String(btn_count);
+      console.log("it is work! " + btn_count + " / " + sum);
+      return sum;
+    };
+    console.log(sun_f.sum);
+  </script>
+  <script type="text/babel">
+    // let btn_count = 0;
+    // const sum = String(btn_count);
+    // function handleClick() {
+    //   btn_count++;
+    //   const sum = String(btn_count);
+    //   console.log("it is work! " + btn_count + " / " + sum);
+    //   return sum;
+    // }
+    // console.log(sun_f.sum);
+    // const root = document.getElementById("root");
+
+    const count_h1 = (
+      <h1 id="count_h1" style={{ color: "skyblue", fontSize: "3rem" }}>
+        click :
+      </h1>
+    );
+    const count_clk = <span id="count_clk">{btn_count}</span>;
+    const btn = <button id="btn">click!</button>;
+
+    const container = (
+      <div id="container">
+        {count_h1}
+        {count_clk}
+        {btn}
+      </div>
+    );
+    // const container = React.createElement("div", [count_h1, count_clk, btn]);
+
+    ReactDOM.render(container, root);
+  </script>
+</html>
