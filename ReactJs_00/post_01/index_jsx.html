@@ -17,35 +17,32 @@
   <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script>
-    let btn_count = 0;
-    const sun_f = function handleClick(sum) {
-      btn_count++;
-      const sum = String(btn_count);
-      console.log("it is work! " + btn_count + " / " + sum);
-      return sum;
-    };
-    console.log(sun_f.sum);
-  </script>
   <script type="text/babel">
-    // let btn_count = 0;
-    // const sum = String(btn_count);
-    // function handleClick() {
-    //   btn_count++;
-    //   const sum = String(btn_count);
-    //   console.log("it is work! " + btn_count + " / " + sum);
-    //   return sum;
-    // }
-    // console.log(sun_f.sum);
-    // const root = document.getElementById("root");
+    let btn_count = 0;
+    let sum;
+    const out_sum = handleClick(sum);
+
+    function handleClick(sum) {
+      btn_count++;
+      sum = Math.floor(btn_count);
+      console.log("it is work! " + btn_count);
+      console.log("in_sum all = " + sum);
+      return sum;
+    }
 
     const count_h1 = (
       <h1 id="count_h1" style={{ color: "skyblue", fontSize: "3rem" }}>
         click :
       </h1>
     );
-    const count_clk = <span id="count_clk">{btn_count}</span>;
-    const btn = <button id="btn">click!</button>;
+
+    const btn = (
+      <button id="btn" onClick="handleClick()">
+        click!
+      </button>
+    );
+    console.log("out_sum all = " + out_sum);
+    const count_clk = <span id="count_clk"> {out_sum} </span>;
 
     const container = (
       <div id="container">
