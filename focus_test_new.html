@@ -71,12 +71,23 @@
             var focus_t;
             var layer_eq;
             var focus_data;
+            var tab_length;
+            var tab_data;
               // var layer = $('.layer').find();
             function modal_close(e){
                 layer_eq = focus_this-1;
                 focus_data = $('.layer_1').find('li').data('focus');
 
-                $('.layer_1').find('a').attr({'tabindex':'0','aria-hidden':'false'});
+                $('.layer_1').find('a').each(function(){
+                    tab_length = $('.layer_1').find('attr','tabindex');
+                    tab_data = $(this).data('focus');
+                for(var i=0;i<tab_data.length;i++){
+                    $('.layer_1').find('a').attr({'tabindex':tab_data,'aria-hidden':'false'});
+                    }
+                    console.log(tab_data);
+                });
+
+
                 $('.layer_2').addClass('display_none');
 
                 $('.layer_1').find('li:eq('+layer_eq+')').children('a').focus();
@@ -85,10 +96,12 @@
 
             $('.layer_1').find('a').on('click',function(){
                 focus_this = $(this).data('focus');
+                // tab_data = tab_length.data('focus');
+
                 $('.layer_2').removeClass('display_none');
                 $('.layer_1').find('a').attr({'tabindex':'-1','aria-hidden':'true'});
-                $('.layer_2').find('[tabindex]:first').focus();
-                console.log(focus_this);
+                $('.layer_2').find('li:eq(0)').children('a').focus();
+                console.log(tab_length);
             });
 
             $('.layer_2').find('.close_btn').on('click',function(e){
@@ -136,21 +149,21 @@
         <div class="layer layer_1">
             <ul>
                 <li>
-                    <a href="#" data-layer="1" data-focus="1" aria-hidden="false" tabindex="0">메뉴 1</a>
+                    <a href="#" data-layer="1" data-focus="1" aria-hidden="false" tabindex="1">메뉴 1</a>
                 </li>
                 <li>
-                    <a href="#" data-layer="1" data-focus="2" aria-hidden="false" tabindex="0">메뉴 2</a>
+                    <a href="#" data-layer="1" data-focus="2" aria-hidden="false" tabindex="2">메뉴 2</a>
                 </li>
                 <li>
-                    <a href="#" data-layer="1" data-focus="3" aria-hidden="false" tabindex="0">메뉴 3</a>
+                    <a href="#" data-layer="1" data-focus="3" aria-hidden="false" tabindex="3">메뉴 3</a>
                 </li>
                 <li>
-                    <a href="#" data-layer="1" data-focus="4" aria-hidden="false" tabindex="0">메뉴 4</a>
+                    <a href="#" data-layer="1" data-focus="4" aria-hidden="false" tabindex="4">메뉴 4</a>
                 </li>
             </ul>
         </div>
         <div class="layer layer_2 display_none">
-            <button class="close_btn" title="팝업 닫기">X</button>
+            <button class="close_btn" title="팝업 닫기" tabindex="5">X</button>
             <ul>
                 <li>
                     <a href="#" data-layer="2" data-focus="1" aria-hidden="false" tabindex="1">메뉴 1</a>
