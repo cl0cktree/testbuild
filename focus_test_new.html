@@ -1,98 +1,171 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="format-detection" content="telephone=no, address=no, email=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+        name="format-detection"
+        content="telephone=no, address=no, email=no"
+    />
     <title>focus 샘플</title>
     <style>
-        html,body{width:100%;height:100%;margin:0;padding:0;font-size:10px;}
-        a{text-decoration-line:none;}
-        .a-center{text-align:center!important;}
-        .click-transition{transition:all 0.3s;}
-        .wrap-all{padding-top:2rem;}
-        .display_none{display:none!important}
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-size: 10px;
+    }
+    a {
+        text-decoration-line: none;
+    }
+    .a-center {
+        text-align: center !important;
+    }
+    .click-transition {
+        transition: all 0.3s;
+    }
+    .wrap-all {
+        padding-top: 2rem;
+    }
+    .display_none {
+        display: none !important;
+    }
 
-        .wrapper .layer{width:100%;height:100dvh;}
-        .wrapper .layer_1{display:block;position:relative;background-color:magenta;}
-        .wrapper .layer_2{display:block;position:fixed;background-color:yellowgreen;top:0;left:0;right:0;bottom:0;z-index:100;}
+    .wrapper .layer {
+        width: 100%;
+        height: 100dvh;
+    }
+    .wrapper .layer_1 {
+        display: block;
+        position: relative;
+        background-color: magenta;
+    }
+    .wrapper .layer_2 {
+        display: block;
+        position: fixed;
+        background-color: yellowgreen;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 100;
+    }
 
-        .wrapper .layer ul{font-size:2rem;}
-        .wrapper .layer ul li{list-style:none;font-weight:700;padding:1rem;}
+    .wrapper .layer ul {
+        font-size: 2rem;
+    }
+    .wrapper .layer ul li {
+        list-style: none;
+        font-weight: 700;
+        padding: 1rem;
+    }
     </style>
     <script src="./jquery-3.2.1.min.js"></script>
     <script defer>
-        document.addEventListener("DOMContentLoaded", function(e){// script 순서 상관 없이 실행.
-            // var layer_this = $(this).data(layer);
-                var focus_this
-                var focus_t
-                // var layer = $('.layer').find();
-                $('.layer_1').find('a').on('click',function(){
-                    focus_this = $(this).data('focus');
-                    $('.layer_2').removeClass('display_none');
-                    $('.layer_1').find('a').attr({'tabindex':'-1','aria-hidden':'true'});
-                    console.log(focus_this);
-                });
-                $('.layer_2').find('.close_btn').on('click',function(){
-                    var layer_eq = focus_this-1;
-                    var focus_data = $('.layer_1').find('li').data('focus');
-                    
-                    $('.layer_1').find('li').each(function(){
-                        focus_t = $(this).children('a').data('focus');
-                        $('.layer_1').find('a').attr({'tabindex':+focus_t,'aria-hidden':'false'});
-                    });
+    document.addEventListener("DOMContentLoaded", function(e){// script 순서 상관 없이 실행.
+          // var layer_this = $(this).data(layer);
+            var focus_this;
+            var focus_t;
+            var layer_eq;
+            var focus_data;
+              // var layer = $('.layer').find();
+            function modal_close(e){
+                layer_eq = focus_this-1;
+                focus_data = $('.layer_1').find('li').data('focus');
 
-                    $('.layer_2').addClass('display_none');
-                   
-                    $('.layer_1').find('li:eq('+layer_eq+')').children('a').focus();
-                    console.log($('.layer_1').find('li').data('focus'));
-                });
-            }
-        );
+                $('.layer_1').find('a').attr({'tabindex':'0','aria-hidden':'false'});
+                $('.layer_2').addClass('display_none');
+
+                $('.layer_1').find('li:eq('+layer_eq+')').children('a').focus();
+                console.log($('.layer_1').find('li').data('focus'));
+            };
+
+            $('.layer_1').find('a').on('click',function(){
+                focus_this = $(this).data('focus');
+                $('.layer_2').removeClass('display_none');
+                $('.layer_1').find('a').attr({'tabindex':'-1','aria-hidden':'true'});
+                $('.layer_2').find('[tabindex]:first').focus();
+                console.log(focus_this);
+            });
+
+            $('.layer_2').find('.close_btn').on('click',function(e){
+                if (e.type=='click'){}
+                modal_close();
+            })
+            
+            $('.layer_2').on('keydown', function(e){
+                if (e.keyCode === 27) {  //esc 키 감지
+                    modal_close();
+                    console.log('in here');
+                }
+
+                if (e.keyCode === 9) { // Tab 키 감지
+                    e.preventDefault();
+                    var next_key = 9;
+                    var prev_key = 9&16;
+
+                    var tabindex = parseInt($(this).attr('tabindex'));
+                    if (e.keyCode==prev_key) { // Shift + Tab
+                        var prev = $('[tabindex="' + (tabindex - 1) + '"]');
+                        if (prev.length === 0) {
+                            prev = $('[tabindex]:last');
+                        }
+                        prev.focus();
+                    }else { // Tab
+                        var next = $('[tabindex="' + (tabindex + 1) + '"]');
+                        if (next.length === 0) {
+                            next = $('[tabindex]:first');
+                        }
+                        next.focus();
+                    }
+                    console.log(tabindex);
+                }
+            });
+        }
+    );
     </script>
 </head>
 <body>
     <div class="wrap-all">
-        <h1 class="a-center">
-            focus 샘플
-        </h1>
+    <h1 class="a-center">focus 샘플</h1>
 
-        <div class="wrapper">
-            <div class="layer layer_1">
-                <ul>
-                    <li>
-                        <a href="#" data-layer="1" data-focus="1" aria-hidden="false" tabindex="1">메뉴 1</a>
-                    </li>
-                    <li>
-                        <a href="#" data-layer="1" data-focus="2" aria-hidden="false" tabindex="2">메뉴 2</a>
-                    </li>
-                    <li>
-                        <a href="#" data-layer="1" data-focus="3" aria-hidden="false" tabindex="3">메뉴 3</a>
-                    </li>
-                    <li>
-                        <a href="#" data-layer="1" data-focus="4" aria-hidden="false" tabindex="4">메뉴 4</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="layer layer_2 display_none">
-                <button class="close_btn" title="팝업 닫기">X</button>
-                <ul>
-                    <li>
-                        <a href="#" data-layer="2" data-focus="1" aria-hidden="false" tabindex="1">메뉴 1</a>
-                    </li>
-                    <li>
-                        <a href="#" data-layer="2" data-focus="2" aria-hidden="false" tabindex="2">메뉴 2</a>
-                    </li>
-                    <li>
-                        <a href="#" data-layer="2" data-focus="3" aria-hidden="false" tabindex="3">메뉴 3</a>
-                    </li>
-                    <li>
-                        <a href="#" data-layer="2" data-focus="4" aria-hidden="false" tabindex="4">메뉴 4</a>
-                    </li>
-                </ul>
-            </div>
-
+    <div class="wrapper">
+        <div class="layer layer_1">
+            <ul>
+                <li>
+                    <a href="#" data-layer="1" data-focus="1" aria-hidden="false" tabindex="0">메뉴 1</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="1" data-focus="2" aria-hidden="false" tabindex="0">메뉴 2</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="1" data-focus="3" aria-hidden="false" tabindex="0">메뉴 3</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="1" data-focus="4" aria-hidden="false" tabindex="0">메뉴 4</a>
+                </li>
+            </ul>
+        </div>
+        <div class="layer layer_2 display_none">
+            <button class="close_btn" title="팝업 닫기">X</button>
+            <ul>
+                <li>
+                    <a href="#" data-layer="2" data-focus="1" aria-hidden="false" tabindex="1">메뉴 1</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="2" data-focus="2" aria-hidden="false" tabindex="2">메뉴 2</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="2" data-focus="3" aria-hidden="false" tabindex="3">메뉴 3</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="2" data-focus="4" aria-hidden="false" tabindex="4">메뉴 4</a>
+                </li>
+            </ul>
+        </div>
         </div>
     </div>
 </body>
