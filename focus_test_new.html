@@ -72,7 +72,7 @@
             var focus_data;
             var tab_length;
             var tab_data;
-            
+
             var $l1_tab = $('.layer_1').find('[tabindex]');
             var $l2_tab = $('.layer_2').find('[tabindex]');
             var $l1_tab_leng=$l1_tab.length;
@@ -85,11 +85,11 @@
                 $('.layer_1').find('a').each(function(){
                     tab_length = $('.layer_1').find('attr','tabindex');
                     tab_data = $(this).data('focus');
-                for(var i=0;i<tab_data.length;i++){
-                    $('.layer_1').find('a').attr({'tabindex':tab_data,'aria-hidden':'false','aria-selected':'true'});
-                    }
-                    console.log(tab_data);
-                });
+                    for(var i=0;i<tab_data.length;i++){
+                        $('.layer_1').find('a').attr({'tabindex':tab_data,'aria-hidden':'false','aria-selected':'false'});
+                        }
+                        console.log(tab_data);
+                    });
 
                 $('.layer_2').addClass('display_none');
 
