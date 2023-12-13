@@ -4,12 +4,10 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-        name="format-detection"
-        content="telephone=no, address=no, email=no"
-    />
+    <meta name="format-detection" content="telephone=no, address=no, email=no"/>
     <title>focus 샘플</title>
     <style>
+    *:focus{border: 2px solid red;}
     html,
     body {
         width: 100%;
@@ -28,114 +26,64 @@
         transition: all 0.3s;
     }
     .wrap-all {
-        padding-top: 2rem;
+        padding-top: 2rem; font-size:20px;
     }
     .display_none {
         display: none !important;
     }
 
-    .wrapper .layer {
-        width: 100%;
-        height: 100dvh;
-    }
-    .wrapper .layer_1 {
-        display: block;
-        position: relative;
-        background-color: magenta;
-    }
-    .wrapper .layer_2 {
-        display: block;
-        position: fixed;
-        background-color: yellowgreen;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 100;
-    }
-
-    .wrapper .layer ul {
-        font-size: 2rem;
-    }
-    .wrapper .layer ul li {
-        list-style: none;
-        font-weight: 700;
-        padding: 1rem;
-    }
+    .wrap-all #openPopupBtn{width:200px;height:60px;background-color:#fff;border:1px solid #000;font-size:18px;margin-top:50px;}
+    
+    .wrap-all #popupContainer{display:none;position:absolute;width:50%;height:400px;background-color:rgba(255,255,255,1);top:50%;left:50%;margin-left:-25%;margin-top:-200px;z-index:3;font-size:20px;}
+    .wrap-all #modalOverlay{display:none;position:fixed;width:100%;height:100svh;background-color:rgba(0,0,0,0.7);left:0;top:0;right:0;bottom:0;z-index:1;}
+    .wrap-all .popup-close{display:block;width:100px;height:50px;background-color:#fff;border: 1px solid #000;margin:30px auto 0;}
     </style>
-    <script src="./jquery-3.2.1.min.js"></script>
     <script defer>
-    document.addEventListener("DOMContentLoaded", function(e){// script 순서 상관 없이 실행.
-          // var layer_this = $(this).data(layer);
-            var focus_this;
-            var layer_eq;
-            var focus_data;
-            var tab_length;
-            var tab_data;
+        document.addEventListener("DOMContentLoaded", function(e){// script 순서 상관 없이 실행.
+            const focusableElements = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]';
+            const modal = document.querySelector('#popupContainer');
+            const focusableContent = modal.querySelectorAll(focusableElements);
+            const firstFocusableElement = modal.querySelectorAll(focusableElements)[0];
+            const lastFocusableElement = focusableContent[focusableContent.length - 1];
 
-            var $l1_tab = $('.layer_1').find('[tabindex]');
-            var $l2_tab = $('.layer_2').find('[tabindex]');
-            var $l1_tab_leng=$l1_tab.length;
-            var $l2_tab_leng=$l2_tab.length;
-            
-            function modal_close(e){
-                layer_eq = focus_this-1;
-                focus_data = $('.layer_1').find('li').data('focus');
+            const input = document.querySelector('input');
+            const openPopupBtn = document.querySelector('#openPopupBtn');
+            const closePopupBtn = document.querySelector('#closePopupBtn');
+            const modalOverlay = document.querySelector('#modalOverlay');
 
-                $('.layer_1').find('a').each(function(){
-                    tab_length = $('.layer_1').find('attr','tabindex');
-                    tab_data = $(this).data('focus');
-                    for(var i=0;i<tab_data.length;i++){
-                        $('.layer_1').find('a').attr({'tabindex':tab_data,'aria-hidden':'false','aria-selected':'false'});
-                        }
-                        console.log(tab_data);
-                    });
-
-                $('.layer_2').addClass('display_none');
-
-                $('.layer_1').find('li:eq('+layer_eq+')').children('a').focus();
-                console.log($('.layer_1').find('li').data('focus'));
+            const togglePopup = (open) => {
+                if (open) {
+                    modal.style.display = 'block';
+                    modalOverlay.style.display = 'block';
+                    input.focus();
+                } else {
+                    modal.style.display = 'none';
+                    modalOverlay.style.display = 'none';
+                }
             };
 
-            $('.layer_1').find('a').on('click',function(){
-                focus_this = $(this).data('focus');
-                // tab_data = tab_length.data('focus');
+            document.addEventListener('keydown', (e) => {
+                let isTabPressed = e.key === 'Tab' || e.keyCode === 9;
 
-                $('.layer_2').removeClass('display_none');
-                $('.layer_1').find('a').attr({'tabindex':'-1','aria-hidden':'true','aria-selected':'false'});
-                $('.layer_2').find('li:eq(0)').children('a').focus();
-                console.log(tab_length);
-            });
-
-            $('.layer_2').find('.close_btn').on('click',function(e){
-                modal_close();
-            })
-            $('.layer_2').on('keydown', function(e){
-                var tabindex = parseInt($(this).attr('tabindex'));
-                var $this_l2;
-                var $this_focus;
-
-                if (e.keyCode === 27) {  //esc 키 감지
-                    modal_close();
+                if (!isTabPressed) {
+                    return;
                 }
-                else{
-                    $this_l2 =  document.activeElement;
-                    $this_focus=parseFloat($this_l2.getAttribute('data-focus'));
 
-                    if ((e.keyCode==9&&!e.shiftKey)&&($this_focus>=$l2_tab_leng)) { // Shift + Tab
-                        e.preventDefault();
-                        $('.layer_2').find('[tabindex=1]').focus();
-                        console.log('next');
+                if (e.shiftKey) {
+                    if (document.activeElement === firstFocusableElement) {
+                    lastFocusableElement.focus();
+                    e.preventDefault();
                     }
-                    else if((e.keyCode==9&&e.shiftKey)&&($this_focus==1)){ // Tab
-                        e.preventDefault();
-                        $('.layer_2').find('[tabindex='+$l2_tab_leng+']').focus();
-                        console.log('prev');
+                } else {
+                    if (document.activeElement === lastFocusableElement) {
+                    firstFocusableElement.focus();
+                    e.preventDefault();
                     }
-                    console.log($this_focus);
-
                 }
             });
+
+            openPopupBtn.addEventListener('click', () => togglePopup(true));
+            closePopupBtn.addEventListener('click', () => togglePopup(false));
         }
     );
     </script>
@@ -143,42 +91,19 @@
 <body>
     <div class="wrap-all">
     <h1 class="a-center">focus 샘플</h1>
+    <div class="wrapper a-center">
+        <h1 tabindex="0">Focus Trapping & WAI </h1>
+        <button id="openPopupBtn" class="popup-open" aria-haspopup="true">Open Popup</button>
 
-    <div class="wrapper">
-        <div class="layer layer_1">
-            <ul>
-                <li>
-                    <a href="#" data-layer="1" data-focus="1" aria-hidden="false" aria-selected="false" tabindex="1">메뉴 1</a>
-                </li>
-                <li>
-                    <a href="#" data-layer="1" data-focus="2" aria-hidden="false" aria-selected="false" tabindex="2">메뉴 2</a>
-                </li>
-                <li>
-                    <a href="#" data-layer="1" data-focus="3" aria-hidden="false" aria-selected="false" tabindex="3">메뉴 3</a>
-                </li>
-                <li>
-                    <a href="#" data-layer="1" data-focus="4" aria-hidden="false" aria-selected="false" tabindex="4">메뉴 4</a>
-                </li>
-            </ul>
+        <div id="popupContainer" class="popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle" tabindex="-1">
+            <div class="popup-content">
+            <h2 id="popupTitle" tabindex="0">Popup Title</h2>
+            <p tabindex="0">Popup content.</p>
+            <input type="text" aria-label="input label" aria-required="true">
+            <button id="closePopupBtn" class="popup-close">Close</button>
+            </div>
         </div>
-        <div class="layer layer_2 display_none">
-            <button class="close_btn focus_ev" title="팝업 닫기" data-layer="2" data-focus="5" aria-hidden="false" tabindex="5">X</button>
-            <ul>
-                <li>
-                    <a href="#" data-layer="2" data-focus="1" aria-hidden="false" aria-selected="false" tabindex="1" class="focus_ev">메뉴 1</a>
-                </li>
-                <li>
-                    <a href="#" data-layer="2" data-focus="2" aria-hidden="false" aria-selected="false" tabindex="2" class="focus_ev">메뉴 2</a>
-                </li>
-                <li>
-                    <a href="#" data-layer="2" data-focus="3" aria-hidden="false" aria-selected="false" tabindex="3" class="focus_ev">메뉴 3</a>
-                </li>
-                <li>
-                    <a href="#" data-layer="2" data-focus="4" aria-hidden="false" aria-selected="false" tabindex="4" class="focus_ev">메뉴 4</a>
-                </li>
-            </ul>
-        </div>
-        </div>
+        <div id="modalOverlay" tabindex="-1"></div>
     </div>
 </body>
 </html>
