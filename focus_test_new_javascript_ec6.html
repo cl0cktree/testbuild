@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no, address=no, email=no"/>
+    <title>focus 샘플</title>
+    <style>
+    *:focus{border: 2px solid red;}
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-size: 10px;
+    }
+    a {
+        text-decoration-line: none;
+    }
+    .a-center {
+        text-align: center !important;
+    }
+    .click-transition {
+        transition: all 0.3s;
+    }
+    .wrap-all {
+        padding-top: 2rem; font-size:20px;
+    }
+    .display_none {
+        display: none !important;
+    }
+
+    .wrap-all #openPopupBtn{width:200px;height:60px;background-color:#fff;border:1px solid #000;font-size:18px;margin-top:50px;}
+    
+    .wrap-all #popupContainer{display:none;position:absolute;width:50%;height:400px;background-color:rgba(255,255,255,1);top:50%;left:50%;margin-left:-25%;margin-top:-200px;z-index:3;font-size:20px;}
+    .wrap-all #modalOverlay{display:none;position:fixed;width:100%;height:100svh;background-color:rgba(0,0,0,0.7);left:0;top:0;right:0;bottom:0;z-index:1;}
+    .wrap-all .popup-close{display:block;width:100px;height:50px;background-color:#fff;border: 1px solid #000;margin:30px auto 0;}
+    </style>
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function(e){// script 순서 상관 없이 실행.
+            const focusableElements = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]';
+            const modal = document.querySelector('#popupContainer');
+            const focusableContent = modal.querySelectorAll(focusableElements);
+            const firstFocusableElement = modal.querySelectorAll(focusableElements)[0];
+            const lastFocusableElement = focusableContent[focusableContent.length - 1];
+
+            const input = document.querySelector('input');
+            const openPopupBtn = document.querySelector('#openPopupBtn');
+            const closePopupBtn = document.querySelector('#closePopupBtn');
+            const modalOverlay = document.querySelector('#modalOverlay');
+
+            const togglePopup = (open) => {
+                if (open) {
+                    modal.style.display = 'block';
+                    modalOverlay.style.display = 'block';
+                    input.focus();
+                } else {
+                    modal.style.display = 'none';
+                    modalOverlay.style.display = 'none';
+                }
+            };
+
+            document.addEventListener('keydown', (e) => {
+                let isTabPressed = e.key === 'Tab' || e.keyCode === 9;
+
+                if (!isTabPressed) {
+                    return;
+                }
+
+                if (e.shiftKey) {
+                    if (document.activeElement === firstFocusableElement) {
+                    lastFocusableElement.focus();
+                    e.preventDefault();
+                    }
+                } else {
+                    if (document.activeElement === lastFocusableElement) {
+                    firstFocusableElement.focus();
+                    e.preventDefault();
+                    }
+                }
+            });
+
+            openPopupBtn.addEventListener('click', () => togglePopup(true));
+            closePopupBtn.addEventListener('click', () => togglePopup(false));
+        }
+    );
+    </script>
+</head>
+<body>
+    <div class="wrap-all">
+    <h1 class="a-center">focus 샘플</h1>
+    <div class="wrapper a-center">
+        <h1 tabindex="0">Focus Trapping & WAI </h1>
+        <button id="openPopupBtn" class="popup-open" aria-haspopup="true">Open Popup</button>
+
+        <div id="popupContainer" class="popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle" tabindex="-1">
+            <div class="popup-content">
+            <h2 id="popupTitle" tabindex="0">Popup Title</h2>
+            <p tabindex="0">Popup content.</p>
+            <input type="text" aria-label="input label" aria-required="true">
+            <button id="closePopupBtn" class="popup-close">Close</button>
+            </div>
+        </div>
+        <div id="modalOverlay" tabindex="-1"></div>
+    </div>
+</body>
+</html>
