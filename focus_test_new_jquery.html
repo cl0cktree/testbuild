@@ -77,20 +77,43 @@
             var $l2_tab = $('.layer_2').find('[tabindex]');
             var $l1_tab_leng=$l1_tab.length;
             var $l2_tab_leng=$l2_tab.length;
-            
+            var t1;
+            var eq;
+            // var test_data = $('.layer_1').find('a, button').data('focus');
+
+            // var test_data = $('.layer_1').find('a, button').attr('data-focus');
+            $('.layer_1').find('a, button').each(function(){
+                tab_length = $('.layer_1').find('attr','tabindex');
+                    tab_data = String($(this).data('focus'));
+                    var data_tab = tab_length;
+                    // for(var i=0;i<tab_data.length;i++){
+                    //         data_tab = tab_data;
+                    //     }
+                    //     $('.layer_1').find('a').attr({'tabindex':data_tab,'aria-hidden':'false','aria-selected':'false'});
+                    console.log(tab_data);
+            })
+
+
             function modal_close(e){
                 layer_eq = focus_this-1;
                 focus_data = $('.layer_1').find('li').data('focus');
-
-                $('.layer_1').find('a').each(function(){
-                    tab_length = $('.layer_1').find('attr','tabindex');
-                    tab_data = $(this).data('focus');
-                    for(var i=0;i<tab_data.length;i++){
-                        $('.layer_1').find('a').attr({'tabindex':tab_data,'aria-hidden':'false','aria-selected':'false'});
-                        }
-                        console.log(tab_data);
-                    });
-
+                // var layer_1 = document.querySelector('.layer_1');
+                // var l1_focus = layer_1.querySelectorAll('a, button');
+                // var l1_data = layer_1.querySelectorAll('data-focus');
+                var fn=0;
+                $('.layer_1').find('a, button').each(function(){
+                    
+                    t1 = $(this).data('focus');
+                    eq = $(this).data('index');
+                    fn++;
+                    // for(var i=1;i<=$l1_tab_leng;i++){
+                    //     $('.layer_1').find('a, button').attr({'tabindex':t1});
+                    // }
+                    // l1_focus.setAttribute('tabindex',t1);
+                    $('.layer_1').find('a, button').data('index',eq).attr('tabindex',t1);
+                    console.log(eq);
+                });
+                $('.layer_1').find('a, button').attr({'aria-hidden':'false','aria-selected':'false'});
                 $('.layer_2').addClass('display_none');
 
                 $('.layer_1').find('li:eq('+layer_eq+')').children('a').focus();
@@ -133,7 +156,6 @@
                         console.log('prev');
                     }
                     console.log($this_focus);
-
                 }
             });
         }
@@ -148,16 +170,16 @@
         <div class="layer layer_1">
             <ul>
                 <li>
-                    <a href="#" data-layer="1" data-focus="1" aria-hidden="false" aria-selected="false" tabindex="1">메뉴 1</a>
+                    <a href="#" data-layer="1" data-focus="1" data-index="1" aria-hidden="false" aria-selected="false" tabindex="1">메뉴 1</a>
                 </li>
                 <li>
-                    <a href="#" data-layer="1" data-focus="2" aria-hidden="false" aria-selected="false" tabindex="2">메뉴 2</a>
+                    <a href="#" data-layer="1" data-focus="2" data-index="2" aria-hidden="false" aria-selected="false" tabindex="2">메뉴 2</a>
                 </li>
                 <li>
-                    <a href="#" data-layer="1" data-focus="3" aria-hidden="false" aria-selected="false" tabindex="3">메뉴 3</a>
+                    <a href="#" data-layer="1" data-focus="3" data-index="3" aria-hidden="false" aria-selected="false" tabindex="3">메뉴 3</a>
                 </li>
                 <li>
-                    <a href="#" data-layer="1" data-focus="4" aria-hidden="false" aria-selected="false" tabindex="4">메뉴 4</a>
+                    <a href="#" data-layer="1" data-focus="4" data-index="4" aria-hidden="false" aria-selected="false" tabindex="4">메뉴 4</a>
                 </li>
             </ul>
         </div>
