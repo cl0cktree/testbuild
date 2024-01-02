@@ -82,16 +82,16 @@
             // var test_data = $('.layer_1').find('a, button').data('focus');
 
             // var test_data = $('.layer_1').find('a, button').attr('data-focus');
-            $('.layer_1').find('a, button').each(function(){
-                tab_length = $('.layer_1').find('attr','tabindex');
-                    tab_data = String($(this).data('focus'));
-                    var data_tab = tab_length;
-                    // for(var i=0;i<tab_data.length;i++){
-                    //         data_tab = tab_data;
-                    //     }
-                    //     $('.layer_1').find('a').attr({'tabindex':data_tab,'aria-hidden':'false','aria-selected':'false'});
-                    console.log(tab_data);
-            })
+            // $('.layer_1').find('a, button').each(function(){
+            //     tab_length = $('.layer_1').find('attr','tabindex');
+            //         tab_data = String($(this).data('focus'));
+            //         var data_tab = tab_length;
+            //         // for(var i=0;i<tab_data.length;i++){
+            //         //         data_tab = tab_data;
+            //         //     }
+            //         //     $('.layer_1').find('a').attr({'tabindex':data_tab,'aria-hidden':'false','aria-selected':'false'});
+            //         console.log(tab_data);
+            // })
 
 
             function modal_close(e){
@@ -106,12 +106,14 @@
                     t1 = $(this).data('focus');
                     eq = $(this).data('index');
                     fn++;
+                    // t1 += $(this).data('focus') 는 에러 발생으로 다른 방식 필요.
                     // for(var i=1;i<=$l1_tab_leng;i++){
                     //     $('.layer_1').find('a, button').attr({'tabindex':t1});
                     // }
                     // l1_focus.setAttribute('tabindex',t1);
                     $('.layer_1').find('a, button').data('index',eq).attr('tabindex',t1);
-                    console.log(eq);
+                    // $('.layer_1').find('a').attr('tabindex',tab_data);
+                    console.log(arr_t1);
                 });
                 $('.layer_1').find('a, button').attr({'aria-hidden':'false','aria-selected':'false'});
                 $('.layer_2').addClass('display_none');
