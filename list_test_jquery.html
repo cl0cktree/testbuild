@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+        name="format-detection"
+        content="telephone=no, address=no, email=no"
+    />
+    <title>prop list 샘플</title>
+    <style>
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-size: 10px;
+    }
+    a {
+        text-decoration-line: none;
+    }
+    .a-center {
+        text-align: center !important;
+    }
+    .click-transition {
+        transition: all 0.3s;
+    }
+    .wrap-all {
+        padding-top: 2rem;
+    }
+    .display_none {
+        display: none !important;
+    }
+
+    .wrapper .layer {
+        width: 100%;
+    }
+    .wrapper .layer_1 {
+        display: block;
+        position: relative;
+        background-color: magenta;
+        height: 100dvh;
+    }
+    .wrapper .layer_2 {
+        display: block;
+        position: fixed;
+        background-color: yellowgreen;
+        min-height: 100px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 100;
+    }
+
+    .wrapper .layer ul {
+        font-size: 2rem;
+    }
+    .wrapper .layer ul li {
+        list-style: none;
+        font-weight: 700;
+        padding: 1rem;
+    }
+    </style>
+    <script src="./jquery-3.2.1.min.js"></script>
+    <script defer>
+    document.addEventListener("DOMContentLoaded", function(e){// script 순서 상관 없이 실행.
+    });
+    </script>
+</head>
+<body>
+    <div class="wrap-all">
+    <h1 class="a-center">prop list 샘플</h1>
+
+    <div class="wrapper">
+        <div class="layer layer_1">
+            <ul>
+                <li>
+                    <a href="#" data-layer="1" data-focus="1" data-index="1" aria-hidden="false" aria-selected="false" tabindex="1">메뉴 1</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="1" data-focus="2" data-index="2" aria-hidden="false" aria-selected="false" tabindex="2">메뉴 2</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="1" data-focus="3" data-index="3" aria-hidden="false" aria-selected="false" tabindex="3">메뉴 3</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="1" data-focus="4" data-index="4" aria-hidden="false" aria-selected="false" tabindex="4">메뉴 4</a>
+                </li>
+            </ul>
+        </div>
+        <div class="layer layer_2">
+            <button class="close_btn focus_ev" title="팝업 닫기" data-layer="2" data-focus="5" aria-hidden="false" tabindex="5">X</button>
+            <ul>
+                <li>
+                    <a href="#" data-layer="2" data-focus="1" aria-hidden="false" aria-selected="false" tabindex="1" class="focus_ev">메뉴 1</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="2" data-focus="2" aria-hidden="false" aria-selected="false" tabindex="2" class="focus_ev">메뉴 2</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="2" data-focus="3" aria-hidden="false" aria-selected="false" tabindex="3" class="focus_ev">메뉴 3</a>
+                </li>
+                <li>
+                    <a href="#" data-layer="2" data-focus="4" aria-hidden="false" aria-selected="false" tabindex="4" class="focus_ev">메뉴 4</a>
+                </li>
+            </ul>
+        </div>
+        </div>
+    </div>
+</body>
+</html>
