@@ -79,6 +79,7 @@
             var $l2_tab_leng=$l2_tab.length;
             var t1;
             var eq;
+            var data_layer_1 = $('.layer_1').find('li').children('a').data('focus');
             // var test_data = $('.layer_1').find('a, button').data('focus');
 
             // var test_data = $('.layer_1').find('a, button').attr('data-focus');
@@ -100,7 +101,7 @@
                 // var layer_1 = document.querySelector('.layer_1');
                 // var l1_focus = layer_1.querySelectorAll('a, button');
                 // var l1_data = layer_1.querySelectorAll('data-focus');
-                var fn=0;
+                var fn=1;
                 $('.layer_1').find('a, button').each(function(){
                     
                     t1 = $(this).data('focus');
@@ -111,15 +112,15 @@
                     //     $('.layer_1').find('a, button').attr({'tabindex':t1});
                     // }
                     // l1_focus.setAttribute('tabindex',t1);
-                    $('.layer_1').find('a, button').data('index',eq).attr('tabindex',t1);
+                    $(this).data('index',fn).attr('tabindex',t1);
                     // $('.layer_1').find('a').attr('tabindex',tab_data);
-                    console.log(arr_t1);
+                    console.log(eq+' + '+t1);
                 });
                 $('.layer_1').find('a, button').attr({'aria-hidden':'false','aria-selected':'false'});
                 $('.layer_2').addClass('display_none');
 
                 $('.layer_1').find('li:eq('+layer_eq+')').children('a').focus();
-                console.log($('.layer_1').find('li').data('focus'));
+                console.log(eq+' + '+t1);
             };
 
             $('.layer_1').find('a').on('click',function(){
@@ -189,16 +190,16 @@
             <button class="close_btn focus_ev" title="팝업 닫기" data-layer="2" data-focus="5" aria-hidden="false" tabindex="5">X</button>
             <ul>
                 <li>
-                    <a href="#" data-layer="2" data-focus="1" aria-hidden="false" aria-selected="false" tabindex="1" class="focus_ev">메뉴 1</a>
+                    <a href="#" data-layer="2" data-focus="5" aria-hidden="false" aria-selected="false" tabindex="1" class="focus_ev">메뉴 1</a>
                 </li>
                 <li>
-                    <a href="#" data-layer="2" data-focus="2" aria-hidden="false" aria-selected="false" tabindex="2" class="focus_ev">메뉴 2</a>
+                    <a href="#" data-layer="2" data-focus="6" aria-hidden="false" aria-selected="false" tabindex="2" class="focus_ev">메뉴 2</a>
                 </li>
                 <li>
-                    <a href="#" data-layer="2" data-focus="3" aria-hidden="false" aria-selected="false" tabindex="3" class="focus_ev">메뉴 3</a>
+                    <a href="#" data-layer="2" data-focus="7" aria-hidden="false" aria-selected="false" tabindex="3" class="focus_ev">메뉴 3</a>
                 </li>
                 <li>
-                    <a href="#" data-layer="2" data-focus="4" aria-hidden="false" aria-selected="false" tabindex="4" class="focus_ev">메뉴 4</a>
+                    <a href="#" data-layer="2" data-focus="8" aria-hidden="false" aria-selected="false" tabindex="4" class="focus_ev">메뉴 4</a>
                 </li>
             </ul>
         </div>
