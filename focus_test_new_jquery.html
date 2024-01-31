@@ -94,7 +94,10 @@
             //         console.log(tab_data);
             // })
 
-
+            $('.layer_1').find('[tabindex]').each(function(){
+                tab_data = $(this).attr('tabindex');
+                console.log('tab_data = '+tab_data);
+            });
             function modal_close(e){
                 layer_eq = focus_this-1;
                 focus_data = $('.layer_1').find('li').data('focus');
@@ -103,7 +106,6 @@
                 // var l1_data = layer_1.querySelectorAll('data-focus');
                 var fn=1;
                 $('.layer_1').find('a, button').each(function(){
-                    
                     t1 = $(this).data('focus');
                     eq = $(this).data('index');
                     fn++;
@@ -114,7 +116,7 @@
                     // l1_focus.setAttribute('tabindex',t1);
                     $(this).data('index',fn).attr('tabindex',t1);
                     // $('.layer_1').find('a').attr('tabindex',tab_data);
-                    console.log(eq+' + '+t1);
+                    console.log(eq+' + '+t1+" + "+$l1_tab_leng);
                 });
                 $('.layer_1').find('a, button').attr({'aria-hidden':'false','aria-selected':'false'});
                 $('.layer_2').addClass('display_none');
