@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no, address=no, email=no">
+    <title>querySelectorAll this test</title>
+    <style>
+        html,body{width:100%;height:100%;margin:0;padding:0;font-size:10px;}
+        .nav{min-height:50px; background:#000; border-bottom:3px solid yellowgreen; padding-left:200px; line-height:50px;}
+        .nav a{display:inline-block; text-align:center; text-decoration:none; color:#fff; font-size:16px; font-weight:600;}
+        .nav a.nav_btn{padding:0 20px;}
+        .nav a.nav_btn.active{color:yellowgreen;}
+        .nav a.out_btn{position:absolute; top:0px; right:20px;}
+    </style>
+    
+</head>
+<body>
+    <div class="wrap">
+        <div class="nav">
+            <a href="" class="nav_btn active"> 버튼1 </a>
+            <a href="" class="nav_btn active"> 버튼2 </a>
+            <a href="" class="nav_btn active"> 버튼3 </a>
+            <a href="" class="nav_btn active"> 버튼4 </a>
+            <a href="" class="nav_btn active"> 버튼5 </a>
+            <a href="" class="nav_btn active"> 버튼6 </a>
+            <a href="" class="out_btn"> 로그아웃 </a>
+        </div>
+        <div class="content"></div>
+    </div>
+</body>
+<script defer>
+    //var nav_all=document.querySelectorAll('.nav_btn').length;
+    //var nav_all_leng=nav_all.length;
+    //console.log('nav_all_leng = '+nav_all);
+    function nav_move(nav_all){
+        event.preventDefault();
+        var active = document.querySelectorAll('.active');
+        var nav_all=document.getElementsByClassName('nav_btn');
+        console.log('nav_all_leng = '+nav_all.length);
+        for(i=0; i<=nav_all.length;++i){
+            console.log('nav_all_leng = '+nav_all.length);
+            nav_all[i].classList.remove('active');
+            this.classList.add('active');
+            console.log('this = '+i);
+
+            // for(j=0; j<=nav_all.length; ++j){
+            // }
+            // 
+        };
+        // nav_all.classList.remove('active');
+        // this.classList.add('active');
+        // this.classList.add('active');
+        return false;
+    }
+    document.addEventListener("click", nav_move);
+</script>
+</html>
