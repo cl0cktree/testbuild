@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no, address=no, email=no">
+    <title>슬라이더 모듈 샘플</title>
+    <style>
+        html,body{width:100%;height:100%;margin:0;padding:0;font-size:10px;}
+        
+        input[type="range"].slider-color{display:none; appearance:none; width:100%; height:30px; background:#fff; border:1px solid #000; border-radius:15px; transition: all 0.2s;}
+        input[type="range"].slider-color:hover{opacity:1;}
+        input[type="range"].slider-color::-webkit-slider-runnable-track{width:98%; height:26px; background:skyblue; border-radius:15px; opacity:1;}
+        input[type="range"].slider-color::-webkit-silder-thumb{-webkit-appearance:none; appearance:none; width:50px; height:50px;  cursor:pointer;}
+        .range_skin{position:relative; width:100%; height:30px; background:#fff; border:1px solid #000; border-radius:15px; transition: all 0.2s;}
+        .range_skin .range_track{position:absolute; height:26px; top:0; background:skyblue;}
+        .range_skin .range_track .thumb{position:absolute; width:30px; height:30px; background: yellowgreen; border-radius:50%; top:0; cursor:pointer;}
+    </style>
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function(){// script 순서 상관 없이 실행.
+            
+        });
+    </script>
+</head>
+<body>
+    <div class="wrap-all">
+        <h1 class="a-center">
+            슬라이더 모듈 샘플
+        </h1>
+        <div class="wrapper_slider">
+            <input type="range" min="1" max="1000" value="500" class="slider-color" id="id1">
+            <div class="range_skin">
+                <div class="range_track">
+                    <button class="thumb"></button>
+                </div>
+                
+            </div>
+        </div>
+        <script>
+            addEventListener('DOMContentLoaded', function(){
+                var range_track = document.querySelector('.range_skin .range_track');
+                var thumb = document.querySelector('.range_skin .range_track .thumb');
+                
+                range_track.addEventListener('click', function(){
+                    
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>
