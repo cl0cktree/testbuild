@@ -222,14 +222,14 @@
                         
                         var num_per_price = Number(percent_price.toFixed(split_zero_cal))*100;                        
                         var price_split_length;
-
-                        if(String(data_cal_cut).split('.').length>2){
+                        // -- 소수 유무 검사 후 해당 소수점 자리 자동 설정.
+                        if(String(data_cal_cut).split('.').length>1){
                             price_split_length = String(data_cal_cut).split('.')[1].length;
                         }else{
                             price_split_length = 0;
                         }
-                        
-                        vanila_slider_status.innerHTML=pattern_sep+'<br>'+num_per_price.toFixed(1)+'%';
+                        // ------------------------------------------
+                        vanila_slider_status.innerHTML=pattern_sep+'<br>'+num_per_price.toFixed(price_split_length)+'%';
                         clone_sep=pattern_sep;
 
                         cal_pattern = pattern_sep.split(',').length;
