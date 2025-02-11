@@ -50,6 +50,7 @@
                 var slider_data_cal=vanila_slider_bar.getAttribute('data-cal'); // -- 값의 최소 기준 단위.
                 var slider_data_max=vanila_slider_bar.getAttribute('data-max'); // -- 슬라이더의 최대값.
                 var slider_data_min=vanila_slider_bar.getAttribute('data-min'); // -- 슬라리더의 최소값.
+                var data_cal_cut = (slider_data_cal/slider_data_max)*100; // -- 기준 단위를 슬라이더의 최대값으로 나눈 값으로 슬라이더의 최소 단위. 퍼센트 최소 소수점 및 단위 비교의 척도.
                 var bar_per_min;
                 var default_width; // -- 최초의 슬라이더 넓이값.
                 var old_width; // -- 이전의 슬라이더 넓이값.
@@ -121,8 +122,9 @@
                     slider_bar_width=vanila_slider_bar.clientWidth;
                     slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                     slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
+                    return_cal = pattern_sep.toString().replace(/,/g, "");
                     slider_icon_point=slider_data_default;
-                    percent_price = slider_data_per/slider_data_max;
+                    percent_price = return_cal/slider_data_max;
                     
                     slider_data_per=((max_sum_minus)*slider_pointer_per)+Number(slider_data_min);
                     var sep_first_per=slider_data_cal.toString().substring(0,1);
@@ -181,15 +183,15 @@
                         var sep_bar_per = slider_bar_per.toString().slice(minus_data_cal,slider_data_max.length);
                         slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal))); //기본 단위 밑으로 계산되어 나오는 숫자를 기본 단위에 맞춤.
                         percent_price = return_cal/slider_data_max; // 전체 최대 비용값 대비 현재 버튼의 가격의 % 정도 출력.
-                        
+                        // -- 퍼센트 출력부의 소수점이 버튼 조작시 최대/최소 범위를 넘지 않도록 범위지정.
                         if(percent_price>1){
                             percent_price = 1;
                         }
                         else if(percent_price<0){
                             percent_price = 0;
                         }
-
-                        console.log('slider_bar_per = '+slider_bar_per);
+                        //  -----------------------------------------------------------------
+                        console.log('slider_bar_per = '+slider_bar_per+' / data_cal_cut = '+data_cal_cut+' / percent_price = '+percent_price);
                         return false;
                     };
                     function sep_bar_auto(){ // 기본 동작 범위 안에서 동작에 사용되는 마지막 수식 공통 함수(최소 단위 밑의 자릿수가 있을 경우 반올림)->slider_math에 기능이 합쳐져 사용 안함.
@@ -217,14 +219,25 @@
                         vanila_slider_over.style.width=trans_val_over;
 
                         pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-                        vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        
+                        var num_per_price = Number(percent_price.toFixed(split_zero_cal))*100;                        
+                        var price_split_length;
+
+                        if(String(data_cal_cut).split('.').length>2){
+                            price_split_length = String(data_cal_cut).split('.')[1].length;
+                        }else{
+                            price_split_length = 0;
+                        }
+                        
+                        vanila_slider_status.innerHTML=pattern_sep+'<br>'+num_per_price.toFixed(1)+'%';
                         clone_sep=pattern_sep;
 
                         cal_pattern = pattern_sep.split(',').length;
                         console.log('cal_pattern = '+cal_pattern);
 
                         return_cal = pattern_sep.toString().replace(/,/g, "");
-                        console.log('return_cal = '+ return_cal);
+                        console.log('return_cal = '+ return_cal + ' / percent_price = '+percent_price);
+                        console.log(' === price_split_length = '+price_split_length);
 
                         input_point=slider_data_reset;
                         trans_val_button=slider_icon_point-slider_bar_halfButton+'px';
@@ -624,7 +637,7 @@
                     if((clone_sep==undefined)||(clone_sep==null)){
                         vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
                     }else{
-                        vanila_slider_status.innerHTML=clone_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
                     };
                     // console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / new_point = '+new_point);
                 };
