@@ -18,7 +18,8 @@
         .wrap-all .wrapper_slider .vanila_slider_over{display:block;position:relative;width:0%;max-width:500px;height:20px;background:rgb(74, 213, 231);border-radius:50px;}
         .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_button{display:block;position:absolute;width:34px;height:34px;background:#009688;border:2px solid #fff;outline:1px solid #666;border-radius:50%;left:0;top:-7px;opacity:1;cursor:pointer;}
         .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_status{display:block;position:absolute;min-width:30px;min-height:30px;background:transparent;left:0px;top:0;margin-top:40px;text-align:center;color:#000;}
-    
+        .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_percent{display:block;position:absolute;min-width:30px;min-height:30px;background:transparent;left:0px;top:0;margin-top:40px;text-align:center;color:#000;}
+
         .wrap-all .wrapper_slider>div:nth-of-type(2){position:relative;margin:4px auto 0;}
         .wrap-all .wrapper_slider>div:nth-of-type(2)>span{position:absolute;font-size:1.4rem;color:#666;}
         .wrap-all .wrapper_slider>div:nth-of-type(2) .slider_min{left:-20px;}
@@ -42,11 +43,12 @@
                 // console.log('i = '+wrapper_slider);
                 var vanila_slider_bar=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_bar'); // -- 슬라이더바 아이디 지정 및 선택.
                 var wrapper_slider_create=document.createElement('div'); // -- .slider_min, .slider_max 를 감싸는 div.
-                vanila_slider_bar.innerHTML+='<span class="vanila_slider_over"></span><button class="vanila_slider_button"></button><span class="vanila_slider_status"></span>';
+                vanila_slider_bar.innerHTML+='<span class="vanila_slider_over"></span><button class="vanila_slider_button"></button><span class="vanila_slider_status"></span><span class="vanila_slider_percent"></span>';
                 var slider_bar_width=vanila_slider_bar.clientWidth; // -- 각 .vanila_slider_bar 넓이값.
                 var vanila_slider_over=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_over');
                 var slider_bar_button=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_button');
                 var vanila_slider_status=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_status');
+                var vanila_slider_percent=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_percent');
                 var slider_data_cal=vanila_slider_bar.getAttribute('data-cal'); // -- 값의 최소 기준 단위.
                 var slider_data_max=vanila_slider_bar.getAttribute('data-max'); // -- 슬라이더의 최대값.
                 var slider_data_min=vanila_slider_bar.getAttribute('data-min'); // -- 슬라리더의 최소값.
@@ -110,7 +112,7 @@
                 var resize_timer = null;
                 //------------------------------------------------------/
                 //-----작동 script 시작----------------------------------
-                vanila_slider_status.innerHTML=pattern_sep+'<br>'+(((slider_bar_per/slider_data_max).toFixed(4))*100)+'%'; // 최초 페이지 진입 시 현재 슬라이더 위치에 기반하여 금액 표시.
+                // vanila_slider_status.innerHTML=pattern_sep+'<br>'+(((slider_bar_per/slider_data_max).toFixed(4))*100)+'%'; // 최초 페이지 진입 시 현재 슬라이더 위치에 기반하여 금액 표시.
                 if(slider_point_split==undefined){
                     point_split_zero = 0;
                 }else{
@@ -146,7 +148,8 @@
                         slider_data_per=slider_data_min;
                     };
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-                    vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                    vanila_slider_status.innerHTML=pattern_sep;
+                    vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
                     // console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
                     old_point=Number(slider_bar_button.style.left.split('px')[0]);
                     default_width=slider_bar_width;
@@ -229,7 +232,10 @@
                             price_split_length = 0;
                         }
                         // ------------------------------------------
-                        vanila_slider_status.innerHTML=pattern_sep+'<br>'+num_per_price.toFixed(price_split_length)+'%';
+                        // vanila_slider_status.innerHTML=pattern_sep+'<br>'+num_per_price.toFixed(price_split_length)+'%';
+                        vanila_slider_status.innerHTML=pattern_sep;
+                        vanila_slider_percent.innerHTML=num_per_price.toFixed(price_split_length)+'%';
+
                         clone_sep=pattern_sep;
 
                         cal_pattern = pattern_sep.split(',').length;
@@ -484,7 +490,9 @@
                         slider_data_per=slider_data_min;
                     };
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-                    vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(point_split_zero))*100)+'%';
+                    // vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(point_split_zero))*100)+'%';
+                    vanila_slider_status.innerHTML=pattern_sep;
+                    vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(point_split_zero))*100)+'%';
                     // console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
                     return false;
                 };
@@ -635,9 +643,13 @@
                     // console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / clone_sep = '+clone_sep);
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     if((clone_sep==undefined)||(clone_sep==null)){
-                        vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        // vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        vanila_slider_status.innerHTML=pattern_sep;
+                        vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
                     }else{
-                        vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        // vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        vanila_slider_status.innerHTML=pattern_sep;
+                        vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
                     };
                     // console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / new_point = '+new_point);
                 };
@@ -687,10 +699,14 @@
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     
                     if((clone_sep==undefined)||(clone_sep==null)){
-                        vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        // vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        vanila_slider_status.innerHTML=pattern_sep;
+                        vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
                     }else{
-                        vanila_slider_status.innerHTML=clone_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
-                    };                    
+                        // vanila_slider_status.innerHTML=clone_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        vanila_slider_status.innerHTML=pattern_sep;
+                        vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                    };
                     // console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / new_point = '+new_point);                    
                 }
 

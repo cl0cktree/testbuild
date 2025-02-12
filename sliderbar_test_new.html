@@ -18,6 +18,7 @@
         .wrap-all .wrapper_slider .vanila_slider_over{display:block;position:relative;width:0%;max-width:500px;height:20px;background:rgb(74, 213, 231);border-radius:50px;}
         .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_button{display:block;position:absolute;width:34px;height:34px;background:#009688;border:2px solid #fff;outline:1px solid #666;border-radius:50%;left:0;top:-7px;opacity:1;cursor:pointer;}
         .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_status{display:block;position:absolute;min-width:30px;min-height:30px;background:transparent;left:0px;top:0;margin-top:40px;text-align:center;color:#000;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_percent{display:block;position:absolute;min-width:30px;min-height:30px;background:transparent;left:0px;top:0;margin-top:40px;text-align:center;color:#000;}
     
         .wrap-all .wrapper_slider>div:nth-of-type(2){position:relative;margin:4px auto 0;}
         .wrap-all .wrapper_slider>div:nth-of-type(2)>span{position:absolute;font-size:1.4rem;color:#666;}
@@ -42,11 +43,12 @@
                 // console.log('i = '+wrapper_slider);
                 var vanila_slider_bar=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_bar'); // -- 슬라이더바 아이디 지정 및 선택.
                 var wrapper_slider_create=document.createElement('div'); // -- .slider_min, .slider_max 를 감싸는 div.
-                vanila_slider_bar.innerHTML+='<span class="vanila_slider_over"></span><button class="vanila_slider_button"></button><span class="vanila_slider_status"></span>';
+                vanila_slider_bar.innerHTML+='<span class="vanila_slider_over"></span><button class="vanila_slider_button"></button><span class="vanila_slider_status"></span><span class="vanila_slider_percent"></span>';
                 var slider_bar_width=vanila_slider_bar.clientWidth; // -- 각 .vanila_slider_bar 넓이값.
                 var vanila_slider_over=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_over');
                 var slider_bar_button=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_button');
                 var vanila_slider_status=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_status');
+                var vanila_slider_percent=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_percent');
                 var slider_data_cal=vanila_slider_bar.getAttribute('data-cal'); // -- 값의 최소 기준 단위.
                 var slider_data_max=vanila_slider_bar.getAttribute('data-max'); // -- 슬라이더의 최대값.
                 var slider_data_min=vanila_slider_bar.getAttribute('data-min'); // -- 슬라리더의 최소값.
@@ -98,8 +100,12 @@
                 var sep_max_min=slider_data_max.slice(minus_data_cal,slider_data_max.length);
                 var round_data_min=(sep_max_min)/slider_data_cal;
                 var pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                var pattern_per=((slider_bar_per/slider_data_max).toFixed(4))*100;
                 var percent_price;
                 var clone_sep;
+                var clone_per;
+                var num_per_price;
+                var price_split_length;
                 // var slider_bar_button_before=document.documentElement.style.setProperty('content',slider_data_ratio);
                 var max_sum_plus=Number(slider_data_max)+Number(slider_data_min);
                 var max_sum_minus=Number(slider_data_max)-Number(slider_data_min);
@@ -110,7 +116,9 @@
                 var resize_timer = null;
                 //------------------------------------------------------/
                 //-----작동 script 시작----------------------------------
-                vanila_slider_status.innerHTML=pattern_sep+'<br>'+(((slider_bar_per/slider_data_max).toFixed(4))*100)+'%'; // 최초 페이지 진입 시 현재 슬라이더 위치에 기반하여 금액 표시.
+                // vanila_slider_status.innerHTML=pattern_sep+'<br>'; // 최초 페이지 진입 시 현재 슬라이더 위치에 기반하여 금액 표시.
+                // vanila_slider_percent.innerHTML=(((slider_bar_per/slider_data_max).toFixed(4))*100)+'%';
+                // console.log(' --=-= slider_bar_per = '+Number(slider_bar_per));
                 if(slider_point_split==undefined){
                     point_split_zero = 0;
                 }else{
@@ -125,6 +133,7 @@
                     return_cal = pattern_sep.toString().replace(/,/g, "");
                     slider_icon_point=slider_data_default;
                     percent_price = return_cal/slider_data_max;
+                    slider_bar_per=100*slider_icon_point/slider_bar_width;
                     
                     slider_data_per=((max_sum_minus)*slider_pointer_per)+Number(slider_data_min);
                     var sep_first_per=slider_data_cal.toString().substring(0,1);
@@ -146,7 +155,12 @@
                         slider_data_per=slider_data_min;
                     };
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-                    vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                    pattern_per=(percent_price.toFixed(4))*100;
+                    clone_per=pattern_per;
+                    vanila_slider_status.innerHTML=pattern_sep;
+                    vanila_slider_percent.innerHTML=clone_per+'%';
+                    console.log(' =-= percent_price = '+percent_price);
+
                     // console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
                     old_point=Number(slider_bar_button.style.left.split('px')[0]);
                     default_width=slider_bar_width;
@@ -182,7 +196,7 @@
 
                         var sep_bar_per = slider_bar_per.toString().slice(minus_data_cal,slider_data_max.length);
                         slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal))); //기본 단위 밑으로 계산되어 나오는 숫자를 기본 단위에 맞춤.
-                        percent_price = return_cal/slider_data_max; // 전체 최대 비용값 대비 현재 버튼의 가격의 % 정도 출력.
+                        percent_price = return_cal/max_sum_plus; // 전체 최대 비용값과 최소 비용값을 더한 수 대비 현재 버튼의 가격의 % 정도 출력.
                         // -- 퍼센트 출력부의 소수점이 버튼 조작시 최대/최소 범위를 넘지 않도록 범위지정.
                         if(percent_price>1){
                             percent_price = 1;
@@ -191,7 +205,7 @@
                             percent_price = 0;
                         }
                         //  -----------------------------------------------------------------
-                        console.log('slider_bar_per = '+slider_bar_per+' / data_cal_cut = '+data_cal_cut+' / percent_price = '+percent_price);
+                        console.log('slider_bar_per = '+slider_bar_per+' / data_cal_cut = '+data_cal_cut+' / max_sum_plus = '+max_sum_plus);
                         return false;
                     };
                     function sep_bar_auto(){ // 기본 동작 범위 안에서 동작에 사용되는 마지막 수식 공통 함수(최소 단위 밑의 자릿수가 있을 경우 반올림)->slider_math에 기능이 합쳐져 사용 안함.
@@ -219,9 +233,10 @@
                         vanila_slider_over.style.width=trans_val_over;
 
                         pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                        pattern_per=(percent_price.toFixed(4))*100;
+                        clone_per=pattern_per;
                         
-                        var num_per_price = Number(percent_price.toFixed(split_zero_cal))*100;                        
-                        var price_split_length;
+                        num_per_price = Number(percent_price.toFixed(split_zero_cal))*100;                        
                         // -- 소수 유무 검사 후 해당 소수점 자리 자동 설정.
                         if(String(data_cal_cut).split('.').length>1){
                             price_split_length = String(data_cal_cut).split('.')[1].length;
@@ -230,6 +245,7 @@
                         }
                         // ------------------------------------------
                         vanila_slider_status.innerHTML=pattern_sep+'<br>'+num_per_price.toFixed(price_split_length)+'%';
+                        vanila_slider_percent.innerHTML=clone_per+'%';
                         clone_sep=pattern_sep;
 
                         cal_pattern = pattern_sep.split(',').length;
@@ -485,6 +501,8 @@
                     };
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(point_split_zero))*100)+'%';
+                    vanila_slider_percent.innerHTML=(((slider_bar_per/slider_data_max).toFixed(4))*100)+'%';
+
                     // console.log('.wrapper_slider_'+i+' => 1 = '+((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)+' / .wrapper_slider_'+i+' => 2 = '+slider_status_width+' / .wrapper_slider_'+i+' => vanila_slider_status = '+Number(vanila_slider_status.clientWidth/2));
                     return false;
                 };
@@ -636,8 +654,10 @@
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     if((clone_sep==undefined)||(clone_sep==null)){
                         vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        vanila_slider_percent.innerHTML=(((slider_bar_per/slider_data_max).toFixed(4))*100)+'%';
                     }else{
                         vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        vanila_slider_percent.innerHTML=(((slider_bar_per/slider_data_max).toFixed(4))*100)+'%';
                     };
                     // console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / new_point = '+new_point);
                 };
@@ -688,8 +708,10 @@
                     
                     if((clone_sep==undefined)||(clone_sep==null)){
                         vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        vanila_slider_percent.innerHTML=(((slider_bar_per/slider_data_max).toFixed(4))*100)+'%';
                     }else{
                         vanila_slider_status.innerHTML=clone_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        vanila_slider_percent.innerHTML=(((slider_bar_per/slider_data_max).toFixed(4))*100)+'%';
                     };                    
                     // console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / new_point = '+new_point);                    
                 }
