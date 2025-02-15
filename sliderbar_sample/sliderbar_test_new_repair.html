@@ -52,7 +52,7 @@
                 var slider_data_cal=vanila_slider_bar.getAttribute('data-cal'); // -- 값의 최소 기준 단위.
                 var slider_data_max=vanila_slider_bar.getAttribute('data-max'); // -- 슬라이더의 최대값.
                 var slider_data_min=vanila_slider_bar.getAttribute('data-min'); // -- 슬라리더의 최소값.
-                var data_cal_cut = (slider_data_cal/slider_data_max)*100; // -- 기준 단위를 슬라이더의 최대값으로 나눈 값으로 슬라이더의 최소 단위. 퍼센트 최소 소수점 및 단위 비교의 척도.
+                var data_cal_cut = (slider_data_cal/(slider_data_max+slider_data_min))*100; // -- 기준 단위를 슬라이더의 최대값으로 나눈 값으로 슬라이더의 최소 단위. 퍼센트 최소 소수점 및 단위 비교의 척도.
                 var bar_per_min;
                 var default_width; // -- 최초의 슬라이더 넓이값.
                 var old_width; // -- 이전의 슬라이더 넓이값.
@@ -98,6 +98,9 @@
                 var split_zero_cal;
                 var cal_pattern;
                 var return_cal;
+                var split_length_cal;
+                var num_per_price;
+                var price_split_length;
                 var slider_data_per=((slider_data_max)*slider_pointer_per);
                 var minus_data_cal=(slider_data_cal.length-1)*-1;
                 var max_min_ratio=Math.round(slider_data_max/slider_data_cal);
@@ -234,18 +237,27 @@
 
                         pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                         
-                        var num_per_price = Number(percent_price.toFixed(split_zero_cal))*100;                        
-                        var price_split_length;
+                        num_per_price = Number(percent_price.toFixed(split_zero_cal))*100;
+                        
+                        if(slider_point_split==undefined){
+                            point_split_zero = 0;
+                        }else{
+                            point_split_zero = slider_point_split.length;
+                            split_zero_cal = point_split_zero+3;
+                        };
+
                         // -- 소수 유무 검사 후 해당 소수점 자리 자동 설정.
                         if(String(data_cal_cut).split('.').length>1){
                             price_split_length = String(data_cal_cut).split('.')[1].length;
+                            split_length_cal = num_per_price.toFixed(price_split_length);
                         }else{
-                            price_split_length = 0;
+                            price_split_length = num_per_price;
+                            split_length_cal = data_cal_cut;
                         }
                         // ------------------------------------------
                         // vanila_slider_status.innerHTML=pattern_sep+'<br>'+num_per_price.toFixed(price_split_length)+'%';
                         vanila_slider_status.innerHTML=pattern_sep;
-                        vanila_slider_percent.innerHTML=num_per_price.toFixed(price_split_length)+'%';
+                        vanila_slider_percent.innerHTML=split_length_cal+'%';
 
                         clone_sep=pattern_sep;
 
@@ -254,7 +266,7 @@
 
                         return_cal = pattern_sep.toString().replace(/,/g, "");
                         console.log('return_cal = '+ return_cal + ' / percent_price = '+percent_price);
-                        console.log(' === price_split_length = '+price_split_length+' / trans_val_percent = '+trans_val_percent);
+                        console.log(' === price_split_length = '+price_split_length+' / split_length_cal = '+split_length_cal+' / trans_val_percent = '+trans_val_percent);
 
                         input_point=slider_data_reset;
                         // --  20250214 주석처리 ---------------------------------------
@@ -470,37 +482,42 @@
                     // -- 소수 유무 검사 후 해당 소수점 자리 자동 설정.
                     if(String(data_cal_cut).split('.').length>1){
                         price_split_length = String(data_cal_cut).split('.')[1].length;
+                        split_length_cal = Number(percent_price.toFixed(price_split_length));
                     }else{
-                        price_split_length = 0;
+                        price_split_length = String(data_cal_cut).split('.')[0].length;
+                        split_length_cal = Number(percent_price);
                     }
                     // ------------------------------------------
                     if((new_point==undefined)||(new_point==null)){
                         if((default_width!==old_width)){
                             // slider_data_reset=old_point;
-                            slider_data_reset = (Number(percent_price.toFixed(split_zero_cal)) * new_width)-(slider_bar_halfButton/2);
+                            slider_data_reset = (split_length_cal * new_width)-(slider_bar_halfButton/2);
+                            console.log(' !== 0-1. new_width!==old_width = ' + slider_data_reset+' / price_split_length = '+price_split_length+' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero)+' / slider_data_per = '+slider_data_per+' / slider_data_per = '+slider_data_per);
                             // console.log('m---old_width/old_point---');
                         }else{
-                            slider_data_reset = (Number(percent_price.toFixed(split_zero_cal)) * new_width)-(slider_bar_halfButton/2);
+                            slider_data_reset = (split_length_cal * new_width)-(slider_bar_halfButton/2);
+                            console.log(' !== 0-2. new_width!==old_width = ' + slider_data_reset+' / price_split_length = '+price_split_length+' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero)+' / slider_data_per = '+slider_data_per+' / slider_data_per = '+slider_data_per);
                         };
                         reisze_check=true;
                     }else{
                         if((default_width!==old_width)){
                             if(new_width!==old_width){
-                                slider_data_reset = (Number(percent_price.toFixed(split_zero_cal)) * new_width)-(slider_bar_halfButton/2);
-                                console.log('1-1. new_width!==old_width = ' + slider_data_reset+' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero)+' / slider_data_per = '+slider_data_per+' / slider_data_per = '+slider_data_per);
+                                slider_data_reset = (split_length_cal * new_width)-(slider_bar_halfButton/2);
+                                console.log(' !== 1-1. new_width!==old_width = ' + slider_data_reset+' / price_split_length = '+price_split_length+' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero)+' / slider_data_per = '+slider_data_per+' / slider_data_per = '+slider_data_per);
                             }else{
-                                slider_data_reset = (Number(percent_price.toFixed(split_zero_cal)) * old_width)-(slider_bar_halfButton/2);
-                                console.log('1-2. new_width==old_width = ' + slider_data_reset+' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero)+' / slider_data_per = '+slider_data_per+' / slider_data_per = '+slider_data_per);
+                                slider_data_reset = (split_length_cal * old_width)-(slider_bar_halfButton/2);
+                                console.log(' !== 1-2. new_width==old_width = ' + slider_data_reset+' / price_split_length = '+price_split_length+' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero)+' / slider_data_per = '+slider_data_per+' / slider_data_per = '+slider_data_per);
                             }
-                            console.log('1. default_width!==old_width = ' + slider_data_reset+' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero)+' / slider_data_per = '+slider_data_per+' / slider_data_per = '+slider_data_per);
+                            console.log(' !== 1. default_width!==old_width = ' + slider_data_reset+' / price_split_length = '+price_split_length+' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero)+' / slider_data_per = '+slider_data_per+' / slider_data_per = '+slider_data_per);
                         }else{
                             if(new_width!==old_width){
-                                console.log('2-1. new_width!==old_width = ' + slider_data_reset);
-                                slider_data_reset = (Number(percent_price.toFixed(split_zero_cal)) * new_width)-(slider_bar_halfButton/2);
+                                slider_data_reset = (split_length_cal * new_width)-(slider_bar_halfButton/2);
+                                console.log(' !== 2-1. new_width!==old_width = ' + slider_data_reset + slider_data_reset+' / price_split_length = '+price_split_length+' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero)+' / slider_data_per = '+slider_data_per+' / slider_data_per = '+slider_data_per);
                             }else{
-                                slider_data_reset = (Number(percent_price.toFixed(split_zero_cal)) * old_width)-(slider_bar_halfButton/2);
+                                slider_data_reset = (split_length_cal * old_width)-(slider_bar_halfButton/2);
+                                console.log(' !== 2-2. new_width!==old_width = ' + slider_data_reset + slider_data_reset+' / price_split_length = '+price_split_length+' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero)+' / slider_data_per = '+slider_data_per+' / slider_data_per = '+slider_data_per);
                             }
-                            console.log('2-2. new_width==old_width = ' + slider_data_reset);
+                            console.log(' !== 2. new_width==old_width = ' + slider_data_reset + slider_data_reset+' / price_split_length = '+price_split_length+' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero)+' / slider_data_per = '+slider_data_per+' / slider_data_per = '+slider_data_per);
                         };
                         reisze_check=true;
                     }
