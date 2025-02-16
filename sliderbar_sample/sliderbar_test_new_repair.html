@@ -17,8 +17,9 @@
         .wrap-all .wrapper_slider .vanila_slider_bar{display:block;position:relative;height:20px;border:2px solid #fff;outline:1px solid #666;margin:8px auto 0;background:yellowgreen;border-radius:50px;}
         .wrap-all .wrapper_slider .vanila_slider_over{display:block;position:relative;width:0%;max-width:500px;height:20px;background:rgb(74, 213, 231);border-radius:50px;}
         .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_button{display:block;position:absolute;width:34px;height:34px;background:#009688;border:2px solid #fff;outline:1px solid #666;border-radius:50%;left:0;top:-7px;opacity:1;cursor:pointer;}
-        .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_status{display:block;position:absolute;min-width:30px;min-height:30px;background:transparent;left:0px;top:0;margin-top:40px;text-align:center;color:#000;}
-        .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_percent{display:block;position:absolute;min-width:30px;min-height:30px;background:transparent;margin-top:40px;text-align:center;color:#000;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .slider_status_all{display:block;position:absolute;min-width:30px;min-height:30px;background:transparent;left:0px;top:0;margin-top:40px;text-align:center;color:#000;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .slider_status_all .vanila_slider_status{display:inline-block;position:relative;width:100%;min-width:30px;min-height:30px;background:transparent;left:0px;top:0;margin-top:0px;text-align:center;color:#000;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .slider_status_all .vanila_slider_percent{display:inline-block;position:relative;width:100%;min-width:30px;min-height:30px;background:transparent;margin-top:0px;text-align:center;color:#000;}
 
         .wrap-all .wrapper_slider>div:nth-of-type(2){position:relative;margin:4px auto 0;}
         .wrap-all .wrapper_slider>div:nth-of-type(2)>span{position:absolute;font-size:1.4rem;color:#666;}
@@ -43,16 +44,16 @@
                 // console.log('i = '+wrapper_slider);
                 var vanila_slider_bar=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_bar'); // -- 슬라이더바 아이디 지정 및 선택.
                 var wrapper_slider_create=document.createElement('div'); // -- .slider_min, .slider_max 를 감싸는 div.
-                vanila_slider_bar.innerHTML+='<span class="vanila_slider_over"></span><button class="vanila_slider_button"></button><span class="vanila_slider_status"></span><span class="vanila_slider_percent"></span>';
+                vanila_slider_bar.innerHTML+='<span class="vanila_slider_over"></span><button class="vanila_slider_button"></button><div class="slider_status_all"><span class="vanila_slider_status"></span><span class="vanila_slider_percent"></span></div>';
                 var slider_bar_width=vanila_slider_bar.clientWidth; // -- 각 .vanila_slider_bar 넓이값.
                 var vanila_slider_over=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_over');
                 var slider_bar_button=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_button');
+                var slider_status_all=document.querySelector('.wrapper_slider_'+i+' .slider_status_all');
                 var vanila_slider_status=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_status');
                 var vanila_slider_percent=document.querySelector('.wrapper_slider_'+i+' .vanila_slider_percent');
                 var slider_data_cal=vanila_slider_bar.getAttribute('data-cal'); // -- 값의 최소 기준 단위.
                 var slider_data_max=vanila_slider_bar.getAttribute('data-max'); // -- 슬라이더의 최대값.
                 var slider_data_min=vanila_slider_bar.getAttribute('data-min'); // -- 슬라리더의 최소값.
-                var data_cal_cut = (slider_data_cal/(slider_data_max+slider_data_min))*100; // -- 기준 단위를 슬라이더의 최대값으로 나눈 값으로 슬라이더의 최소 단위. 퍼센트 최소 소수점 및 단위 비교의 척도.
                 var bar_per_min;
                 var default_width; // -- 최초의 슬라이더 넓이값.
                 var old_width; // -- 이전의 슬라이더 넓이값.
@@ -86,6 +87,7 @@
                 var slider_icon_move;
                 var slider_data_reset;
                 var slider_bar_per=100*slider_icon_point/slider_bar_width; // -- 현재 버튼의 위치에 비례하여 출력 되는 증감되는 비용 계산에 사용 됨. resize 시 비율 계산과 값이 교체 되므로 중요함.
+                var all_status_width=Number(slider_status_all.clientWidth/2);
                 var slider_status_width=Number(vanila_slider_status.clientWidth/2);
                 var slider_percent_width=Number(vanila_slider_percent.clientWidth/2);
                 var slider_bar_halfButton=Number(slider_bar_button.offsetWidth/2);
@@ -112,6 +114,7 @@
                 // var slider_bar_button_before=document.documentElement.style.setProperty('content',slider_data_ratio);
                 var max_sum_plus=Number(slider_data_max)+Number(slider_data_min);
                 var max_sum_minus=Number(slider_data_max)-Number(slider_data_min);
+                var data_cal_cut = ((slider_data_cal/max_sum_minus).toFixed(4)*100); // -- 기준 단위를 슬라이더의 최대값으로 나눈 값으로 슬라이더의 최소 단위. 퍼센트 최소 소수점 및 단위 비교의 척도.
                 var plus_num=0;
                 var animation_frame_1 = 0;
                 var animation_frame_2 = 600;
@@ -131,12 +134,14 @@
                     slider_bar_width=vanila_slider_bar.clientWidth;
                     slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                     slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-(slider_status_width*2);
+                    
                     slider_data_default_percent=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-(slider_status_width);
+                    
                     return_cal = pattern_sep.toString().replace(/,/g, "");
                     slider_icon_point=slider_data_default;
                     percent_price = return_cal/slider_data_max;
                     
-                    slider_data_per=((max_sum_minus)*slider_pointer_per)+Number(slider_data_min);
+                    slider_data_per=((max_sum_plus)*slider_pointer_per);
                     var sep_first_per=slider_data_cal.toString().substring(0,1);
                     var sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
 
@@ -250,9 +255,12 @@
                         if(String(data_cal_cut).split('.').length>1){
                             price_split_length = String(data_cal_cut).split('.')[1].length;
                             split_length_cal = num_per_price.toFixed(price_split_length);
+                            if(data_cal_cut){
+
+                            }
                         }else{
-                            price_split_length = num_per_price;
-                            split_length_cal = data_cal_cut;
+                            price_split_length = data_cal_cut;
+                            split_length_cal =num_per_price;
                         }
                         // ------------------------------------------
                         // vanila_slider_status.innerHTML=pattern_sep+'<br>'+num_per_price.toFixed(price_split_length)+'%';
@@ -266,7 +274,7 @@
 
                         return_cal = pattern_sep.toString().replace(/,/g, "");
                         console.log('return_cal = '+ return_cal + ' / percent_price = '+percent_price);
-                        console.log(' === price_split_length = '+price_split_length+' / split_length_cal = '+split_length_cal+' / trans_val_percent = '+trans_val_percent);
+                        console.log(' === price_split_length = '+price_split_length+' / split_length_cal = '+split_length_cal+' / max_min_ratio = '+max_min_ratio+' / trans_val_percent = '+trans_val_percent);
 
                         input_point=slider_data_reset;
                         // --  20250214 주석처리 ---------------------------------------
