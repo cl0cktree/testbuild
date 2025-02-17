@@ -17,9 +17,9 @@
         .wrap-all .wrapper_slider .vanila_slider_bar{display:block;position:relative;height:20px;border:2px solid #fff;outline:1px solid #666;margin:8px auto 0;background:yellowgreen;border-radius:50px;}
         .wrap-all .wrapper_slider .vanila_slider_over{display:block;position:relative;width:0%;max-width:500px;height:20px;background:rgb(74, 213, 231);border-radius:50px;}
         .wrap-all .wrapper_slider .vanila_slider_bar .vanila_slider_button{display:block;position:absolute;width:34px;height:34px;background:#009688;border:2px solid #fff;outline:1px solid #666;border-radius:50%;left:0;top:-7px;opacity:1;cursor:pointer;}
-        .wrap-all .wrapper_slider .vanila_slider_bar .slider_status_all{display:block;position:absolute;min-width:30px;min-height:30px;background:transparent;left:0px;top:0;margin-top:40px;text-align:center;color:#000;}
-        .wrap-all .wrapper_slider .vanila_slider_bar .slider_status_all .vanila_slider_status{display:inline-block;position:relative;width:100%;min-width:30px;min-height:30px;background:transparent;left:0px;top:0;margin-top:0px;text-align:center;color:#000;}
-        .wrap-all .wrapper_slider .vanila_slider_bar .slider_status_all .vanila_slider_percent{display:inline-block;position:relative;width:100%;min-width:30px;min-height:30px;background:transparent;margin-top:0px;text-align:center;color:#000;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .slider_status_all{display:block;position:absolute;width:max-content;min-width:72px;min-height:30px;background:transparent;left:0px;top:0;margin-top:40px;text-align:center;color:#000;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .slider_status_all .vanila_slider_status{display:block;position:relative;width:fit-content;min-width:30px;min-height:30px;background:transparent;left:0px;top:0;margin:0px auto;text-align:center;color:#000;}
+        .wrap-all .wrapper_slider .vanila_slider_bar .slider_status_all .vanila_slider_percent{display:block;position:relative;width:fit-content;min-width:30px;min-height:30px;background:transparent;margin:0px auto;text-align:center;color:#000;}
 
         .wrap-all .wrapper_slider>div:nth-of-type(2){position:relative;margin:4px auto 0;}
         .wrap-all .wrapper_slider>div:nth-of-type(2)>span{position:absolute;font-size:1.4rem;color:#666;}
@@ -94,6 +94,7 @@
                 var slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                 var slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_status_width;
                 var slider_data_default_percent=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width);
+                var slider_data_default_all=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-(slider_status_all/2);
                 var slider_pointer_per=(slider_data_default+slider_bar_halfButton)/slider_bar_width;
                 var slider_point_split = String(slider_pointer_per).split('.')[1]; // -- 퍼센트 출력부의 소수점 부분 추출.
                 var point_split_zero;
@@ -131,11 +132,13 @@
                 }
                 function default_data(){ // 최초 페이지 진입시 슬라이더 동작 함수.
                     slider_status_width=Number(vanila_slider_status.clientWidth/2);
+                    all_status_width = Number(slider_status_all.clientWidth)/2;
+                    console.log(' -=-= all_status_width = '+all_status_width);
                     slider_bar_width=vanila_slider_bar.clientWidth;
                     slider_data_default=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-slider_bar_halfButton;
                     slider_data_default_status=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-(slider_status_width*2);
-                    
                     slider_data_default_percent=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-(slider_status_width);
+                    slider_data_default_all=((vanila_slider_bar.getAttribute('data-default')/100)*slider_bar_width)-all_status_width;
                     
                     return_cal = pattern_sep.toString().replace(/,/g, "");
                     slider_icon_point=slider_data_default;
@@ -146,8 +149,9 @@
                     var sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
 
                     slider_bar_button.style.left=slider_data_default+'px';
-                    vanila_slider_status.style.left=slider_data_default_status+'px';
-                    vanila_slider_percent.style.left=slider_data_default_percent+'px';
+                    // vanila_slider_status.style.left=slider_data_default_status+'px';
+                    // vanila_slider_percent.style.left=slider_data_default_percent+'px';
+                    slider_status_all.style.left=slider_data_default_all+'px';
                     vanila_slider_over.style.width=slider_data_default+slider_bar_button.clientWidth+'px';
 
                     // console.log('sep_first_per = '+sep_first_per);
@@ -236,8 +240,9 @@
                         trans_val_over=trans_per+slider_bar_halfButton+'px';
 
                         slider_bar_button.style.left=trans_val_button;
-                        vanila_slider_status.style.left=trans_val_status;
-                        vanila_slider_percent.style.left=trans_val_percent;
+                        // vanila_slider_status.style.left=trans_val_status;
+                        // vanila_slider_percent.style.left=trans_val_percent;
+                        slider_status_all.style.left=trans_val_status;
                         vanila_slider_over.style.width=trans_val_over;
 
                         pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
@@ -553,9 +558,10 @@
                         re_val_over=slider_data_reset+slider_bar_halfButton+'px';
 
                         slider_bar_button.style.left=re_val_button;
-                        vanila_slider_status.style.left=re_val_status;
-                        vanila_slider_percent.style.left='';
-                        vanila_slider_percent.style.left=re_val_percent;
+                        // vanila_slider_status.style.left=re_val_status;
+                        slider_status_all.style.left=re_val_status;
+                        // vanila_slider_percent.style.left='';
+                        // vanila_slider_percent.style.left=re_val_percent;
                         vanila_slider_over.style.width=re_val_over;
 
                         console.log('resize - re_val_button = '+re_val_button+' / re_val_status = '+re_val_status+' / re_val_over = '+re_val_over+' / slider_data_reset = '+slider_data_reset+' / slider_percent_width = '+slider_percent_width+' / re_val_percent = '+re_val_percent);
