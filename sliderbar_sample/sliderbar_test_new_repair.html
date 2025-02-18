@@ -71,6 +71,7 @@
                 var re_val_status; // -- vanila_slider_status의 resize 값을 갖는 변수.
                 var re_val_percent; // -- vanila_slider_percent의 resize 값을 갖는 변수.
                 var re_val_over; // -- vanila_slider_over의 resize 값을 갖는 변수.
+                var re_val_all; // -- slider_status_all의 resize 값을 갖는 변수.
                 var trans_per; // -- 이전 넓이와 현재 넓이의 비율을 담는 변수.
                 var per_value; // -- resize 시와 이벤트 입력 시의 버튼 위치의 비율 공유를 위한 변수.
                 var frame_start;
@@ -245,38 +246,25 @@
                         slider_status_all.style.left=trans_val_status;
                         vanila_slider_over.style.width=trans_val_over;
 
-                        pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-                        
-                        num_per_price = Number(percent_price.toFixed(split_zero_cal))*100;
-                        
+                        // -- num_per_price 의 소수점 자리 자동 설정.
                         if(slider_point_split==undefined){
                             point_split_zero = 0;
                         }else{
                             point_split_zero = slider_point_split.length;
                             split_zero_cal = point_split_zero+3;
                         };
-
+                        // ------------------------------------------
+                        num_per_price = Number(percent_price.toFixed(split_zero_cal))*100;
                         // -- 소수 유무 검사 후 해당 소수점 자리 자동 설정.
                         if(String(data_cal_cut).split('.').length>1){
                             price_split_length = String(data_cal_cut).split('.')[1].length;
                             split_length_cal = num_per_price.toFixed(price_split_length);
-                            if(data_cal_cut){
-
-                            }
                         }else{
                             price_split_length = data_cal_cut;
                             split_length_cal =num_per_price;
                         }
                         // ------------------------------------------
-                        // vanila_slider_status.innerHTML=pattern_sep+'<br>'+num_per_price.toFixed(price_split_length)+'%';
-                        vanila_slider_status.innerHTML=pattern_sep;
-                        vanila_slider_percent.innerHTML=split_length_cal+'%';
-
-                        clone_sep=pattern_sep;
-
-                        cal_pattern = pattern_sep.split(',').length;
-                        console.log('cal_pattern = '+cal_pattern);
-
+                        pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                         return_cal = pattern_sep.toString().replace(/,/g, "");
                         console.log('return_cal = '+ return_cal + ' / percent_price = '+percent_price);
                         console.log(' === price_split_length = '+price_split_length+' / split_length_cal = '+split_length_cal+' / max_min_ratio = '+max_min_ratio+' / trans_val_percent = '+trans_val_percent);
@@ -310,6 +298,15 @@
 
                         //     console.log('ch2 = '+re_val_button+' / '+re_val_status+' / '+re_val_over);
                         // }
+
+                        // vanila_slider_status.innerHTML=pattern_sep+'<br>'+num_per_price.toFixed(price_split_length)+'%';
+                        vanila_slider_status.innerHTML=pattern_sep;
+                        vanila_slider_percent.innerHTML=split_length_cal+'%';
+
+                        clone_sep=pattern_sep;
+
+                        cal_pattern = pattern_sep.split(',').length;
+                        console.log('cal_pattern = '+cal_pattern);
 
                         new_point=Number(slider_bar_button.style.left.split('px')[0]);
                         console.log('evn - percent_price = '+percent_price+' / trans_val_button = '+trans_val_button+' / trans_val_status = '+trans_val_status+' / trans_val_over = '+trans_val_over+ ' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero));
@@ -554,12 +551,13 @@
                     function reset_move(){
                         re_val_button=slider_data_reset+'px';
                         re_val_status=slider_data_reset-slider_status_width+'px';
+                        re_val_all=slider_data_reset-slider_status_width+'px';
                         re_val_percent=slider_data_reset-slider_percent_width+'px';
                         re_val_over=slider_data_reset+slider_bar_halfButton+'px';
 
                         slider_bar_button.style.left=re_val_button;
                         // vanila_slider_status.style.left=re_val_status;
-                        slider_status_all.style.left=re_val_status;
+                        slider_status_all.style.left=re_val_all;
                         // vanila_slider_percent.style.left='';
                         // vanila_slider_percent.style.left=re_val_percent;
                         vanila_slider_over.style.width=re_val_over;
@@ -579,16 +577,40 @@
                         slider_data_per=slider_data_min;
                     };
                     // console.log('!!!resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / clone_sep = '+clone_sep);
+
+                    // -- num_per_price 의 소수점 자리 자동 설정.
+                    if(slider_point_split==undefined){
+                        point_split_zero = 0;
+                    }else{
+                        point_split_zero = slider_point_split.length;
+                        split_zero_cal = point_split_zero+3;
+                    };
+                    // ------------------------------------------
+                    num_per_price = Number(percent_price.toFixed(split_zero_cal))*100;
+                    // -- 소수 유무 검사 후 해당 소수점 자리 자동 설정.
+                    if(String(data_cal_cut).split('.').length>1){
+                        price_split_length = String(data_cal_cut).split('.')[1].length;
+                        split_length_cal = num_per_price.toFixed(price_split_length);
+                    }else{
+                        price_split_length = data_cal_cut;
+                        split_length_cal =num_per_price;
+                    }
+                    // ------------------------------------------
+
                     pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     if((clone_sep==undefined)||(clone_sep==null)){
                         // vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
-                        vanila_slider_status.innerHTML=pattern_sep;
-                        vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        // vanila_slider_status.innerHTML=pattern_sep;
+                        // vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        console.log('???resize_data_1 - (Number(percent_price.toFixed(split_zero_cal))*100) = '+(Number(percent_price.toFixed(split_zero_cal))*100)+' / percent_price = '+percent_price+' / split_zero_cal = '+split_zero_cal);
                     }else{
                         // vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
-                        vanila_slider_status.innerHTML=pattern_sep;
-                        vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        // vanila_slider_status.innerHTML=pattern_sep;
+                        // vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
+                        console.log('???resize_data_2 - (Number(percent_price.toFixed(split_zero_cal))*100) = '+(Number(percent_price.toFixed(split_zero_cal))*100)+' / percent_price = '+percent_price+' / split_zero_cal = '+split_zero_cal);
                     };
+                    vanila_slider_status.innerHTML=pattern_sep;
+                    vanila_slider_percent.innerHTML=split_length_cal+'%';
                     // console.log('???resize_data - slider_bar_width = '+slider_bar_width+' / slider_icon_point = '+slider_icon_point+' / new_point = '+new_point);
                 };
 
