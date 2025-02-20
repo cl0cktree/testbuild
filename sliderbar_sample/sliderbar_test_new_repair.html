@@ -207,6 +207,12 @@
 
                         var sep_bar_per = slider_bar_per.toString().slice(minus_data_cal,slider_data_max.length);
                         slider_data_per=(slider_data_per-(Number(slider_data_per)%Number(slider_data_cal))); //기본 단위 밑으로 계산되어 나오는 숫자를 기본 단위에 맞춤.
+                        
+                        // -- slider_math() 안에 아래의 수식이 있을 경우 마우스오버의 위치를 그대로 참조 하여 resetmove() 상의 버튼 위치가 결정 되어 width 변경 시 원치 않는 값을 참조 함.
+                        // pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                        // return_cal = pattern_sep.toString().replace(/,/g, "");
+                        // -----------------------------------------------------------------------------------------------------------------------------------------------
+                       
                         percent_price = return_cal/slider_data_max; // 전체 최대 비용값 대비 현재 버튼의 가격의 % 정도 출력.
                         // -- 퍼센트 출력부의 소수점이 버튼 조작시 최대/최소 범위를 넘지 않도록 범위지정.
                         if(percent_price>1){
@@ -267,7 +273,7 @@
                         pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                         return_cal = pattern_sep.toString().replace(/,/g, "");
                         console.log('return_cal = '+ return_cal + ' / percent_price = '+percent_price);
-                        console.log(' === price_split_length = '+price_split_length+' / split_length_cal = '+split_length_cal+' / max_min_ratio = '+max_min_ratio+' / trans_val_percent = '+trans_val_percent);
+                        console.log(' === price_split_length = '+price_split_length+' / split_length_cal = '+split_length_cal+' / slider_bar_per = '+slider_bar_per+' / trans_val_percent = '+trans_val_percent+ ' / percent_price = '+percent_price);
 
                         input_point=slider_data_reset;
                         // --  20250214 주석처리 ---------------------------------------
@@ -312,10 +318,21 @@
                         console.log('evn - percent_price = '+percent_price+' / trans_val_button = '+trans_val_button+' / trans_val_status = '+trans_val_status+' / trans_val_over = '+trans_val_over+ ' / percent_price.toFixed(point_split_zero) = '+percent_price.toFixed(point_split_zero));
                     };
 
+                    function click_pass(){
+                        pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                        return_cal = pattern_sep.toString().replace(/,/g, "");
+                    };
+                    
+                    function touch_pass(){
+                        slider_math();
+                        slider_move();
+                    };
+
                     function vanila_mouseClick(event){ // 마우스 클릭 시 적용되는 동작 함수(최소/최대 범위 도달 시 동작 및 정상 범위 내에서의 동작 방식).
                         event.preventDefault();
                         event.stopPropagation();
                         slide_icon_pageX=event.pageX;
+                        click_pass();
                         slider_math();
                         mousedown_start=false;
                         vanila_slider_over.classList.add('click-transition');
@@ -339,6 +356,7 @@
                             slider_move();
                             // console.log(vanila_slider_over.clientWidth);
                         };
+ 
                         // input_point=trans_val_button;
                         // new_point=Number(slider_bar_button.style.left.split('px')[0]);
                         // console.log('///--slider_data_default='+slider_data_default+' / slider_data_reset='+slider_data_reset);
@@ -381,6 +399,7 @@
                         event.preventDefault();
                         event.stopPropagation();
                         slide_icon_pageX=event.changedTouches[0].pageX;
+                        touch_pass();
                         slider_math();
                         if(slider_icon_point>slider_bar_width-(slider_bar_halfButton/4)){
                             slider_bar_per=slider_data_max;
@@ -447,6 +466,7 @@
                         slider_bar_button.classList.add('click-transition');
                         touch_func();
                     };
+
                     //--동작 이밴트 적용 부분-- 각 이밴트 함수 내부에 resize 시 조건을 내장시키는 방향으로 코드 수정할 것.
                     vanila_slider_bar.addEventListener('click',vanila_mouseClick,false);
                     vanila_slider_bar.addEventListener('mousedown',vanila_mouseDown,false);
