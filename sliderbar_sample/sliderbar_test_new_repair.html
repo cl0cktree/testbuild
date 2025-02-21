@@ -267,7 +267,7 @@
                             split_length_cal = num_per_price.toFixed(price_split_length);
                         }else{
                             price_split_length = data_cal_cut;
-                            split_length_cal =num_per_price;
+                            split_length_cal = Math.round(num_per_price);
                         }
                         // ------------------------------------------
                         pattern_sep=slider_bar_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
@@ -382,6 +382,7 @@
                                 slider_bar_per=slider_data_min;
                             };
                             slider_icon_point=0+(slider_bar_halfButton/4);
+                            console.log(' !@# -- mouse_func -- slider_icon_point = '+slider_icon_point);
                             slider_move();
                         }else{
                             if(mousedown_start==true){
@@ -508,7 +509,7 @@
                     var sep_first_per=slider_data_cal.toString().substring(0,1);
                     var sep_bar_per=slider_data_per.toString().slice(minus_data_cal,slider_data_max.length);
                     slider_data_reset='';
-                    console.log('<--new_width='+new_width);
+                    console.log('<--new_width - slider_data_per ='+slider_data_per);
                     // -- 소수 유무 검사 후 해당 소수점 자리 자동 설정.
                     if(String(data_cal_cut).split('.').length>1){
                         price_split_length = String(data_cal_cut).split('.')[1].length;
@@ -613,21 +614,21 @@
                         split_length_cal = num_per_price.toFixed(price_split_length);
                     }else{
                         price_split_length = data_cal_cut;
-                        split_length_cal =num_per_price;
+                        split_length_cal = Math.round(num_per_price);
                     }
                     // ------------------------------------------
 
-                    pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                    // pattern_sep=slider_data_per.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     if((clone_sep==undefined)||(clone_sep==null)){
                         // vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
                         // vanila_slider_status.innerHTML=pattern_sep;
                         // vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
-                        console.log('???resize_data_1 - (Number(percent_price.toFixed(split_zero_cal))*100) = '+(Number(percent_price.toFixed(split_zero_cal))*100)+' / percent_price = '+percent_price+' / split_zero_cal = '+split_zero_cal);
+                        console.log('???resize_data_1 - (Number(percent_price.toFixed(split_zero_cal))*100) = '+(Number(percent_price.toFixed(split_zero_cal))*100)+' / percent_price = '+percent_price+' / slider_data_per = '+slider_data_per);
                     }else{
                         // vanila_slider_status.innerHTML=pattern_sep+'<br>'+(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
                         // vanila_slider_status.innerHTML=pattern_sep;
                         // vanila_slider_percent.innerHTML=(Number(percent_price.toFixed(split_zero_cal))*100)+'%';
-                        console.log('???resize_data_2 - (Number(percent_price.toFixed(split_zero_cal))*100) = '+(Number(percent_price.toFixed(split_zero_cal))*100)+' / percent_price = '+percent_price+' / split_zero_cal = '+split_zero_cal);
+                        console.log('???resize_data_2 - (Number(percent_price.toFixed(split_zero_cal))*100) = '+(Number(percent_price.toFixed(split_zero_cal))*100)+' / percent_price = '+percent_price+' / slider_data_per = '+slider_data_per);
                     };
                     vanila_slider_status.innerHTML=pattern_sep;
                     vanila_slider_percent.innerHTML=split_length_cal+'%';
