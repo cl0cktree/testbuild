@@ -185,7 +185,7 @@ $(function(){
 			});
 
 			$('.slide').on('touchstart touchmove touchend touchcancle click mouseover mouseleave',function(event){
-				cal_width = s_width*0.5;
+				cal_width = s_width*0.3;
 				cal_height = msheight*0.2;
 				var dragmove;
 				var slideNum;
