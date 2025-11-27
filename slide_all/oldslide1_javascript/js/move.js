@@ -1,5 +1,5 @@
 $(function(){
-
+	var slide_all;
 	var slide = document.querySelectorAll('.slide');
 	var indicator = document.querySelector('.indicator');
 	var slide_img = document.querySelector('.slide img');
@@ -18,6 +18,10 @@ $(function(){
 	var bi=0;
 	var resize_timer;
 	var resize_time = 200;
+	var tstart=null;
+	var tmove=null;
+	var cal_width;
+	var cal_height;
 
 	slide_wrap.style.height=msheight+'px';
 
@@ -34,7 +38,7 @@ $(function(){
 		var msheight = slide_img.clientHeight;
 		var mswidth = slide.length;
 		var wrapwidth = mswidth*100;
-		var s_width = slide.clientWidth;
+		s_width = slide.clientWidth;
 
 		slide_wrap.style.height=msheight+'px';
 	};
@@ -144,202 +148,162 @@ $(function(){
 		}
 	};
 
+	function slide_count(event, s_width){
+		cal_width = s_width*0.2;
+		cal_height = msheight*0.2;
+
+		for( var i = 0; i < slide.length; i++ ){
+			var s_item = slide.item(i)
+			slide_all = s_item;		
+			slide_all.addEventListener('click',slide_click,false);
+			slide_all.addEventListener('mouseover',stop_s,false);
+			slide_all.addEventListener('mouseout',start_s,false);
+			slide_all.addEventListener('touchstart',slide_t_start,false);
+			slide_all.addEventListener('touchend',slide_t_end,false);
+			slide_all.addEventListener('touchcancle',slide_t_cancle,false);
+		}
+
+		function slide_click(event){		
+		if(this==document.getElementById('slide1')){
+			document.body.style.backgroundColor='red';
+		}else if(this==document.getElementById('slide2')){
+			document.body.style.backgroundColor='orange'
+		}else if(this==document.getElementById('slide3')){
+			document.body.style.backgroundColor='yellow'
+		}else if(this==document.getElementById('slide4')){
+			document.body.style.backgroundColor='green'
+		}else if(this==document.getElementById('slide5')){
+			document.body.style.backgroundColor='blue'
+		}else if(this==document.getElementById('slide6')){
+			document.body.style.backgroundColor='purple'
+		}
+		};
+
+		function slide_mouseover(){
+
+		};
+
+		function slide_mouseleave(){
+
+		};
+
+		function slide_t_start(event){			
+			event.preventDefault();
+			event.stopPropagation();			
+			tstart=event.touches[0].pageX;
+			ystart=event.touches[0].pageY;
+		};
+
+		function slide_t_end(event, s_width){
+			event.preventDefault();
+			event.stopPropagation();
+			// tend=event.originalEvent.touches[0].pageX;
+			console.log('s_width = '+s_width);
+			tmove=event.changedTouches[0].pageX;
+			ymove=event.changedTouches[0].pageY;
+			stop_s();
+			var tvalue = tstart-tmove;
+			var yvalue = ystart-ymove;
+			if (tvalue>cal_width)			{
+				var tvalue = cal_width;
+				$('#next-btn').stop().click();
+				//alert('1-1 = '+tvalue+'/ 1-2 = '+cal_width);
+				//move=move-100;
+			}else if (tvalue<-cal_width)
+			{
+				//move=move+100;
+				var tvalue = cal_width;
+				$('#prev-btn').stop().click();
+				//alert('2-1 = '+tvalue+'/ 2-2 = '+cal_width);
+			}else if ((tstart-tmove)<cal_width){
+				if(yvalue==0){
+					if($(this).is('#slide1')==true){
+						$('body').css({'background':'red'})
+					}else if($(this).is('#slide2')==true){
+						$('body').css({'background':'orange'})
+					}else if($(this).is('#slide3')==true){
+						$('body').css({'background':'yellow'})
+					}else if($(this).is('#slide4')==true){
+						$('body').css({'background':'green'})
+					}else if($(this).is('#slide5')==true){
+						$('body').css({'background':'blue'})
+					}else if($(this).is('#slide6')==true){
+						$('body').css({'background':'purple'})
+					}
+				}else{
+					if(yvalue>cal_height){
+						$('body, html').stop().animate({ scrollTop: $("body").offset().top+yvalue },300);
+					}else if(yvalue<cal_height){
+						if((yvalue*-1)>cal_height){
+							$('body, html').stop().animate({ scrollTop: $("body").offset().top+yvalue },300);
+						}
+					}
+				}
+
+			}
+			start_s();
+		};
+
+		function slide_t_cancle(event, s_width){
+			event.preventDefault();
+			event.stopPropagation();
+			// tend=event.originalEvent.touches[0].pageX;
+			stop_s();
+			var tvalue = tstart-tmove;
+			var yvalue = ystart-ymove;
+			if (tvalue>cal_width)
+			{
+				var tvalue = cal_width;
+				$('#next-btn').stop().click();
+				//alert('1-1 = '+tvalue+'/ 1-2 = '+cal_width);
+				//move=move-100;
+			}else if (tvalue<-cal_width){
+				//move=move+100;
+				var tvalue = cal_width;
+				$('#prev-btn').stop().click();
+				//alert('2-1 = '+tvalue+'/ 2-2 = '+cal_width);
+
+			}else if (tstart-tmove<cal_width){
+				if(yvalue==0){
+					if($(this).is('#slide1')==true){
+						$('body').css({'background':'red'})
+					}else if($(this).is('#slide2')==true){
+						$('body').css({'background':'orange'})
+					}else if($(this).is('#slide3')==true){
+						$('body').css({'background':'yellow'})
+					}else if($(this).is('#slide4')==true){
+						$('body').css({'background':'green'})
+					}else if($(this).is('#slide5')==true){
+						$('body').css({'background':'blue'})
+					}else if($(this).is('#slide6')==true){
+						$('body').css({'background':'purple'})
+					}
+				}else{
+					if(yvalue>cal_height){
+						$('body, html').stop().animate({ scrollTop: $("body").offset().top+yvalue },300);
+					}else if(yvalue<cal_height){
+						if((yvalue*-1)>cal_height){
+							$('body, html').stop().animate({ scrollTop: $("body").offset().top+yvalue },300);
+						}
+					}
+				}
+			}
+			start_s();
+		};		
+		console.log('slide_all = '+slide_all.className);
+		return false;
+	};
+
+	slide_count(event);
+
 	prev_btn.addEventListener('mouseover',stop_s,false);
 	prev_btn.addEventListener('mouseout',start_s,false);
 	prev_btn.addEventListener('click',prev_mouseClick,false);
 	next_btn.addEventListener('mouseover',stop_s,false);
 	next_btn.addEventListener('mouseout',start_s,false);
-	next_btn.addEventListener('click',next_mouseClick,false);
+	next_btn.addEventListener('click',next_mouseClick,false);	
 
-	$('.slide').on('touchstart touchend touchcancle click mouseover mouseleave',function(event){
-		/*
-		//-현재의 변화되는 x와 ywhkvy 값-
-		var px=event.changeedTouches[0].pageX;
-		var py=event.changeedTouches[0].pageY;
-
-		//-좌표변화 이벤트가 일어나는지 체크-
-		ptouch=getMoveType(px,py);
-
-		//-스크롤과의 충돌방지 부분(스크롤 이벤트를 무시)-
-		if (ptouch===1)
-		{
-			event.preventDefault();
-		}
-		*/
-		// var tstart;
-		// var tmove;
-		// var tend;
-		// var tcancel;
-
-		var cal_width = s_width*0.2;
-		var cal_height = msheight*0.2;
-
-		/*swipe 이벤트 시작*/
-		if (event.type=='touchstart')
-		{
-			event.preventDefault();
-			event.stopPropagation();
-			tstart=event.originalEvent.touches[0].pageX;
-			ystart=event.originalEvent.touches[0].pageY;
-			//stop_s();
-		}
-
-		// else if (event.type=='touchmove')
-		// {
-		// 	event.preventDefault();
-		// 	event.stopPropagation();
-		// 	tmove=event.originalEvent.changedTouches[0].pageX;
-		// }
-
-		else if (event.type=='touchend')
-		{
-			event.preventDefault();
-			event.stopPropagation();
-			// tend=event.originalEvent.touches[0].pageX;
-			tmove=event.originalEvent.changedTouches[0].pageX;
-			ymove=event.originalEvent.changedTouches[0].pageY;
-
-			stop_s();
-			var tvalue = tstart-tmove;
-			var yvalue = ystart-ymove;
-
-			if (tvalue>cal_width)
-			{
-				var tvalue = cal_width;
-
-				$('#next-btn').stop().click();
-				//alert('1-1 = '+tvalue+'/ 1-2 = '+cal_width);
-
-				//move=move-100;
-
-			}else if (tvalue<-cal_width)
-			{
-				//move=move+100;
-				var tvalue = cal_width;
-
-				$('#prev-btn').stop().click();
-				//alert('2-1 = '+tvalue+'/ 2-2 = '+cal_width);
-
-
-			}else if (tstart-tmove<cal_width){
-
-				if(yvalue==0){
-					if($(this).is('#slide1')==true){
-						$('body').css({'background':'red'})
-					}else if($(this).is('#slide2')==true){
-						$('body').css({'background':'orange'})
-					}else if($(this).is('#slide3')==true){
-						$('body').css({'background':'yellow'})
-					}else if($(this).is('#slide4')==true){
-						$('body').css({'background':'green'})
-					}else if($(this).is('#slide5')==true){
-						$('body').css({'background':'blue'})
-					}else if($(this).is('#slide6')==true){
-						$('body').css({'background':'purple'})
-					}
-				}else{
-					if(yvalue>cal_height){
-						$('body, html').stop().animate({ scrollTop: $("body").offset().top+yvalue },300);
-					}else if(yvalue<cal_height){
-						if((yvalue*-1)>cal_height){
-							$('body, html').stop().animate({ scrollTop: $("body").offset().top+yvalue },300);
-						}
-					}
-				}
-
-			}
-			start_s();
-		}
-
-		else if (event.type=='touchcancle')
-		{
-			event.preventDefault();
-			event.stopPropagation();
-			// tend=event.originalEvent.touches[0].pageX;
-
-			stop_s();
-			var tvalue = tstart-tmove;
-			var yvalue = ystart-ymove;
-
-			if (tvalue>cal_width)
-			{
-				var tvalue = cal_width;
-
-				$('#next-btn').stop().click();
-				//alert('1-1 = '+tvalue+'/ 1-2 = '+cal_width);
-
-				//move=move-100;
-
-			}else if (tvalue<-cal_width)
-			{
-				//move=move+100;
-				var tvalue = cal_width;
-
-				$('#prev-btn').stop().click();
-				//alert('2-1 = '+tvalue+'/ 2-2 = '+cal_width);
-
-
-			}else if (tstart-tmove<cal_width){
-
-				if(yvalue==0){
-					if($(this).is('#slide1')==true){
-						$('body').css({'background':'red'})
-					}else if($(this).is('#slide2')==true){
-						$('body').css({'background':'orange'})
-					}else if($(this).is('#slide3')==true){
-						$('body').css({'background':'yellow'})
-					}else if($(this).is('#slide4')==true){
-						$('body').css({'background':'green'})
-					}else if($(this).is('#slide5')==true){
-						$('body').css({'background':'blue'})
-					}else if($(this).is('#slide6')==true){
-						$('body').css({'background':'purple'})
-					}
-				}else{
-					if(yvalue>cal_height){
-						$('body, html').stop().animate({ scrollTop: $("body").offset().top+yvalue },300);
-					}else if(yvalue<cal_height){
-						if((yvalue*-1)>cal_height){
-							$('body, html').stop().animate({ scrollTop: $("body").offset().top+yvalue },300);
-						}
-					}
-				}
-			}
-			start_s();
-		}
-		else if (event.type=='click')
-		{
-			if($(this).is('#slide1')==true){
-				$('body').css({'background':'red'})
-			}else if($(this).is('#slide2')==true){
-				$('body').css({'background':'orange'})
-			}else if($(this).is('#slide3')==true){
-				$('body').css({'background':'yellow'})
-			}else if($(this).is('#slide4')==true){
-				$('body').css({'background':'green'})
-			}else if($(this).is('#slide5')==true){
-				$('body').css({'background':'blue'})
-			}else if($(this).is('#slide6')==true){
-				$('body').css({'background':'purple'})
-			}
-			// if (bi==0)
-			// {
-			// 	bi++;
-			// 	alert('click'+bi)
-			// }else{
-			// 	alert('click'+bi)
-			// }
-		}
-		else if (event.type=='mouseover')
-		{
-			stop_s();
-		}
-		else if (event.type=='mouseleave')
-		{
-			start_s();
-		}
-		return false;
-	});
+	console.log(slide.length);
 
 	var cb;
 	var cbm;
