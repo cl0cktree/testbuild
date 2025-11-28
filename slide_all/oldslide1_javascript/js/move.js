@@ -75,7 +75,7 @@ $(function(){
 		)
 		slide_animation.onfinish = function(){
 			slide_animation = null;
-		};				
+		};
 	};
 
 	function bullet_movement(){
@@ -101,7 +101,7 @@ $(function(){
 		bulet = document.querySelectorAll('.bulet');
 		bulet_num = document.querySelector('#bulet'+bi);
 		if (move<100)
-		{			
+		{
 			slide_movement();
 			next_btn.style.zIndex='2';
 			$('.bulet').css({'color':'#ccc'})
@@ -148,9 +148,10 @@ $(function(){
 		}
 	};
 
-	function slide_count(event, s_width){
+	function slide_count(event){
 		cal_width = s_width*0.2;
 		cal_height = msheight*0.2;
+		s_width = slide.clientWidth;
 
 		for( var i = 0; i < slide.length; i++ ){
 			var s_item = slide.item(i)
@@ -163,20 +164,20 @@ $(function(){
 			slide_all.addEventListener('touchcancle',slide_t_cancle,false);
 		}
 
-		function slide_click(event){		
-		if(this==document.getElementById('slide1')){
-			document.body.style.backgroundColor='red';
-		}else if(this==document.getElementById('slide2')){
-			document.body.style.backgroundColor='orange'
-		}else if(this==document.getElementById('slide3')){
-			document.body.style.backgroundColor='yellow'
-		}else if(this==document.getElementById('slide4')){
-			document.body.style.backgroundColor='green'
-		}else if(this==document.getElementById('slide5')){
-			document.body.style.backgroundColor='blue'
-		}else if(this==document.getElementById('slide6')){
-			document.body.style.backgroundColor='purple'
-		}
+		function slide_click(event){
+			if(this==document.getElementById('slide1')){
+				document.body.style.backgroundColor='red';
+			}else if(this==document.getElementById('slide2')){
+				document.body.style.backgroundColor='orange'
+			}else if(this==document.getElementById('slide3')){
+				document.body.style.backgroundColor='yellow'
+			}else if(this==document.getElementById('slide4')){
+				document.body.style.backgroundColor='green'
+			}else if(this==document.getElementById('slide5')){
+				document.body.style.backgroundColor='blue'
+			}else if(this==document.getElementById('slide6')){
+				document.body.style.backgroundColor='purple'
+			}
 		};
 
 		function slide_mouseover(){
@@ -187,23 +188,29 @@ $(function(){
 
 		};
 
-		function slide_t_start(event){			
+		function slide_t_start(event){
 			event.preventDefault();
-			event.stopPropagation();			
+			event.stopPropagation();
 			tstart=event.touches[0].pageX;
 			ystart=event.touches[0].pageY;
 		};
 
-		function slide_t_end(event, s_width){
+		function slide_t_end(event){
 			event.preventDefault();
 			event.stopPropagation();
+			s_width = slide_wrap.clientWidth;
+			cal_width = s_width*0.2;
+			cal_height = msheight*0.2;
 			// tend=event.originalEvent.touches[0].pageX;
-			console.log('s_width = '+s_width);
 			tmove=event.changedTouches[0].pageX;
 			ymove=event.changedTouches[0].pageY;
+
 			stop_s();
 			var tvalue = tstart-tmove;
 			var yvalue = ystart-ymove;
+
+			console.log('tstart-tmove = '+cal_width);
+
 			if (tvalue>cal_width)			{
 				var tvalue = cal_width;
 				$('#next-btn').stop().click();
@@ -217,18 +224,18 @@ $(function(){
 				//alert('2-1 = '+tvalue+'/ 2-2 = '+cal_width);
 			}else if ((tstart-tmove)<cal_width){
 				if(yvalue==0){
-					if($(this).is('#slide1')==true){
-						$('body').css({'background':'red'})
-					}else if($(this).is('#slide2')==true){
-						$('body').css({'background':'orange'})
-					}else if($(this).is('#slide3')==true){
-						$('body').css({'background':'yellow'})
-					}else if($(this).is('#slide4')==true){
-						$('body').css({'background':'green'})
-					}else if($(this).is('#slide5')==true){
-						$('body').css({'background':'blue'})
-					}else if($(this).is('#slide6')==true){
-						$('body').css({'background':'purple'})
+					if(this==document.getElementById('slide1')){
+						document.body.style.backgroundColor='red';
+					}else if(this==document.getElementById('slide2')){
+						document.body.style.backgroundColor='orange'
+					}else if(this==document.getElementById('slide3')){
+						document.body.style.backgroundColor='yellow'
+					}else if(this==document.getElementById('slide4')){
+						document.body.style.backgroundColor='green'
+					}else if(this==document.getElementById('slide5')){
+						document.body.style.backgroundColor='blue'
+					}else if(this==document.getElementById('slide6')){
+						document.body.style.backgroundColor='purple'
 					}
 				}else{
 					if(yvalue>cal_height){
@@ -244,13 +251,21 @@ $(function(){
 			start_s();
 		};
 
-		function slide_t_cancle(event, s_width){
+		function slide_t_cancle(event){
 			event.preventDefault();
 			event.stopPropagation();
 			// tend=event.originalEvent.touches[0].pageX;
+			s_width = slide_wrap.clientWidth;
+			cal_width = s_width*0.2;
+			cal_height = msheight*0.2;
+			// tend=event.originalEvent.touches[0].pageX;			
+			tmove=event.changedTouches[0].pageX;
+			ymove=event.changedTouches[0].pageY;
+
 			stop_s();
 			var tvalue = tstart-tmove;
 			var yvalue = ystart-ymove;
+			
 			if (tvalue>cal_width)
 			{
 				var tvalue = cal_width;
@@ -265,18 +280,18 @@ $(function(){
 
 			}else if (tstart-tmove<cal_width){
 				if(yvalue==0){
-					if($(this).is('#slide1')==true){
-						$('body').css({'background':'red'})
-					}else if($(this).is('#slide2')==true){
-						$('body').css({'background':'orange'})
-					}else if($(this).is('#slide3')==true){
-						$('body').css({'background':'yellow'})
-					}else if($(this).is('#slide4')==true){
-						$('body').css({'background':'green'})
-					}else if($(this).is('#slide5')==true){
-						$('body').css({'background':'blue'})
-					}else if($(this).is('#slide6')==true){
-						$('body').css({'background':'purple'})
+					if(this==document.getElementById('slide1')){
+						document.body.style.backgroundColor='red';
+					}else if(this==document.getElementById('slide2')){
+						document.body.style.backgroundColor='orange'
+					}else if(this==document.getElementById('slide3')){
+						document.body.style.backgroundColor='yellow'
+					}else if(this==document.getElementById('slide4')){
+						document.body.style.backgroundColor='green'
+					}else if(this==document.getElementById('slide5')){
+						document.body.style.backgroundColor='blue'
+					}else if(this==document.getElementById('slide6')){
+						document.body.style.backgroundColor='purple'
 					}
 				}else{
 					if(yvalue>cal_height){
@@ -289,7 +304,7 @@ $(function(){
 				}
 			}
 			start_s();
-		};		
+		};
 		console.log('slide_all = '+slide_all.className);
 		return false;
 	};
@@ -301,7 +316,7 @@ $(function(){
 	prev_btn.addEventListener('click',prev_mouseClick,false);
 	next_btn.addEventListener('mouseover',stop_s,false);
 	next_btn.addEventListener('mouseout',start_s,false);
-	next_btn.addEventListener('click',next_mouseClick,false);	
+	next_btn.addEventListener('click',next_mouseClick,false);
 
 	console.log(slide.length);
 
