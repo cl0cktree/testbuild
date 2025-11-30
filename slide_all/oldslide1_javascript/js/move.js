@@ -60,22 +60,38 @@ $(function(){
 		i=i/100;
 	};
 
+	function next_btn_off(){
+		prev_btn.style.zIndex='2';
+		next_btn.style.zIndex='-1';
+
+	};
+	function prev_btn_off(){
+		prev_btn.style.zIndex='-1';
+		next_btn.style.zIndex='2';
+	};
+	function all_btn_on(){
+		prev_btn.style.zIndex='2';
+		next_btn.style.zIndex='2';
+	};
+
 	function slide_movement(){
 		// console.log('move =='+move);
 		if(slide_animation){
 			slide_animation.cancel();
 		};
 		slide_animation = slide_container.animate(
-			[{left:+move+'%'}],
+			[{left:0},{left:move+'%'}],
 			{
 				duration:100,
 				easing:'ease-in-out',
-				fill: 'forwards'
+				iterations: 1,
+				fill: 'both'
 			}
 		)
 		slide_animation.onfinish = function(){
 			slide_animation = null;
 		};
+		// console.log('move = '+move);
 	};
 
 	function bullet_movement(){
@@ -213,14 +229,16 @@ $(function(){
 
 			if (tvalue>cal_width)			{
 				var tvalue = cal_width;
-				$('#next-btn').stop().click();
+				// $('#next-btn').stop().click();
+				next_btn.click();
 				//alert('1-1 = '+tvalue+'/ 1-2 = '+cal_width);
 				//move=move-100;
 			}else if (tvalue<-cal_width)
 			{
 				//move=move+100;
 				var tvalue = cal_width;
-				$('#prev-btn').stop().click();
+				// $('#prev-btn').stop().click();
+				prev_btn.click();
 				//alert('2-1 = '+tvalue+'/ 2-2 = '+cal_width);
 			}else if ((tstart-tmove)<cal_width){
 				if(yvalue==0){
@@ -269,13 +287,15 @@ $(function(){
 			if (tvalue>cal_width)
 			{
 				var tvalue = cal_width;
-				$('#next-btn').stop().click();
+				// $('#next-btn').stop().click();
+				next_btn.click();
 				//alert('1-1 = '+tvalue+'/ 1-2 = '+cal_width);
 				//move=move-100;
 			}else if (tvalue<-cal_width){
 				//move=move+100;
 				var tvalue = cal_width;
-				$('#prev-btn').stop().click();
+				// $('#prev-btn').stop().click();
+				prev_btn.click();
 				//alert('2-1 = '+tvalue+'/ 2-2 = '+cal_width);
 
 			}else if (tstart-tmove<cal_width){
@@ -342,17 +362,14 @@ $(function(){
 
 							if (cb==1)
 							{
-								$('#prev-btn').css({'z-index':'-1'})
-								$('#next-btn').css({'z-index':'2'})
+								prev_btn_off();
 
 							}else if ((cb!==1)&&(cb!==mswidth))
 							{
-								$('#prev-btn').css({'z-index':'2'})
-								$('#next-btn').css({'z-index':'2'})
+								all_btn_on();
 							}else if (cb==mswidth)
 							{
-								$('#prev-btn').css({'z-index':'2'})
-								$('#next-btn').css({'z-index':'-1'})
+								next_btn_off();
 							}
 
 						}else if (move-cbm>-100){
@@ -365,17 +382,14 @@ $(function(){
 
 							if (cb==1)
 							{
-								$('#prev-btn').css({'z-index':'-1'})
-								$('#next-btn').css({'z-index':'2'})
+								prev_btn_off();
 
 							}else if ((cb!==1)&&(cb!==mswidth))
 							{
-								$('#prev-btn').css({'z-index':'2'})
-								$('#next-btn').css({'z-index':'2'})
+								all_btn_on();
 							}else if (cb==mswidth)
 							{
-								$('#prev-btn').css({'z-index':'2'})
-								$('#next-btn').css({'z-index':'-1'})
+								next_btn_off();
 							}
 						}
 					}
@@ -394,18 +408,15 @@ $(function(){
 
 	if ((move==0)||(cb==1))
 	{
-		$('#prev-btn').css({'z-index':'-1'})
-		$('#next-btn').css({'z-index':'2'})
+		prev_btn_off();
 		$('.bulet').css({'color':'#ccc'})
 		$('#bulet1').css({'color':'#999'})
 	}else if ((cb!==1)&&(cb!==mswidth))
 	{
-		$('#prev-btn').css({'z-index':'2'})
-		$('#next-btn').css({'z-index':'2'})
+		all_btn_on();
 	}else if (cb==mswidth)
 	{
-		$('#prev-btn').css({'z-index':'2'})
-		$('#next-btn').css({'z-index':'-1'})
+		next_btn_off();
 	};
 
 	var autospeed=2000;
@@ -428,26 +439,22 @@ $(function(){
 			}
 			if (move<msswipe)
 			{
-				$('#prev-btn').css({'z-index':'2'})
-				$('#next-btn').css({'z-index':'2'})
+				all_btn_on();
 				$('.bulet').css({'color':'#ccc'})
 				$('#bulet'+bi).css({'color':'#999'})
 				// slide_container.stop().animate({'left':move+'%'},100)
 				slide_movement();
 				if (move==0)
 				{
-					$('#prev-btn').css({'z-index':'-1'})
-					$('#next-btn').css({'z-index':'2'})
+					prev_btn_off();
 				}
 				if (move-msminus==0)
 				{
-					$('#prev-btn').css({'z-index':'2'})
-					$('#next-btn').css({'z-index':'-1'})
+					next_btn_off();
 				}
 
 			}else if (move>msminus){
-				$('#prev-btn').css({'z-index':'2'})
-				$('#next-btn').css({'z-index':'-1'})
+				next_btn_off();
 			}
 
 		},autospeed)
