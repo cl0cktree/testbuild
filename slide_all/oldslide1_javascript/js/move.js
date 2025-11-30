@@ -80,7 +80,7 @@ $(function(){
 			slide_animation.cancel();
 		};
 		slide_animation = slide_container.animate(
-			[{left:0},{left:move+'%'}],
+			[{left:0+'%'},{left:move+'%'}],
 			{
 				duration:100,
 				easing:'ease-in-out',
@@ -171,7 +171,7 @@ $(function(){
 
 		for( var i = 0; i < slide.length; i++ ){
 			var s_item = slide.item(i)
-			slide_all = s_item;		
+			slide_all = s_item;
 			slide_all.addEventListener('click',slide_click,false);
 			slide_all.addEventListener('mouseover',stop_s,false);
 			slide_all.addEventListener('mouseout',start_s,false);

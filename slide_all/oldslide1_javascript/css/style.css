@@ -1,10 +1,5 @@
 /*공통*/
 @charset "UTF-8";
-@import url('http://fonts.googleapis.com/earlyaccess/nanumgothic.css');
-@font-face{font-family:"Nanum Gothic";src:url('/fonts/NanumGothic.eot');
-	src:url('/fonts/NanumGothic.eot?#iefix') format('embedded-opentype'),url('/fonts/NanumGothic.woff') format('woff'),url('/fonts/NanumGothic.ttf') format('truetype');
-	url('/fonts/NanumGothic.svg#NanumGothic') format('svg')src:local(※), url('/fonts/NanumGothic.woff') format('woff');
-}
 
 body{width:100%;height:100%;margin:0;padding:0;background:#fff; font-family:NanumGothic,Gothic,고딕;overflow:auto;}
 section{padding:0;margin:0;border:0;display:block;position:relative;overflow:hidden;}
