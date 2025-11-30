@@ -135,7 +135,7 @@ $(function(){
 		{
 			slide_movement();
 			next_btn.style.zIndex='2';
-			$('.bulet').css({'color':'#ccc'})
+			bulet_num.style.color='#ccc';
 			for( var i = 0; i < bulet.length; i++ ){
 				var b_item = bulet.item(i)
 				b_item.style.color='#ccc';
