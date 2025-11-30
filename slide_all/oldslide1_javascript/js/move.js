@@ -60,6 +60,7 @@ $(function(){
 		i=i/100;
 	};
 
+	// #next-btn 과 #prev-btn 의 노출 여부를 위한 z-index 설정 함수들.
 	function next_btn_off(){
 		prev_btn.style.zIndex='2';
 		next_btn.style.zIndex='-1';
@@ -73,26 +74,40 @@ $(function(){
 		prev_btn.style.zIndex='2';
 		next_btn.style.zIndex='2';
 	};
-
+	//-----------------------------------------------------------
 	function slide_movement(){
 		// console.log('move =='+move);
 		if(slide_animation){
 			slide_animation.cancel();
 		};
+		// 1. 슬라이드 자동 실행 시 최종 위치에서 초기화로 당겨지는 움직임을 기존 속도와 동일하게 유지 하므로, 반대로 급격한 초기화 움직임을 주고 싶으면 아래 부분(2번)과 주석을 반대로 적용할 것.
 		slide_animation = slide_container.animate(
-			[{left:0+'%'},{left:move+'%'}],
+			[{left:move+'%'}],
 			{
 				duration:100,
 				easing:'ease-in-out',
 				iterations: 1,
 				fill: 'both'
 			}
-		)
+		);
+		//------------------------------------------------------------------------------
+		// 2. 슬라이드 자동 실행 시 최종 위치에서 초기화로 당겨지는 움직임을 급격하게 주고 싶으면, 해당 부분과 바로 위의 같은 변수(1번)의 주석을 서로 반대로 적용할 것.
+		// slide_animation = slide_container.animate(
+			// [{left:0+'%'},{left:move+'%'}],
+			// {
+				// duration:100,
+				// easing:'ease-in-out',
+				// iterations: 1,
+				// fill: 'both'
+			// }
+		// );
+		//------------------------------------------------------------------------------
 		slide_animation.onfinish = function(){
 			slide_animation = null;
 		};
 		// console.log('move = '+move);
 	};
+	slide_movement();
 
 	function bullet_movement(){
 		if(slide_animation){
