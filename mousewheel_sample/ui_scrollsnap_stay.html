@@ -130,23 +130,36 @@
             function click_scroll_movement(){                
                 // console.log('move =='+move);
                 // scroll_animation = null;
-                setTimeout(function(){
-                    
-                    if(scroll_animation){
-                      scroll_animation.cancel();
-                    };
-                    scroll_animation = document.querySelector('body').animate(
-                      [window.scrollTo({left:0,top:art_height*count_val,behavior:'smooth',transition:'all 0.2s ease-in-out'})],
-                      {
-                        duration:200,
-                        easing:'ease-in-out',
-                        fill: 'forwards'
-                      }
-                    )
-                    scroll_animation.onfinish = function(){
-                      scroll_animation = null;
-                    };
-                },star_time);
+                // setTimeout(function(){
+                    // 
+                    // if(scroll_animation){
+                      // scroll_animation.cancel();
+                    // };
+                    // scroll_animation = document.querySelector('body').animate(
+                      // [window.scrollTo({left:0,top:art_height*count_val,behavior:'smooth'})],
+                      // {
+                        // duration:200,
+                        // easing:'ease-in-out',
+                        // fill: 'forwards'
+                      // }
+                    // )
+                    // scroll_animation.onfinish = function(){
+                      // scroll_animation = null;
+                    // };
+                // },star_time);
+
+                // window.scrollTo({left:0,top:art_height*count_val,behavior:'smooth'});
+
+                document.querySelector('body').animate(
+                  [window.scroll(0,art_height*count_val)],
+                  {
+                    duration:2000,
+                    easing:'ease-in-out',
+                    fill: 'forwards'
+                  }
+                )
+
+                console.log('scroll move!!');
             };
             click_scroll_movement();
             count=menu_idx;
