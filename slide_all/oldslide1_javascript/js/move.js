@@ -8,6 +8,8 @@ $(function(){
 	var prev_btn = document.getElementById('prev-btn');
 	var next_btn = document.getElementById('next-btn');
 	var bulet = document.querySelectorAll('.bulet');
+	var bulet_count;
+	var bulet_All = function(){for(var i=0;i<bulet.lnegth;i++){bulet_count=bulet.item(i);}};
 	var bulet_num;
 	var bulet_1;
 	var bulet_arr;
@@ -127,6 +129,7 @@ $(function(){
 		if (move<100)
 		{
 			slide_movement();
+			console.log('b_item = '+b_item);
 			next_btn.style.zIndex='2';
 			bulet_num.style.color='#ccc';
 			for( var i = 0; i < bulet.length; i++ ){
@@ -355,14 +358,17 @@ $(function(){
 
 			b_item.addEventListener('click',bulet_click,false);
 			b_item.addEventListener('mouseover',stop_s,false);
-			b_item.addEventListener('mouseout',start_s,false);		
+			b_item.addEventListener('mouseout',start_s,false);
 		}
 
 		function bulet_click(){
+			console.log('bulet_count = '+bulet_count);
 			for (cb = $('.bulet').each(Array).length;cb>=1;cb-- ){
 				if ($(this).attr('id')=='bulet'+cb){
 					$('.bulet').css({'color':'#ccc'})
-					$(this).css({'color':'#999'})
+
+					// $(this).css({'color':'#999'})
+					this.style.color='#999';
 					cbm = cb*100;
 
 					if (move-cbm<0)
