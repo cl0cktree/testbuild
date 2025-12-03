@@ -9,7 +9,7 @@ $(function(){
 	var next_btn = document.getElementById('next-btn');
 	var bulet = document.querySelectorAll('.bulet');
 	var bulet_count;
-	var bulet_All = function(){for(var i=0;i<bulet.lnegth;i++){bulet_count=bulet.item(i);}};
+	var bulet_All;
 	var bulet_num;
 	var bulet_1;
 	var bulet_arr;
@@ -351,8 +351,11 @@ $(function(){
 	var cbm;
 	function bulet_input(){
 		bulet = document.querySelectorAll('.bulet');
+		bulet_count = bulet.length;
+		bulet_All = document.getElementsByClassName('bulet');
+		bulet_test = Array.from(bulet_All);
 		bulet_num = document.querySelector('#bulet'+bi);
-
+		// console.log('bulet_All = '+[bulet_All.item]);
 		for( var i = 0; i < bulet.length; i++ ){
 			var b_item = bulet.item(i);
 
@@ -362,11 +365,15 @@ $(function(){
 		}
 
 		function bulet_click(){
-			console.log('bulet_count = '+bulet_count);
-			for (cb = $('.bulet').each(Array).length;cb>=1;cb-- ){
+			console.log('bulet_test = '+bulet_test);
+			for (cb = bulet.length;cb>=1;cb-- ){
+				console.log('cb = '+cb);
 				if ($(this).attr('id')=='bulet'+cb){
-					$('.bulet').css({'color':'#ccc'})
-
+					var b_item = bulet.item(cb-1);
+					console.log('bulet_test_in = '+bulet_test);
+					b_item.style.color='#ccc';
+					// $('.bulet').css({'color':'#ccc'})
+					// bulet_test.style.color='#ccc';
 					// $(this).css({'color':'#999'})
 					this.style.color='#999';
 					cbm = cb*100;
