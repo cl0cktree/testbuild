@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Optimized Slide Demo</title>
+    <link rel="stylesheet" href="./css/style_jemini.css">
+	<script type="text/javascript" defer src="./js/move.js"></script>
+</head>
+<body>
+    <div class="slider_wrapper">
+        <!-- 메인 슬라이드 영역 -->
+        <div class="slide_viewport">
+			<div class="page_counter">1 / 5</div>
+            <ul class="slide_list">
+                <li><img data-src="./images/slide/banner1.png" src="./images/slide/banner1.png" alt="Slide 1"></li>
+                <li><img data-src="./images/slide/banner2.png" src="./images/slide/banner2.png" alt="Slide 2"></li>
+                <li><img data-src="./images/slide/banner3.png" src="./images/slide/banner3.png" alt="Slide 3"></li>
+                <li><img data-src="./images/slide/banner4.png" src="./images/slide/banner4.png" alt="Slide 4"></li>
+				<li><img data-src="./images/slide/banner5.png" src="./images/slide/banner5.png" alt="Slide 5"></li>
+            </ul>
+
+            <!-- 꺽쇠 모양 네비게이션 버튼 -->
+            <button class="nav_btn prev" aria-label="Previous"></button>
+            <button class="nav_btn next" aria-label="Next"></button>
+
+            <!-- 도트 인디케이터 (하단 중앙) -->
+            <div class="dot_indicator"></div>
+        </div>
+
+		<div class="progress_container">
+			<div class="progress_bar"></div>
+		</div>
+        <!-- 하단 컨트롤 (재생버튼 + 썸네일) -->
+        <div class="bottom_controls">
+            <button class="btn_toggle" title="Play/Pause"></button>
+            <div class="thumb_indicator"></div>
+        </div>
+    </div>
+
+
+</body>
+</html>

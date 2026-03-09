@@ -1,0 +1,89 @@
+/* 기본 레이아웃 */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.slider_wrapper { position: relative; max-width: 900px; margin: 40px auto; user-select: none; }
+
+/* 뷰포트 및 슬라이드 */
+.slide_viewport { position: relative; overflow: hidden; border-radius: 0; background: #000; }
+.slide_list { display: flex; cursor: grab; touch-action: pan-y; will-change: transform; }
+.slide_list:active { cursor: grabbing; }
+.slide_list li { flex-shrink: 0; width: 100%; }
+.slide_list li::marker { content:''; display: none; }
+.slide_list li img { width: 100%; display: block; transition: opacity 0.5s; object-fit: cover; }
+/* Ensure images don't block pointer events for hover */
+.slide_list li img { pointer-events: none; }
+
+/* 중앙 양 끝 꺽쇠 버튼 */
+.nav_btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 50px; height: 50px; background: rgba(0,0,0,0.3); border: none;
+    cursor: pointer; z-index: 10; transition: background 0.3s;
+}
+.nav_btn:hover { background: rgba(0,0,0,0.6); }
+.nav_btn::before {
+    content: ''; display: block; width: 15px; height: 15px;
+    border-top: 3px solid #fff; border-right: 3px solid #fff;
+    margin: auto;
+}
+.prev { left: 10px; }
+.prev::before { transform: rotate(-135deg); margin-left: 18px; }
+.next { right: 10px; }
+.next::before { transform: rotate(45deg); margin-right: 18px; }
+
+/* 도트 인디케이터 */
+.dot_indicator {
+    position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; z-index: 11;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; border: none; background: rgba(0,0,0,0.5); cursor: pointer; transition: 0.3s; }
+.dot.active { background: rgba(0,0,0,1); transform: scale(1.2); }
+
+/* 하단 썸네일 및 재생 제어 */
+.bottom_controls { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 20px; }
+
+/* 재생/정지 버튼 (CSS 아이콘) */
+.btn_toggle { 
+    width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; background: #fff; cursor: pointer; position: relative;
+}
+.btn_toggle::before { /* 일시정지 아이콘 (기본) */
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 12px; height: 12px; border-left: 4px solid #333; border-right: 4px solid #333;
+}
+.btn_toggle.paused::before { /* 재생 아이콘 */
+    border: none; width: 0; height: 0;
+    border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 12px solid #333;
+    transform: translate(-30%, -50%);
+}
+
+/* 썸네일 */
+.thumb_indicator { display: flex; gap: 8px; }
+.thumb_item { width: 70px; height: 45px; border: 2px solid transparent; border-radius: 4px; overflow: hidden; cursor: pointer; opacity: 0.5; transition: 0.3s; padding:0; }
+.thumb_item img { width: 100%; height: 100%; object-fit: cover; }
+.thumb_item.active { border-color: #333; opacity: 1; transform: translateY(-3px); }
+
+/* Page Counter */
+.page_counter {
+    position: absolute; top: 15px; right: 20px;
+    background: rgba(0,0,0,0.5); color: #fff;
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 13px; z-index: 12; font-family: sans-serif;
+}
+
+.progress_container {
+    width: 100%;
+    height: 4px;
+    background: #eee;
+    overflow: hidden;
+}
+
+.progress_bar {
+    width: 100%;
+    height: 100%;
+    background: #3498db;
+    transform: scaleX(0); /* Starts at 0 */
+    transform-origin: left;
+    transition: none; /* Controlled via JS */
+}
+
+@media (max-width: 600px) {
+    .thumb_item { width: 60px; height: 40px; }
+}
