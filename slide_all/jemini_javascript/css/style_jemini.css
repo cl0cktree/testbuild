@@ -1,6 +1,6 @@
 /* 기본 레이아웃 */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-.slider_wrapper { position: relative; max-width: 900px; margin: 40px auto; user-select: none; }
+.slider_wrapper { position: relative; width: 100%; margin: 40px auto; user-select: none; }
 
 /* 뷰포트 및 슬라이드 */
 .slide_viewport { position: relative; overflow: hidden; border-radius: 0; background: #000; }
@@ -70,7 +70,7 @@
 
 .progress_container {
     width: 100%;
-    height: 4px;
+    height: 40px;
     background: #eee;
     overflow: hidden;
 }
@@ -78,7 +78,7 @@
 .progress_bar {
     width: 100%;
     height: 100%;
-    background: #3498db;
+    background: rgba(0, 0, 0, 0.5);
     transform: scaleX(0); /* Starts at 0 */
     transform-origin: left;
     transition: none; /* Controlled via JS */
