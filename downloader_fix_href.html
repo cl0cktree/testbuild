@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CORS 우회 지원 자동 다운로더</title>
+        <style>
+            body { font-family: sans-serif; padding: 20px; line-height: 2; }
+            div { margin-bottom: 10px; }
+            input, select, button { padding: 6px; margin-right: 5px; }
+            label { font-weight: bold; display: inline-block; width: 120px; }
+            .info { color: #555; font-size: 0.9em; margin-top: 5px; background: #eee; padding: 10px; border-radius: 4px; }
+        </style>
+    </head>
+    <body>
+        <div>
+            <label for="targetUrl">대상 폴더 URL:</label>
+            <input type="text" id="targetUrl" placeholder="https://example.com" style="width: 400px;">
+        </div>
+        <div>
+            <label for="startNum">숫자 범위:</label>
+            <input type="number" id="startNum" placeholder="시작(예: 1)" style="width: 100px;"> ~ 
+            <input type="number" id="endNum" placeholder="끝(예: 50)" style="width: 100px;">
+        </div>
+        <div>
+            <label for="ext">확장자 선택:</label>
+            <select id="ext">
+                <option value="jpg">jpg</option>
+                <option value="jpeg">jpeg</option>
+                <option value="png">png</option>
+                <option value="gif">gif</option>
+                <option value="webp">webp</option>
+                <option value="mp4">mp4</option>
+                <option value="webm">webm</option>
+                <option value="avi">avi</option>
+                <option value="mov">mov</option>
+            </select>
+        </div>
+        <div>
+            <label for="corsMode">CORS 에러 해결:</label>
+            <select id="corsMode">
+                <option value="none">일반 모드 (CORS 제한 없을 때)</option>
+                <option value="proxy1">CORS 프록시 모드 1 (Allorigins)</option>
+                <option value="proxy2">CORS 프록시 모드 2 (Cors.sh - 테스트용)</option>
+                <option value="directLink">강제 링크 모드 (Fetch 미사용 / 팝업 허용 필수)</option>
+            </select>
+        </div>
+        <div>
+            <button id="download_btn" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px;">다운로드 시작</button>
+        </div>
+
+        <div class="info">
+            💡 <strong>사용 팁:</strong><br>
+            - 기본 다운로드 시 콘솔에 <code>CORS Error</code>가 발생하면 <strong>'CORS 프록시 모드 1'</strong>로 변경해 보세요.<br>
+            - 프록시가 모두 막힌 경우 <strong>'강제 링크 모드'</strong>를 선택하세요. (브라우저 상단 주소창 우측에서 <strong>팝업 및 다중 다운로드 허용</strong>을 꼭 눌러야 작동합니다.)
+        </div>
+
+        <script>
+            const download_btn = document.getElementById('download_btn');
+
+            async function downloadSequentially4Digit(baseUrl, startNum, endNum, ext, corsMode) {
+                const formattedBaseUrl = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+                
+                download_btn.disabled = true;
+                download_btn.textContent = '다운로드 중...';
+
+                for (let i = startNum; i <= endNum; i++) {
+                    const paddedNum = String(i).padStart(4, '0');
+                    const fileName = `xiaoeun_${paddedNum}.${ext}`;
+                    let imageUrl = `${formattedBaseUrl}${fileName}`;
+                    
+                    console.log(`시도 중 (${i}/${endNum}): ${imageUrl}`);
+                    
+                    // [방법 1] 강제 링크 모드: fetch를 거치지 않고 브라우저에 바로 다운로드 지시
+                    if (corsMode === 'directLink') {
+                        const link = document.createElement('a');
+                        link.href = imageUrl;
+                        link.download = fileName;
+                        link.target = '_blank'; // 서버 설정을 우회하기 위해 새창 열기 활용
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        
+                        await new Promise(resolve => setTimeout(resolve, 800)); // 팝업 차단 방지를 위해 시간 연장
+                        continue;
+                    }
+
+                    // CORS 우회 프록시 URL 적용 규칙
+                    if (corsMode === 'proxy1') {
+                        imageUrl = `https://allorigins.win{encodeURIComponent(imageUrl)}`;
+                    } else if (corsMode === 'proxy2') {
+                        imageUrl = `https://cors.sh{imageUrl}`;
+                    }
+                    
+                    try {
+                        // 프록시 모드 2번 전용 헤더 세팅
+                        const headers = corsMode === 'proxy2' ? { 'x-cors-gratis': 'true' } : {};
+                        
+                        const response = await fetch(imageUrl, { headers: headers });
+                        if (!response.ok) {
+                            console.warn(`파일 없음 또는 에러: ${fileName} (건너뜀)`);
+                            continue; 
+                        }
+                        
+                        const blob = await response.blob();
+                        const objectUrl = URL.createObjectURL(blob);
+                        
+                        const link = document.createElement('a');
+                        link.href = objectUrl;
+                        link.download = fileName;
+                        
+                        document.body.appendChild(link);
+                        link.click();
+                        
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(objectUrl);
+                        
+                        console.log(`다운로드 완료: ${fileName}`);
+                        
+                    } catch (error) {
+                        console.error(`다운로드 실패: ${fileName}`, error);
+                    }
+                    
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                alert('모든 다운로드 프로세스가 종료되었습니다. 콘솔창(F12)을 확인하세요.');
+                download_btn.disabled = false;
+                download_btn.textContent = '다운로드 시작';
+            }
+
+            function download_all() {
+                const targetUrl = document.getElementById('targetUrl').value.trim();
+                const startNum = document.getElementById('startNum').value;
+                const endNum = document.getElementById('endNum').value;
+                const ext = document.getElementById('ext').value;            
+                const corsMode = document.getElementById('corsMode').value;            
+
+                if (!targetUrl) { alert('대상 URL을 입력해주세요.'); return; }
+                if (!startNum || !endNum) { alert('번호 범위를 입력해주세요.'); return; }
+
+                const start = Number(startNum);
+                const end = Number(endNum);
+
+                if (start > end) { alert('시작 번호가 끝 번호보다 큽니다.'); return; }
+
+                downloadSequentially4Digit(targetUrl, start, end, ext, corsMode);
+            }
+
+            download_btn.addEventListener('click', download_all, false);
+        </script>
+    </body>
+</html>

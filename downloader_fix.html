@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>자동 파일 다운로더</title>
+        <style>
+            body { font-family: sans-serif; padding: 20px; line-height: 2; }
+            input, select, button { padding: 5px; margin-right: 5px; }
+        </style>
+    </head>
+    <body>
+        <div>
+            <label for="targetUrl">기본 URL: </label>
+            <input type="text" id="targetUrl" placeholder="https://example.com" style="width: 300px;">
+        </div>
+        <div>
+            <label for="startNum">시작 번호: </label>
+            <input type="number" id="startNum" placeholder="1" min="1">
+            <label for="endNum">끝 번호: </label>
+            <input type="number" id="endNum" placeholder="50" min="1">
+        </div>
+        <div>
+            <label for="ext">확장자: </label>
+            <select id="ext">
+                <option value="jpg">jpg</option>
+                <option value="jpeg">jpeg</option>
+                <option value="png">png</option>
+                <option value="gif">gif</option>
+                <option value="webp">webp</option>
+                <option value="mp4">mp4</option>
+                <option value="webm">webm</option>
+                <option value="avi">avi</option>
+                <option value="mov">mov</option>
+                <option value="flv">flv</option>
+                <option value="wmv">wmv</option>
+                <option value="swf">swf</option>
+                <option value="doc">doc</option>
+                <option value="docx">docx</option>
+                <option value="xls">xls</option>
+            </select>
+            <button id="download_btn">다운로드 시작</button>
+        </div>
+
+        <script>
+            const download_btn = document.getElementById('download_btn');
+
+            async function downloadSequentially4Digit(baseUrl, startNum, endNum, ext) {
+                // URL 끝에 슬래시(/) 처리 보장
+                const formattedBaseUrl = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+                
+                // 버튼 비활성화 (중복 클릭 방지)
+                download_btn.disabled = true;
+                download_btn.textContent = '다운로드 중...';
+
+                for (let i = startNum; i <= endNum; i++) {
+                    const paddedNum = String(i).padStart(4, '0');
+                    const fileName = `xiaoeun_${paddedNum}.${ext}`;
+                    const imageUrl = `${formattedBaseUrl}${fileName}`;
+                    
+                    console.log(`시도 중 (${i}/${endNum}): ${imageUrl}`);
+                    
+                    try {
+                        const response = await fetch(imageUrl);
+                        if (!response.ok) {
+                            console.warn(`파일 없음 또는 에러: ${fileName} (건너뜀)`);
+                            continue; 
+                        }
+                        
+                        const blob = await response.blob();
+                        const objectUrl = URL.createObjectURL(blob);
+                        
+                        const link = document.createElement('a');
+                        link.href = objectUrl;
+                        link.download = fileName;
+                        
+                        document.body.appendChild(link);
+                        link.click();
+                        
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(objectUrl);
+                        
+                        console.log(`다운로드 완료: ${fileName}`);
+                        
+                    } catch (error) {
+                        console.error(`다운로드 실패: ${fileName}`, error);
+                    }
+                    
+                    // 브라우저 차단 및 과부하 방지 대기 시간 (0.5초)
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                alert('모든 다운로드 작업이 완료되었습니다.');
+                console.log('모든 다운로드 작업이 완료되었습니다.');
+                
+                // 버튼 원상복구
+                download_btn.disabled = false;
+                download_btn.textContent = '다운로드 시작';
+            }
+
+            function download_all() {
+                const targetUrl = document.getElementById('targetUrl').value.trim();
+                const startNum = document.getElementById('startNum').value;
+                const endNum = document.getElementById('endNum').value;
+                const ext = document.getElementById('ext').value;            
+
+                // 유효성 검사
+                if (!targetUrl) {
+                    alert('기본 URL을 입력해주세요.');
+                    return;
+                }
+                if (!startNum || !endNum) {
+                    alert('시작 번호와 끝 번호를 모두 입력해주세요.');
+                    return;
+                }
+
+                const start = Number(startNum);
+                const end = Number(endNum);
+
+                if (start > end) {
+                    alert('시작 번호는 끝 번호보다 작거나 같아야 합니다.');
+                    return;
+                }
+
+                // 다운로드 실행
+                downloadSequentially4Digit(targetUrl, start, end, ext);
+            }
+
+            download_btn.addEventListener('click', download_all, false);
+        </script>
+    </body>
+</html>
