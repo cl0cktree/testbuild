@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>독학사 2단계 컴퓨터공학 - 논리회로 모의고사</title>
+    <style>
+        :root {
+            --primary-color: #2b6cb0;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+            --accent-color: #e53e3e;
+            --success-color: #38a169;
+        }
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 { margin: 0; font-size: 24px; }
+        .quiz-card {
+            background: var(--card-bg);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+        .question {
+            font-weight: bold;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+        .code-block {
+            background-color: #edf2f7;
+            font-family: 'Consolas', monospace;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+        .options {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-label:hover {
+            background: #edf2f7;
+        }
+        .option-label input {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        .btn-check {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn-check:hover {
+            background-color: #2b6cb0;
+        }
+        .explanation-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0fff4;
+            border: 1px solid #c6f6d5;
+            border-radius: 6px;
+        }
+        .explanation-box.visible {
+            display: block;
+        }
+        .ans-title {
+            font-weight: bold;
+            color: var(--success-color);
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>독학사 2단계 컴퓨터공학: 논리회로 (40문항 완벽 정복)</h1>
+        <p>문제를 풀고 '정답 및 해설 확인' 버튼을 눌러보세요.</p>
+    </header>
+
+    <div id="quiz-container"></div>
+</div>
+
+<script>
+const quizData = [
+    {
+        id: 1,
+        q: "10진수 53을 2진수로 올바르게 변환한 것은?",
+        options: ["110101(2)", "110111(2)", "111001(2)", "101101(2)"],
+        ans: 1,
+        exp: "53 = 32 + 16 + 4 + 1 = 1×2⁵ + 1×2⁴ + 0×2³ + 1×2² + 0×2¹ + 1×2⁰ 이므로 110101(2)입니다."
+    },
+    {
+        id: 2,
+        q: "2진수 1011.101(2)을 10진수로 변환한 값은?",
+        options: ["11.5", "11.625", "11.75", "11.875"],
+        ans: 2,
+        exp: "정수부 1011(2) = 8 + 2 + 1 = 11이며, 소수부 0.101(2) = 1×2⁻¹ + 0×2⁻² + 1×2⁻³ = 0.5 + 0 + 0.125 = 0.625이므로 11.625입니다."
+    },
+    {
+        id: 3,
+        q: "16진수 A3F(16)를 2진수로 올바르게 나타낸 것은?",
+        options: ["101000111111(2)", "101000111110(2)", "101100111111(2)", "101001001111(2)"],
+        ans: 1,
+        exp: "16진수의 각 자리를 4비트 2진수로 변환합니다. A = 1010, 3 = 0011, F = 1111이므로 결합하면 101000111111(2)입니다."
+    },
+    {
+        id: 4,
+        q: "2진수 1101에 대한 2의 보수(2's Complement) 표현으로 옳은 것은?",
+        options: ["0010", "0011", "1110", "0101"],
+        ans: 2,
+        exp: "1의 보수는 모든 비트를 반전시킨 0010입니다. 여기에 1을 더하면 2의 보수인 0011이 됩니다."
+    },
+    {
+        id: 5,
+        q: "BCD 코드(8421 코드)에서 10진수 9를 올바르게 표현한 것은?",
+        options: ["0111", "1000", "1001", "1111"],
+        ans: 3,
+        exp: "BCD 코드는 10진수 0~9를 가중치 8, 4, 2, 1을 가진 4비트 2진수로 표현하므로 9는 1001이 됩니다."
+    },
+    {
+        id: 6,
+        q: "다음 중 에러 검출 및 교정이 모두 가능한 코드는?",
+        options: ["해밍 코드(Hamming Code)", "패리티 비트(Parity Bit)", "그레이 코드(Gray Code)", "3초과 코드(Excess-3 Code)"],
+        ans: 1,
+        exp: "패리티 비트는 에러 검출만 가능하지만, 해밍 코드는 패리티 비트를 여러 개 추가하여 에러의 검출뿐만 아니라 1비트 에러의 교정까지 가능합니다."
+    },
+    {
+        id: 7,
+        q: "2진수 1101(2)을 그레이 코드(Gray Code)로 올바르게 변환한 것은?",
+        options: ["1101", "1011", "1111", "1010"],
+        ans: 2,
+        exp: "최상위 비트는 그대로 내려서 1, 이후 비트들은 인접한 비트끼리 XOR합니다. 1 ⊕ 1 = 0, 1 ⊕ 0 = 1, 0 ⊕ 1 = 1이므로 1011이 됩니다."
+    },
+    {
+        id: 8,
+        q: "가중치 코드(Weighted Code)가 아닌 것은?",
+        options: ["BCD 코드", "2421 코드", "3초과 코드(Excess-3 Code)", "비트 기반 6421 코드"],
+        ans: 3,
+        exp: "3초과 코드는 BCD 코드에 3(0011(2))을 더해 만든 코드로, 각 자릿수가 고유한 무게(가중치)를 가지지 않는 비가중치 코드입니다."
+    },
+    {
+        id: 9,
+        q: "부울 대수(Boolean Algebra)의 기본 정리 중 옳지 않은 것은?",
+        options: ["A + 1 = 1", "A · 0 = 0", "A + A' = 1", "A · A' = 1"],
+        ans: 4,
+        exp: "변수 A와 그 보수 A'의 논리곱(AND)인 A · A'는 항상 0입니다."
+    },
+    {
+        id: 10,
+        q: "부울 함수 F = A + A'B를 간소화한 결과로 옳은 것은?",
+        options: ["A", "B", "A + B", "AB"],
+        ans: 3,
+        exp: "분배법칙을 적용하면 A + A'B = (A + A')(A + B)가 됩니다. 이때 A + A' = 1이므로 최종 결과는 A + B입니다."
+    },
+    {
+        id: 11,
+        q: "드모르간의 정리(De Morgan's Theorem)를 올바르게 나타낸 식은?",
+        options: ["(A + B)' = A' + B'", "(A · B)' = A' · B'", "(A + B)' = A' · B'", "(A · B)' = A + B"],
+        ans: 3,
+        exp: "드모르간의 정리에 의하면 전체의 논리합 보수는 개별 보수의 논리곱과 같으므로 (A + B)' = A' · B'입니다."
+    },
+    {
+        id: 12,
+        q: "부울 함수 F(A, B, C) = ∑(1, 3, 5, 7)을 최소 폼으로 간소화한 결과는?",
+        options: ["A", "B", "C", "A'C"],
+        ans: 3,
+        exp: "민텀 1,3,5,7은 이진수로 001, 011, 101, 111입니다. A와 B는 변하지만 C 비트는 항상 1로 고정되어 있으므로 간소화 결과는 C입니다."
+    },
+    {
+        id: 13,
+        q: "카르노맵(Karnaugh Map)에서 4개의 1이 인접하여 하나의 묶음을 형성했을 때 소거되는 변수의 개수는?",
+        options: ["1개", "2개", "3개", "4개"],
+        ans: 2,
+        exp: "카르노맵에서 묶는 셀의 개수가 2ⁿ개일 때, n개의 변수가 소거됩니다. 4개는 2²개이므로 2개의 변수가 소거됩니다."
+    },
+    {
+        id: 14,
+        q: "입력 A, B가 서로 다를 때만 출력 Y=1이 되는 논리 게이트는?",
+        options: ["AND", "OR", "XOR", "XNOR"],
+        ans: 3,
+        exp: "배타적 논리합(XOR) 게이트는 두 입력의 상태가 서로 다를 때 출력이 1이 되는 특성을 가집니다."
+    },
+    {
+        id: 15,
+        q: "모든 논리 함수를 구현할 수 있어 '범용 게이트(Universal Gate)'라고 불리는 게이트 조합은?",
+        options: ["AND, OR", "NAND, NOR", "XOR, XNOR", "NOT, BUFFER"],
+        ans: 2,
+        exp: "NAND와 NOR 게이트만 있으면 NOT, AND, OR 등 모든 논리 연산을 구현할 수 있으므로 범용 게이트라고 합니다."
+    },
+    {
+        id: 16,
+        q: "다음 회로의 출력이 Y = (AB)'일 때, 이 게이트의 이름은?",
+        options: ["NOR", "NAND", "XOR", "AND"],
+        ans: 2,
+        exp: "논리곱(AND)의 결과를 반전(NOT)한 형태이므로 NAND(Not-AND) 게이트입니다."
+    },
+    {
+        id: 17,
+        q: "다음 중 조합논리회로(Combinational Logic Circuit)에 해당하지 않는 것은?",
+        options: ["멀티플렉서(MUX)", "전가산기(Full Adder)", "디코더(Decoder)", "레지스터(Register)"],
+        ans: 4,
+        exp: "레지스터는 내부 상태를 기억할 수 있는 플립플롭의 집합체이므로 순서논리회로(Sequential Logic Circuit)에 해당합니다."
+    },
+    {
+        id: 18,
+        q: "두 개의 입력 비트 A, B를 더하여 합(Sum)과 자리올림수(Carry)를 구하는 회로는?",
+        options: ["반가산기(Half Adder)", "전가산기(Full Adder)", "반감산기(Half Subtractor)", "인코더(Encoder)"],
+        ans: 1,
+        exp: "하위 자리의 올림수를 고려하지 않고 오직 현재 위치의 두 비트만 더하는 회로는 반가산기입니다."
+    },
+    {
+        id: 19,
+        q: "반가산기(Half Adder)에서 합(Sum)을 출력하는 논리 게이트는?",
+        options: ["AND", "OR", "XOR", "NAND"],
+        ans: 3,
+        exp: "반가산기에서 두 입력이 0,1 또는 1,0일 때 합이 1이 되므로 XOR 게이트를 사용하며, 자리올림수(Carry)에는 AND 게이트를 사용합니다."
+    },
+    {
+        id: 20,
+        q: "전가산기(Full Adder)를 설계하기 위해 필요한 최소한의 반가산기(Half Adder)와 OR 게이트의 구성은?",
+        options: ["반가산기 1개, OR 게이트 1개", "반가산기 2개, OR 게이트 1개", "반가산기 2개, OR 게이트 2개", "반가산기 1개, OR 게이트 2개"],
+        ans: 2,
+        exp: "전가산기는 하위 올림수까지 포함하여 3비트를 더하는 회로로, 반가산기 2개와 OR 게이트 1개로 구현이 가능합니다."
+    },
+    {
+        id: 21,
+        q: "n개의 입력선으로 들어온 부호화된 정보를 2ⁿ개의 출력선 중 하나로 변환하는 회로는?",
+        options: ["멀티플렉서(MUX)", "디멀티플렉서(DEMUX)", "인코더(Encoder)", "디코더(Decoder)"],
+        ans: 4,
+        exp: "2진 코드를 원래의 신호로 복원하거나 명령어를 해석할 때 사용하는 회로는 디코더(해독기)입니다."
+    },
+    {
+        id: 22,
+        q: "3개의 선택선(Select Line)을 가진 멀티플렉서(Multiplexer)가 가질 수 있는 최대 입력선의 개수는?",
+        options: ["3개", "6개", "8개", "16개"],
+        ans: 3,
+        exp: "멀티플렉서는 2ⁿ개의 입력선 중 선택선 n개의 조합을 통해 1개의 출력을 고릅니다. 선택선이 3개이므로 입력선은 2³ = 8개입니다."
+    },
+    {
+        id: 23,
+        q: "다음 중 멀티플렉서(MUX)의 설명으로 옳은 것은?",
+        options: ["1개의 입력 신호를 다수의 출력선 중 하나로 보낸다.", "다수의 입력선 중 하나를 선택하여 1개의 출력선으로 내보낸다.", "n진 부호를 10진 신호로 변경한다.", "상태를 기억하는 메모리 소자이다."],
+        ans: 2,
+        exp: "멀티플렉서는 다대일(Many-to-One) 데이터 선택기이며, 1번 설명은 디멀티플렉서(DEMUX)에 해당합니다."
+    },
+    {
+        id: 24,
+        q: "순서논리회로가 조합논리회로와 구별되는 가장 결정적인 특징은?",
+        options: ["게이트의 수가 많다.", "메모리(기억) 소자를 포함한다.", "출력 속도가 빠르다.", "클럭 신호를 전혀 사용하지 않는다."],
+        ans: 2,
+        exp: "순서논리회로는 현재의 입력뿐만 아니라 과거의 상태를 저장하는 메모리 소자(플립플롭 등)와 조합논리회로가 결합된 구조입니다."
+    },
+    {
+        id: 25,
+        q: "클럭 펄스의 하강 에지(Falling Edge)에서만 상태가 변하는 소자를 뜻하는 명칭은?",
+        options: ["레벨 트리거 소자", "포지티브 에지 트리거 소자", "네거티브 에지 트리거 소자", "무조건적 트리거 소자"],
+        ans: 3,
+        exp: "신호가 High(1)에서 Low(0)로 떨어지는 하강 시점에 동기화되어 동작하는 회로를 네거티브 에지 트리거라고 합니다."
+    },
+    {
+        id: 26,
+        q: "SR 플립플롭에서 입력 S=1, R=1이 인가될 때 발생하는 문제점은?",
+        options: ["출력이 항상 0이 된다.", "출력이 반전(Toggle)된다.", "출력 상태를 예측할 수 없는 부정(금지) 상태가 된다.", "아무런 변화가 일어나지 않는다."],
+        ans: 3,
+        exp: "SR 플립플롭은 Set과 Reset이 동시에 수행될 수 없으므로 S=1, R=1 입력은 정의되지 않는 금지된 상태입니다."
+    },
+    {
+        id: 27,
+        q: "SR 플립플롭의 부정 상태(금지 입력)를 해결하기 위해 S=1, R=1일 때 출력이 반전되도록 개선한 플립플롭은?",
+        options: ["D 플립플롭", "T 플립플롭", "JK 플립플롭", "마스터-슬레이브 플립플롭"],
+        ans: 3,
+        exp: "JK 플립플롭은 SR 플립플롭의 결함을 보완하여, J=1, K=1일 때 이전 상태를 뒤집는 반전(Toggle) 기능이 수행되도록 설계되었습니다."
+    },
+    {
+        id: 28,
+        q: "입력된 데이터 비트를 다음 클럭이 올 때까지 그대로 지연시켜 유지하는 용도로 주로 쓰이는 플립플롭은?",
+        options: ["D 플립플롭", "T 플립플롭", "RS 플립플롭", "JK 플립플롭"],
+        ans: 1,
+        exp: "D(Data/Delay) 플립플롭은 입력 신호 D의 값을 클럭 타이밍에 맞춰 그대로 다음 상태 출력으로 전달하는 지연 기억 소자입니다."
+    },
+    {
+        id: 29,
+        q: "T 플립플롭의 입력 T=1일 때 다음 상태 출력 Q(t+1)의 값은?",
+        options: ["0", "1", "Q(t)", "Q'(t)"],
+        ans: 4,
+        exp: "T(Toggle) 플립플롭은 T=1일 때 클럭이 들어오면 현재 출력인 Q(t)를 반전시킨 Q'(t)를 출력합니다."
+    },
+    {
+        id: 30,
+        q: "JK 플립플롭의 두 입력을 하나로 묶어서 반전 게이트(NOT)를 거치지 않고 직접 연결하면 어떤 플립플롭과 같아지는가?",
+        options: ["RS 플립플롭", "D 플립플롭", "T 플립플롭", "마스터-슬레이브 플립플롭"],
+        ans: 3,
+        exp: "JK 플립플롭의 J와 K를 묶어서 하나의 입력선 T로 사용하면, 0일 때 불변, 1일 때 반전되는 T 플립플롭이 됩니다."
+    },
+    {
+        id: 31,
+        q: "레이스 컨디션(Race Condition)을 방지하기 위해 두 개의 플립플롭을 직렬 연계하여 한쪽이 출력할 때 다른 쪽이 대기하도록 만든 소자는?",
+        options: ["D 플립플롭", "에지 트리거 플립플롭", "마스터-슬레이브 플립플롭", "래치(Latch)"],
+        ans: 3,
+        exp: "주(Master)와 종(Slave) 구조로 플립플롭을 배치하여 클럭이 1일 때와 0일 때 각각 동작을 나누어 처리함으로써 출력 오동작을 완전히 막는 소자입니다."
+    },
+    {
+        id: 32,
+        q: "4개의 플립플롭을 연결하여 만든 카운터가 가질 수 있는 최대 상태(State)의 개수는?",
+        options: ["4개", "8개", "16개", "32개"],
+        ans: 3,
+        exp: "플립플롭 1개당 1비트(2개 상태)를 표현하므로, n개의 플립플롭이 있으면 총 2ⁿ개의 상태를 가집니다. 2⁴ = 16입니다."
+    },
+    {
+        id: 33,
+        q: "첫 번째 플립플롭의 출력이 다음 플립플롭의 클럭 신호로 사용되어 도미노처럼 순차적으로 트리거되는 비동기식 카운터는?",
+        options: ["리플 카운터(Ripple Counter)", "링 카운터(Ring Counter)", "존슨 카운터(Johnson Counter)", "동기식 카운터(Synchronous Counter)"],
+        ans: 1,
+        exp: "모든 플립플롭에 클럭이 동시에 인가되지 않고, 앞단 출력이 뒷단 클럭을 타고 물결치듯 전달되는 비동기식 카운터를 리플 카운터라고 합니다."
+    },
+    {
+        id: 34,
+        q: "모든 플립플롭에 공통된 시스템 클럭이 동시에 인가되어 상태가 일제히 변하는 카운터는?",
+        options: ["비동기식 카운터", "리플 카운터", "동기식 카운터", "업-다운 비동기 카운터"],
+        ans: 3,
+        exp: "모든 소자가 하나의 클럭 신호에 맞추어 동시에 상태 전환을 일으키므로 시간 지연이 적고 고속 동작에 유리한 동기식 카운터입니다."
+    },
+    {
+        id: 35,
+        q: "시프트 레지스터의 출력을 다시 입력으로 되먹임(Feedback)하여, 단 하나의 비트만 1인 채로 순환하도록 만든 카운터는?",
+        options: ["리플 카운터", "링 카운터(Ring Counter)", "존슨 카운터", "그레이 카운터"],
+        ans: 2,
+        exp: "링 카운터는 한 루프를 돌며 1개의 비트 신호 위치만 이동하는 구조를 가져 디코더 설계 없이 출력을 바로 제어 신호로 쓸 수 있습니다."
+    },
+    {
+        id: 36,
+        q: "데이터 전송 방식 중 여러 개의 비트를 각각 독립된 전송선을 통해 동시에 한꺼번에 전송하는 방식은?",
+        options: ["직렬 전송(Serial Transmission)", "병렬 전송(Parallel Transmission)", "동기식 전송", "비동기식 전송"],
+        ans: 2,
+        exp: "다수의 물리적 전송선 채널을 활용해 데이터를 통째로 한 번에 보내므로 속도가 빠르지만 단거리 회로 내부 전송에 적합한 방식은 병렬 전송입니다."
+    },
+    {
+        id: 37,
+        q: "부울 함수를 구현할 때 AND 배열과 OR 배열이 모두 프로그래밍 가능하여 가장 자유도가 높은 설계 구조를 가진 소자는?",
+        options: ["ROM", "PAL", "PLA", "RAM"],
+        ans: 3,
+        exp: "PLA(Programmable Logic Array)는 입력단의 AND 행렬과 출력단의 OR 행렬을 설계자가 모두 직접 프로그래밍할 수 있는 소자입니다."
+    },
+    {
+        id: 38,
+        q: "PAL(Programmable Array Logic)의 내부 구조 특징으로 올바른 것은?",
+        options: ["AND 배열은 고정되고 OR 배열만 프로그래밍 가능하다.", "AND 배열과 OR 배열 모두 고정되어 있다.", "AND 배열은 프로그래밍 가능하고 OR 배열은 고정되어 있다.", "AND 배열과 OR 배열 모두 프로그래밍 가능하다."],
+        ans: 3,
+        exp: "PAL은 PLA의 높은 단가를 낮추기 위해 입력 AND 단만 커스텀 프로그래밍하고 출력 OR 단은 내부적으로 미리 고정시켜 둔 형태입니다."
+    },
+    {
+        id: 39,
+        q: "다음 회로 소자 중 전원이 차단되면 저장된 데이터가 모두 소멸하는 휘발성(Volatile) 메모리는?",
+        options: ["ROM", "RAM", "Flash Memory", "EPROM"],
+        ans: 2,
+        exp: "RAM(Random Access Memory)은 동작 중 읽고 쓰기가 자유로우나 전원이 꺼지면 내부 상태가 날아가는 대표적인 휘발성 소자입니다."
+    },
+    {
+        id: 40,
+        q: "동적 램(DRAM)이 정적 램(SRAM)과 비교하여 가지는 구조적 특징으로 옳은 것은?",
+        options: ["플립플롭 구조로 되어 있어 속도가 매우 빠르다.", "캐시 메모리(Cache Memory)로 주로 사용된다.", "커패시터(Capacitor)를 포함하고 있어 주기적인 재충전(Refresh)이 필요하다.", "집적도가 낮고 가격이 비싸다."],
+        ans: 3,
+        exp: "DRAM은 축전기(커패시터)의 충전 상태로 데이터를 보존하므로 시간이 지나면 방전됩니다. 따라서 소멸을 막기 위한 주기적인 재충전 회로가 필수적입니다."
+    }
+    ];
+function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    quizData.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'quiz-card';
+
+        let codeHtml = item.code ? `<div class="code-block">${escapeHtml(item.code)}</div>` : '';
+        
+        let optionsHtml = '';
+        item.options.forEach((opt, idx) => {
+            optionsHtml += `
+                <label class="option-label">
+                    <input type="radio" name="q_${item.id}" value="${idx + 1}">
+                    ${idx + 1}. ${opt}
+                </label>
+            `;
+        });
+
+        card.innerHTML = `
+            <div class="question">Q${item.id}. ${item.q}</div>
+            ${codeHtml}
+            <div class="options">
+                ${optionsHtml}
+            </div>
+            <button class="btn-check" onclick="checkAnswer(${item.id}, ${item.ans})">정답 및 해설 확인</button>
+            <div class="explanation-box" id="exp_${item.id}">
+                <div class="ans-title" id="status_${item.id}"></div>
+                <div><strong>해설:</strong> ${item.exp}</div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function escapeHtml(text) {
+    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function checkAnswer(id, correctAns) {
+    const selected = document.querySelector(`input[name="q_${id}"]:checked`);
+    const expBox = document.getElementById(`exp_${id}`);
+    const statusText = document.getElementById(`status_${id}`);
+    
+    if(!selected) {
+        alert("먼저 정답을 선택해 주세요!");
+        return;
+    }
+
+    const userAns = parseInt(selected.value);
+    if(userAns === correctAns) {
+        statusText.innerHTML = `정답입니다! ⭕ (정답: ${correctAns}번)`;
+        statusText.style.color = '#38a169';
+    } else {
+        statusText.innerHTML = `틀렸습니다! ❌ (정답: ${correctAns}번 / 선택한 답: ${userAns}번)`;
+        statusText.style.color = '#e53e3e';
+    }
+    
+    expBox.classList.add('visible');
+}
+
+window.onload = renderQuiz;
+</script>
+
+</body>
+</html>

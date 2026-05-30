@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>독학사 2단계 컴퓨터공학 - 객체지향 프로그래밍 모의고사</title>
+    <style>
+        :root {
+            --primary-color: #2b6cb0;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+            --accent-color: #e53e3e;
+            --success-color: #38a169;
+        }
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 { margin: 0; font-size: 24px; }
+        .quiz-card {
+            background: var(--card-bg);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+        .question {
+            font-weight: bold;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+        .code-block {
+            background-color: #edf2f7;
+            font-family: 'Consolas', monospace;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+        .options {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-label:hover {
+            background: #edf2f7;
+        }
+        .option-label input {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        .btn-check {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn-check:hover {
+            background-color: #2b6cb0;
+        }
+        .explanation-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0fff4;
+            border: 1px solid #c6f6d5;
+            border-radius: 6px;
+        }
+        .explanation-box.visible {
+            display: block;
+        }
+        .ans-title {
+            font-weight: bold;
+            color: var(--success-color);
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>독학사 2단계 컴퓨터공학: 객체지향 프로그래밍 (40문항 완벽 정복)</h1>
+        <p>문제를 풀고 '정답 및 해설 확인' 버튼을 눌러보세요.</p>
+    </header>
+
+    <div id="quiz-container"></div>
+</div>
+
+<script>
+const quizData = [
+    {
+        id: 1,
+        q: "다음 중 객체지향 프로그래밍(OOP)의 핵심 4대 특징에 해당하지 않는 것은?",
+        options: ["캡슐화 (Encapsulation)", "상속성 (Inheritance)", "다형성 (Polymorphism)", "순차성 (Sequentiality)"],
+        ans: 4,
+        exp: "객체지향의 4대 핵심 특징은 추상화(Abstraction), 캡슐화, 상속성, 다형성입니다. 순차성은 절차지향 프로그래밍의 특징에 가깝습니다."
+    },
+    {
+        id: 2,
+        q: "데이터와 그 데이터를 처리하는 함수를 하나로 묶어 내부 구현 상세를 외부에 숨기는 객체지향 특징은?",
+        options: ["추상화", "캡슐화", "다형성", "직렬화"],
+        ans: 2,
+        exp: "정보 은닉(Information Hiding)을 가능하게 하며, 데이터와 메서드를 하나의 단위로 묶는 것을 캡슐화라고 합니다."
+    },
+    {
+        id: 3,
+        q: "C++이나 Java에서 클래스 내부의 멤버를 동일 패키지나 외부 등 어디서나 자유롭게 접근할 수 있도록 지정하는 접근 제어 지시자는?",
+        options: ["private", "protected", "public", "default"],
+        ans: 3,
+        exp: "public으로 선언된 멤버는 클래스 외부나 외부 객체 등 어디서나 제약 없이 접근할 수 있습니다."
+    },
+    {
+        id: 4,
+        q: "접근 제어 지시자 중 '자기 자신 클래스와 자식(하위) 클래스' 내부까지만 접근을 허용하고 외부 접근은 차단하는 것은?",
+        options: ["private", "protected", "public", "package"],
+        ans: 2,
+        exp: "protected는 상속 관계에 있는 자식 클래스에서의 접근을 허용하면서 외부로부터는 은닉하고 싶을 때 사용합니다."
+    },
+    {
+        id: 5,
+        q: "객체가 생성될 때 멤버 변수의 초기화를 위해 자동으로 호출되며, 반환 타입이 없고 클래스 이름과 동일한 이름을 가지는 특수한 메서드는?",
+        options: ["소멸자 (Destructor)", "생성자 (Constructor)", "정적 메서드 (Static Method)", "가상 메서드 (Virtual Method)"],
+        ans: 2,
+        exp: "생성자는 객체 생성 시점에 단 한 번 자동 실행되는 객체 초기화 목적의 특수 메서드입니다."
+    },
+    {
+        id: 6,
+        q: "다음 C++ 코드에서 컴파일 에러를 발생시키는 행은?",
+        code: "class Test {\n    int a;\npublic:\n    int b;\n};\n\nint main() {\n    Test t;\n    t.b = 10; // (가)\n    t.a = 20; // (나)\n}",
+        options: ["에러 없음", "(가)", "(나)", "(가)와 (나) 모두"],
+        ans: 3,
+        exp: "C++ 클래스에서 접근 지시자를 명시하지 않은 멤버(int a)는 기본적으로 private 속성을 가집니다. 따라서 외부인 main 함수에서 t.a로 직접 접근하면 컴파일 에러가 발생합니다."
+    },
+    {
+        id: 7,
+        q: "기존의 클래스(부모 클래스)가 가진 멤버와 기능을 그대로 물려받아 새로운 클래스를 생성함으로써 코드의 재사용성을 높이는 특징은?",
+        options: ["다형성", "추상화", "상속성", "바인딩"],
+        ans: 3,
+        exp: "이미 정의된 클래스의 속성과 기능을 상속받아 새로운 클래스를 확장하는 것을 상속성이라고 합니다."
+    },
+    {
+        id: 8,
+        q: "동일한 이름의 메서드가 상황이나 객체에 따라 다르게 동작할 수 있는 능력을 의미하며, 오버로딩과 오버라이딩을 통해 구현되는 특징은?",
+        options: ["캡슐화", "다형성", "추상화", "모듈화"],
+        ans: 2,
+        exp: "다형성(Polymorphism)은 하나의 인터페이스나 메시지가 서로 다른 방식으로 반응하고 처리되는 객체지향의 핵심 성질입니다."
+    },
+    {
+        id: 9,
+        q: "동일한 클래스 내에서 매개변수의 타입이나 개수가 다르면 '동일한 이름의 메서드'를 여러 개 정의할 수 있는 기능은?",
+        options: ["메서드 오버라이딩 (Overriding)", "메서드 오버로딩 (Overloading)", "동적 바인딩 (Dynamic Binding)", "메서드 하이딩 (Hiding)"],
+        ans: 2,
+        exp: "오버로딩(Overloading)은 한 클래스 안에서 이름은 같지만 시그니처(매개변수 구조)가 다른 메서드를 다중 정의하는 것입니다."
+    },
+    {
+        id: 10,
+        q: "상속 관계에서 부모 클래스에 정의된 메서드를 자식 클래스에서 '동일한 시그니처'로 재정의하여 부모의 기능을 덮어쓰는 기능은?",
+        options: ["메서드 오버로딩", "메서드 오버라이딩", "캡슐화", "클래스 캐스팅"],
+        ans: 2,
+        exp: "오버라이딩(Overriding)은 상속받은 메서드를 자식 클래스의 필요에 맞게 재정의하여 사용하는 다형성의 대표적 예시입니다."
+    },
+    {
+        id: 11,
+        q: "다음 Java 코드의 출력 결과로 옳은 것은?",
+        code: "class Parent {\n    void show() { System.out.print(\"P\"); }\n}\nclass Child extends Parent {\n    void show() { System.out.print(\"C\"); }\n}\npublic class Main {\n    public static void main(String[] args) {\n        Parent p = new Child();\n        p.show();\n    }\n}",
+        options: ["P", "C", "PC", "컴파일 에러"],
+        ans: 2,
+        exp: "부모 타입 참조 변수(Parent p)가 자식 객체(new Child())를 가리키고 있을 때 오버라이딩된 메서드를 호출하면, 실행 시점의 실제 객체인 자식 클래스의 메서드가 호출됩니다(동적 바인딩). 따라서 'C'가 출력됩니다."
+    },
+    {
+        id: 12,
+        q: "C++에서 자식 클래스의 객체가 소멸할 때 부모 클래스의 소멸자도 안전하게 순차 호출되도록 하기 위해 부모 소멸자 앞에 붙여야 하는 키워드는?",
+        options: ["static", "virtual", "inline", "friend"],
+        ans: 2,
+        exp: "상속 구조를 가질 때 부모 클래스의 소멸자를 virtual(가상 소멸자)로 선언하지 않으면 메모리 누수(Memory Leak)가 발생할 수 있습니다."
+    },
+    {
+        id: 13,
+        q: "C++에서 함수의 선언부만 존재하고 구현부가 없는 함수로, 함수 정의 뒤에 '= 0;'을 붙여 표현하는 가상 함수를 무엇이라 하는가?",
+        options: ["일반 가상 함수", "순수 가상 함수 (Pure Virtual Function)", "정적 함수", "프렌드 함수"],
+        ans: 2,
+        exp: "순수 가상 함수는 하위 자식 클래스에서 반드시 구현하도록 강제하기 위해 본체를 비워둔( = 0 ) 가상 함수입니다."
+    },
+    {
+        id: 14,
+        q: "하나 이상의 순수 가상 함수를 포함하고 있어서 직접 객체(인스턴스)를 생성할 수 없는 클래스를 무엇이라 하는가?",
+        options: ["구체 클래스 (Concrete Class)", "추상 클래스 (Abstract Class)", "파생 클래스 (Derived Class)", "인터페이스 (Interface)"],
+        ans: 2,
+        exp: "순수 가상 함수가 설계도로서만 존재하고 미완성 상태인 클래스를 추상 클래스라고 하며, 객체 생성이 불가능하고 상속을 통해서만 구체화됩니다."
+    },
+    {
+        id: 15,
+        q: "Java에서 다중 상속의 효과를 내기 위해 사용되며, 모든 메서드가 추상 메서드로만 구성되고 바디가 없는 클래스 형태의 구조체는?",
+        options: ["추상 클래스", "인터페이스 (Interface)", "내부 클래스", "열거형 (Enum)"],
+        ans: 2,
+        exp: "Java는 클래스 단일 상속만 지원하므로, 다중 상속의 이점을 제공하기 위해 규칙과 규격만 선언하는 인터페이스를 제공합니다."
+    },
+    {
+        id: 16,
+        q: "객체지향 설계 원칙 중 SOLID 원칙에 해당하지 않는 것은?",
+        options: ["단일 책임 원칙 (SRP)", "개방-폐쇄 원칙 (OCP)", "리스코프 치환 원칙 (LSP)", "최소 비용 원칙 (MCP)"],
+        ans: 4,
+        exp: "SOLID 원칙은 SRP(단일책임), OCP(개방폐쇄), LSP(리스코프치환), ISP(인터페이스분리), DIP(의존역전)로 구성됩니다."
+    },
+    {
+        id: 17,
+        q: "소프트웨어 구성요소(클래스, 모듈 등)는 확장에는 열려 있어야 하고, 변경에는 닫혀 있어야 한다는 SOLID 설계 원칙은?",
+        options: ["단일 책임 원칙 (SRP)", "개방-폐쇄 원칙 (OCP)", "의존 역전 원칙 (DIP)", "인터페이스 분리 원칙 (ISP)"],
+        ans: 2,
+        exp: "기존 코드를 수정하지 않으면서 새로운 기능을 추가(확장)할 수 있도록 설계해야 한다는 규칙은 개방-폐쇄 원칙(Open-Closed Principle)입니다."
+    },
+    {
+        id: 18,
+        q: "특정 클래스의 인스턴스(객체)가 메모리에 딱 하나만 생성되어 프로그램 전역에서 공유되도록 보장하는 디자인 패턴은?",
+        options: ["팩토리 패턴 (Factory Pattern)", "싱글톤 패턴 (Singleton Pattern)", "옵저버 패턴 (Observer Pattern)", "어댑터 패턴 (Adapter Pattern)"],
+        ans: 2,
+        exp: "시스템 전역에서 단 하나의 공통 인스턴스만 유지·제어하도록 설계하는 기법은 싱글톤(Singleton) 패턴입니다."
+    },
+    {
+        id: 19,
+        q: "컴파일 시점에 호출할 함수의 주소가 결정되는 선언적 결합 방식으로 오버로딩에 적용되는 바인딩 종류는?",
+        options: ["정적 바인딩 (Static Binding)", "동적 바인딩 (Dynamic Binding)", "지연 바인딩 (Lazy Binding)", "런타임 바인딩"],
+        ans: 1,
+        exp: "컴파일 단계에서 명확하게 대상을 확정 짓는 방식을 정적(초기) 바인딩이라고 합니다."
+    },
+    {
+        id: 20,
+        q: "프로그램 실행 중(Runtime)에 포인터나 참조 변수가 가리키는 실제 객체의 타입에 따라 함수 호출 주소가 결정되는 바인딩은?",
+        options: ["정적 바인딩", "동적 바인딩 (Dynamic Binding)", "사전 바인딩", "원시 바인딩"],
+        ans: 2,
+        exp: "가상 함수나 오버라이딩된 메서드가 호출될 때, 실행 시점에 실제 인스턴스를 보고 맵핑 주소를 결정하는 것을 동적 바인딩이라고 합니다."
+    },
+    {
+        id: 21,
+        q: "C++에서 멤버 함수가 아닌 외부 함수나 다른 클래스를 자신의 private 멤버에 접근할 수 있도록 권한을 부여하는 키워드는?",
+        options: ["friend", "virtual", "inline", "explicit"],
+        ans: 1,
+        exp: "friend 키워드로 선언된 클래스나 함수는 해당 클래스의 모든 private 및 protected 멤버에 접근할 수 있는 특권을 가집니다."
+    },
+    {
+        id: 22,
+        q: "객체가 소멸될 때 자동으로 호출되며 동적 할당된 메모리를 해제하는 등의 정리 작업을 수행하는 C++의 특수 메서드는?",
+        options: ["생성자", "소멸자 (Destructor)", "가비지 컬렉터", "클리너"],
+        ans: 2,
+        exp: "소멸자는 클래스 이름 앞에 물결 표시(~)가 붙은 형태를 띠며, 객체 해제 시 자원을 반납하는 역할을 합니다."
+    },
+    {
+        id: 23,
+        q: "Java에서 개발자가 직접 메모리를 해제하지 않아도 시스템이 유효하지 않은(참조가 끊긴) 객체를 자동 탐지하여 수거하는 기능은?",
+        options: ["메모리 할당자", "가비지 컬렉션 (Garbage Collection)", "디스트럭터", "포인터 해제기"],
+        ans: 2,
+        exp: "Java 런타임 환경(JVM)의 가비지 컬렉터가 백그라운드에서 쓰레기 객체를 수거하여 메모리를 자동 관리해 줍니다."
+    },
+    {
+        id: 24,
+        q: "객체지향 프로그램의 구성 단위를 나타내며, 실세계의 유무형의 개념을 상태(데이터)와 행위(메서드)로 모형화한 실체는?",
+        options: ["클래스 (Class)", "객체 / 인스턴스 (Object)", "패키지 (Package)", "인터페이스"],
+        ans: 2,
+        exp: "설계도를 토대로 메모리에 실체화되어 살아있는 구체적 대상을 객체(Object) 혹은 인스턴스라고 부릅니다."
+    },
+    {
+        id: 25,
+        q: "동일한 종류의 객체들이 가져야 할 속성과 행위를 정의해 놓은 설계도 또는 틀(Template)에 해당하는 명칭은?",
+        options: ["인스턴스", "객체", "클래스 (Class)", "메서드"],
+        ans: 3,
+        exp: "객체를 만들어 내기 위한 틀이자 청사진을 클래스(Class)라고 칭합니다."
+    },
+    {
+        id: 26,
+        q: "클래스 내부에서 인스턴스 변수와 구별하기 위해, 객체 자신을 가리키는 숨겨진 포인터(또는 참조 변수)의 이름은?",
+        options: ["super", "this", "self", "parent"],
+        ans: 2,
+        exp: "this는 현재 활성화된 객체 자기 자신의 주소를 가리키는 내장 참조 변수입니다."
+    },
+    {
+        id: 27,
+        q: "Java에서 자식 클래스가 부모 클래스의 멤버나 생성자를 명시적으로 호출할 때 사용하는 키워드는?",
+        options: ["this", "super", "parent", "base"],
+        ans: 2,
+        exp: "super는 상위(부모) 클래스의 객체 공간 및 생성자를 지시하는 키워드입니다."
+    },
+    {
+        id: 28,
+        q: "C++에서 기존 연산자(+, -, * 등)를 사용자 정의 클래스 객체 간의 연산에도 적용할 수 있도록 기능을 확장하는 문법은?",
+        options: ["연산자 오버로딩 (Operator Overloading)", "연산자 오버라이딩", "함수 포인터", "매크로 치환"],
+        ans: 1,
+        exp: "operator 키워드를 사용하여 기존 시스템 연산자가 객체끼리의 덧셈이나 뺄셈에서도 특수 동작을 하도록 재정의하는 기술입니다."
+    },
+    {
+        id: 29,
+        q: "특정 객체에 속하지 않고 클래스 자체에 고정되어, 모든 인스턴스가 단 하나의 메모리 공간을 공유하는 멤버를 지정하는 키워드는?",
+        options: ["final", "static", "volatile", "constant"],
+        ans: 2,
+        exp: "static 변수 및 메서드는 객체 생성 없이 클래스 이름으로 바로 접근 가능하며 공유 메모리에 상주합니다."
+    },
+    {
+        id: 30,
+        q: "한 번 지정되면 프로그램 실행 중 절대 값을 변경할 수 없도록 지정하는 Java의 상속 및 수정 불가 키워드는?",
+        options: ["static", "final", "const", "immutable"],
+        ans: 2,
+        exp: "Java에서 final 키워드는 변수에 붙으면 상수, 메서드에 붙으면 오버라이딩 금지, 클래스에 붙으면 상속 금지를 의미합니다."
+    },
+    {
+        id: 31,
+        q: "자식 클래스가 여러 부모 클래스로부터 동시에 상속을 받는 구조를 뜻하며, C++은 지원하나 Java는 클래스 수준에서 금지한 상속 방식은?",
+        options: ["단일 상속 (Single Inheritance)", "다중 상속 (Multiple Inheritance)", "계층적 상속", "반복 상속"],
+        ans: 2,
+        exp: "두 개 이상의 클래스를 부모로 삼는 것을 다중 상속이라 하며, 모호성 문제(다이아몬드 상속 문제)로 인해 최신 언어들은 대부분 배제하는 추세입니다."
+    },
+    {
+        id: 32,
+        q: "상위 클래스의 속성을 하위 클래스가 물려받는 상속 관계를 통칭하는 UML 구조적 관계의 언어적 표현은?",
+        options: ["is-a 관계", "has-a 관계", "use-a 관계", "part-of 관계"],
+        ans: 1,
+        exp: "상속은 '~은 ~의 일종이다'라는 관계가 성립해야 하므로 'is-a' 관계 모델입니다. 포함 및 소유는 'has-a' 관계입니다."
+    },
+    {
+        id: 33,
+        q: "한 클래스가 다른 클래스의 객체를 자신의 멤버 변수로 포함하여 활용하는 관계 모델을 뜻하는 용어는?",
+        options: ["is-a 관계", "has-a 관계", "상속 관계", "추상화 관계"],
+        ans: 2,
+        exp: "자동차(Car)가 엔진(Engine)을 소유하고 있는 형태는 상속이 아닌 포함 및 구성 관계이므로 'has-a' 관계에 속합니다."
+    },
+    {
+        id: 34,
+        q: "프로그램 실행 중 예기치 않게 발생하는 오류 상황을 감지하고 안전하게 복구하기 위해 사용하는 문법 구조 구조체는?",
+        options: ["if-else 구조", "try-catch 구조", "switch-case 구조", "assert 구조"],
+        ans: 2,
+        exp: "try 블록 내에서 예외(Exception)가 발생하면 catch 블록이 이를 잡아 처리함으로써 비정상 종료를 예방합니다."
+    },
+    {
+        id: 35,
+        q: "C++ 및 Java에서 데이터 타입을 미리 확정하지 않고 일반화된 기호(T 등)로 선언한 후, 객체 생성 시점에 구체적인 타입을 주입하는 일반화(Generic) 문법 소자는?",
+        options: ["매크로 (Macro)", "템플릿 / 제네릭 (Template/Generic)", "인터페이스", "추상 함수"],
+        ans: 2,
+        exp: "C++의 template 문법과 Java의 Generic 문법은 타입 매개변수를 활용하여 코드 중복 없이 다형성 구조의 컬렉션을 다룰 수 있게 합니다."
+    },
+    {
+        id: 36,
+        q: "C++에서 가상 함수들의 실제 호출 주소를 배열 형태로 관리하여 동적 바인딩을 구현하는 내부 메커니즘 테이블은?",
+        options: ["해시 테이블", "가상 함수 테이블 (vtable)", "심볼 테이블", "인덱스 맵"],
+        ans: 2,
+        exp: "virtual 함수가 선언된 클래스는 내부적으로 가상 함수 테이블을 가리키는 포인터를 생성하여 런타임에 알맞은 주소를 찾아갑니다."
+    },
+    {
+        id: 37,
+        q: "객체의 상태를 바이트 스트림 형태로 변환하여 파일에 저장하거나 네트워크로 전송할 수 있도록 만드는 기술은?",
+        options: ["직렬화 (Serialization)", "역직렬화 (Deserialization)", "인코딩", "마샬링"],
+        ans: 1,
+        exp: "메모리상의 인스턴스 객체를 영속적으로 저장 또는 전송하기 위해 선형적 데이터로 펼치는 기술을 직렬화라고 합니다."
+    },
+    {
+        id: 38,
+        q: "다음 C++ 프로그램의 실행 결과로 올바른 것은?",
+        code: "#include <iostream>\nusing namespace std;\n\nclass Base {\npublic:\n    virtual void print() { cout << \"B\"; }\n};\nclass Derived : public Base {\npublic:\n    void print() { cout << \"D\"; }\n};\n\nint main() {\n    Base* b = new Derived();\n    b->print();\n    delete b;\n}",
+        options: ["B", "D", "BD", "컴파일 에러"],
+        ans: 2,
+        exp: "부모 포인터 b가 자식 인스턴스를 참조하고 있으며, print() 함수가 가상 함수(virtual)로 지정되어 있으므로 자식 클래스의 오버라이딩된 함수가 동적 바인딩되어 'D'가 출력됩니다."
+    },
+    {
+        id: 39,
+        q: "객체지향 설계 기법 중 결합도(Coupling)와 응집도(Cohesion)에 대한 설명으로 올바른 것은?",
+        options: ["모듈 간의 결합도는 높이고 응집도는 낮춰야 한다.", "모듈 간의 결합도는 낮추고 응집도는 높여야 한다.", "결합도와 응집도 모두 최대한 높여야 한다.", "결합도와 응집도 모두 최대한 낮춰야 한다."],
+        ans: 2,
+        exp: "수정 및 유지가 쉬운 좋은 설계가 되려면 객체/모듈 상호 간의 독립성(낮은 결합도)을 높이고, 내부 책임의 집중도(높은 응집도)를 강하게 설정해야 합니다."
+    },
+    {
+        id: 40,
+        q: "기존에 구현된 클래스의 명세(인터페이스)가 맞지 않아 사용할 수 없을 때, 중간에서 변환 장치 역할을 하여 호환성을 확보해 주는 구조적 디자인 패턴은?",
+        options: ["싱글톤 패턴", "어댑터 패턴 (Adapter Pattern)", "스트래티지 패턴", "팩토리 메소드 패턴"],
+        ans: 2,
+        exp: "일상생활의 돼지코 변환 플러그처럼 서로 다른 인터페이스 구조를 연결해 맞추어 주는 설계 기법을 어댑터 패턴이라고 합니다."
+    }
+    ];
+function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    quizData.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'quiz-card';
+
+        let codeHtml = item.code ? `<div class="code-block">${escapeHtml(item.code)}</div>` : '';
+        
+        let optionsHtml = '';
+        item.options.forEach((opt, idx) => {
+            optionsHtml += `
+                <label class="option-label">
+                    <input type="radio" name="q_${item.id}" value="${idx + 1}">
+                    ${idx + 1}. ${opt}
+                </label>
+            `;
+        });
+
+        card.innerHTML = `
+            <div class="question">Q${item.id}. ${item.q}</div>
+            ${codeHtml}
+            <div class="options">
+                ${optionsHtml}
+            </div>
+            <button class="btn-check" onclick="checkAnswer(${item.id}, ${item.ans})">정답 및 해설 확인</button>
+            <div class="explanation-box" id="exp_${item.id}">
+                <div class="ans-title" id="status_${item.id}"></div>
+                <div><strong>해설:</strong> ${item.exp}</div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function escapeHtml(text) {
+    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function checkAnswer(id, correctAns) {
+    const selected = document.querySelector(`input[name="q_${id}"]:checked`);
+    const expBox = document.getElementById(`exp_${id}`);
+    const statusText = document.getElementById(`status_${id}`);
+    
+    if(!selected) {
+        alert("먼저 정답을 선택해 주세요!");
+        return;
+    }
+
+    const userAns = parseInt(selected.value);
+    if(userAns === correctAns) {
+        statusText.innerHTML = `정답입니다! ⭕ (정답: ${correctAns}번)`;
+        statusText.style.color = '#38a169';
+    } else {
+        statusText.innerHTML = `틀렸습니다! ❌ (정답: ${correctAns}번 / 선택한 답: ${userAns}번)`;
+        statusText.style.color = '#e53e3e';
+    }
+    
+    expBox.classList.add('visible');
+}
+
+window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
