@@ -1,0 +1,7 @@
+[
+    {"nav_section":"header","nav_kinds":"gnb","nav_title":"숙련도&소개","nav_img":"","nav_alt":"터치 및 클릭시 소개 페이지로 이동","nav_url":"/sub/sub1.html","nav_num":"1"},
+    {"nav_section":"header","nav_kinds":"gnb","nav_title":"웹&앱 퍼블리싱","nav_img":"","nav_alt":"터치 및 클릭시 웹 및 앱 작업 결과 페이지로 이동","nav_url":"/sub/sub2.html","nav_num":"2"},
+    {"nav_section":"header","nav_kinds":"gnb","nav_title":"동영상 편집작업","nav_img":"","nav_alt":"터치 및 클릭시 동영상 편집 작업 페이지로 이동","nav_url":"/sub/sub3.html","nav_num":"3"},
+    {"nav_section":"header","nav_kinds":"gnb","nav_title":"플래시","nav_img":"","nav_alt":"터치 및 클릭시 플래시 작업 페이지로 이동","nav_url":"/sub/sub4.html","nav_num":"4"},
+    {"nav_section":"header","nav_kinds":"gnb","nav_title":"2D랜더링&편집작업","nav_img":"","nav_alt":"터치 및 클릭시 2D 이미지 작업  페이지로 이동","nav_url":"/sub/sub5.html","nav_num":"5"}
+]
