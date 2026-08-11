@@ -54,7 +54,7 @@
             </ul>
         </nav>
         <h2>
-            <button class="" tab-index="1" aria-hidden="false" aria-label="메뉴버튼" value="메뉴버튼">
+            <button id="menu_btn" class="menu_btn" tab-index="1" aria-hidden="false" aria-label="메뉴버튼" value="메뉴버튼">
                 <span>
                     메뉴버튼
                 </span>
@@ -62,7 +62,7 @@
         </h2>
     </header>
 
-    <div class="section" id="section">
+    <div class="section scrollsnap_act" id="section">
       <div class="article art_1" id="article_1" data-index="1">
         article1
       </div>
@@ -82,6 +82,7 @@
 
     <script defer type="text/javascript">
       document.addEventListener("DOMContentLoaded", function(){
+        var body_tag=document.body;
         var page_url=this.location.href.split('#')[0];
         var page_url_mark=this.location.href.split('#')[1];
         var page_mark_num;
@@ -95,6 +96,7 @@
         var nav_li=document.querySelector('nav li');
         var nav_li_all=document.querySelectorAll('nav li');
         var nav_height=document.querySelector('nav').clientHeight;
+        var nav_mobile_wrap=document.querySelector('.nav_mobile_wrap');
         var menu_idx;
         var art_idx;
         var i=1;
@@ -108,17 +110,18 @@
         var y_start;
         var y_move;
         var y_value;
-        var sel_this;        
+        var sel_this;
         var scroll_framespeed = 1000/60;
         var star_time = 300;
         var scroll_animation = null;
+        var menu_btn = document.querySelector('.menu_btn');
 
         art_height=art.clientHeight;
         count=Math.round(((document.documentElement.scrollTop/window.innerHeight)))+1;
         if(count>art_all.length){
-          count=art_all.length;
+            count=art_all.length;
         }else if(count<1){
-          count=1;
+            count=1;
         };
         history.pushState(null,null,page_url+'#article_'+count);
         function start_page(){
@@ -175,12 +178,12 @@
                 // window.scrollTo({left:0,top:art_height*count_val,behavior:'smooth'});
 
                 document.querySelector('body').animate(
-                  [window.scroll(0,art_height*count_val)],
-                  {
+                    [window.scroll(0,art_height*count_val)],
+                    {
                     duration:2000,
                     easing:'ease-in-out',
                     fill: 'forwards'
-                  }
+                    }
                 )
 
                 console.log('scroll move!!');
@@ -189,8 +192,8 @@
             count=menu_idx;
             // page_mark_num=page_url_mark.split('_')[1];
             history.pushState(null,null,page_url+'#article_'+count);
-          };
-          sel_this.addEventListener("click",nav_click,false);
+            };
+            sel_this.addEventListener("click",nav_click,false);
         });
         
         function wheel_y(event){
@@ -278,6 +281,23 @@
         sec.addEventListener("touchend",drag_end,false);
         sec.addEventListener("touchcancle",drag_cancel,false);
 
+        menu_btn.addEventListener('click',menu_btn_click,false)
+
+        function menu_btn_click(){
+            console.log('menu_btn_click');
+            if(menu_btn.classList.contains('menu_btn') && menu_btn.classList.contains('on')){
+                nav_mobile_wrap.classList.remove('on');
+                menu_btn.classList.remove('on');
+                body_tag.style.overflowY='auto';
+                
+            }else{
+                nav_mobile_wrap.classList.add('on');
+                menu_btn.classList.add('on');
+                body_tag.style.overflowY='hidden';
+
+            }
+        }
+
         function popstate_controll(){
           sce = true;
           if((this.location.href.split('#')[1]==null)||(this.location.href.split('#')[1]=='article_1')){
@@ -326,6 +346,7 @@
             },scroll_framespeed)
           };
         });
+
         return false;
       });
     </script>
