@@ -8,8 +8,8 @@
   </head>
   <body>
     <header class="header type01_scrollsnap_act">
-        <h1>
-            <a href="" tab-index="1" aria-hidden="false">
+        <h1 tab-index="0" aria-hidden="false">
+            <a href="" tab-index="0" aria-hidden="false">
                 Logo
                 <!-- <img src="/images/logo_jgbd.png" alt="mainlogo - 클릭시 메인페이지로 이동"> -->
             </a>
@@ -18,43 +18,43 @@
         <nav class="nav_wrap">
             <ul class="navi">
                 <li data-index="1">
-                    <a href="#article_1" tab-index="1" aria-hidden="false">article1</a>
+                    <a href="#article_1" tab-index="0" aria-hidden="false">article1</a>
                 </li>
                 <li data-index="2">
-                    <a href="#article_2" tab-index="1" aria-hidden="false">article2</a>
+                    <a href="#article_2" tab-index="0" aria-hidden="false">article2</a>
                 </li>
                 <li data-index="3">
-                    <a href="#article_3" tab-index="1" aria-hidden="false">article3</a>
+                    <a href="#article_3" tab-index="0" aria-hidden="false">article3</a>
                 </li>
                 <li data-index="4">
-                    <a href="#article_4" tab-index="1" aria-hidden="false">article4</a>
+                    <a href="#article_4" tab-index="0" aria-hidden="false">article4</a>
                 </li>
                 <li data-index="5">
-                    <a href="#article_5" tab-index="1" aria-hidden="false">article5</a>
+                    <a href="#article_5" tab-index="0" aria-hidden="false">article5</a>
                 </li>
             </ul>
         </nav>
         <nav class="nav_mobile_wrap">
             <ul class="nav_mobile">
                 <li data-index="1">
-                    <a href="#article_1" tab-index="1" aria-hidden="false">article1</a>
+                    <a href="#article_1" tab-index="0" aria-hidden="false">article1</a>
                 </li>
                 <li data-index="2">
-                    <a href="#article_2" tab-index="1" aria-hidden="false">article2</a>
+                    <a href="#article_2" tab-index="0" aria-hidden="false">article2</a>
                 </li>
                 <li data-index="3">
-                    <a href="#article_3" tab-index="1" aria-hidden="false">article3</a>
+                    <a href="#article_3" tab-index="0" aria-hidden="false">article3</a>
                 </li>
                 <li data-index="4">
-                    <a href="#article_4" tab-index="1" aria-hidden="false">article4</a>
+                    <a href="#article_4" tab-index="0" aria-hidden="false">article4</a>
                 </li>
                 <li data-index="5">
-                    <a href="#article_5" tab-index="1" aria-hidden="false">article5</a>
+                    <a href="#article_5" tab-index="0" aria-hidden="false">article5</a>
                 </li>
             </ul>
         </nav>
-        <h2>
-            <button id="menu_btn" class="menu_btn" tab-index="1" aria-hidden="false" aria-label="메뉴버튼" value="메뉴버튼">
+        <h2 tab-index="0" aria-hidden="false">
+            <button id="menu_btn" class="menu_btn" tab-index="0" aria-hidden="false" aria-label="메뉴버튼" value="메뉴버튼">
                 <span>
                     메뉴버튼
                 </span>
@@ -62,23 +62,28 @@
         </h2>
     </header>
 
-    <div class="section scrollsnap_act" id="section">
-      <div class="article art_1" id="article_1" data-index="1">
-        article1
-      </div>
-      <div class="article art_2" id="article_2" data-index="2">
-        article2
-      </div>
-      <div class="article art_3" id="article_3" data-index="3">
-        article3
-      </div>
-      <div class="article art_4" id="article_4" data-index="4">
-        article4
-      </div>
-      <div class="article art_5" id="article_5" data-index="5">
-        article5
-      </div>
-    </div>
+    <section class="section scrollsnap_act" id="section">
+        <div class="article art_1" id="article_1" data-index="1">
+            article1
+        </div>
+        <div class="article art_2" id="article_2" data-index="2">
+            article2
+        </div>
+        <div class="article art_3" id="article_3" data-index="3">
+            article3
+        </div>
+        <div class="article art_4" id="article_4" data-index="4">
+            article4
+        </div>
+        <div class="article art_5" id="article_5" data-index="5">
+            article5
+        </div>
+    </section>
+    <footer>
+        <div >
+
+        </div>
+    </footer>
 
     <script defer type="text/javascript">
       document.addEventListener("DOMContentLoaded", function(){
@@ -353,14 +358,33 @@
                 var conbox_contentswrap = document.getElementById('all-filter-conbox');
                 var filter_conbox_contentswrap = document.getElementById('filter-conbox-contentswrap');
 
-                $('.body-section-content, header, footer').find('[tabindex]').attr('tabindex','-1');
-                $('#all-filter-conbox').find('[tabindex]').attr('tabindex','0');
-                $('#all-filter-conbox').find('[tabindex]').eq(0).focus();
+                // $('.body-section-content, header, footer').find('[tabindex]').attr('tabindex','-1');
+                // $('#all-filter-conbox').find('[tabindex]').attr('tabindex','0');
+                // $('#all-filter-conbox').find('[tabindex]').eq(0).focus();
+
+                document.querySelectorAll('.section, header, footer [tabindex]').forEach(function(item) {
+                    item.setAttribute('tabindex', '-1');
+                });
+
+                document.querySelectorAll('.nav_mobile_wrap [tabindex]').forEach(function(item) {
+                    item.setAttribute('tabindex', '0');
+                });
+
+                document.querySelectorAll('.nav_mobile_wrap [tabindex="1"]').forEach(function(item) {
+                    item.focus();
+                });
                 
                 conbox_contentswrap.addEventListener('keydown', function(e){
                     var this_on_focus;
 
-                    var con_range = $('.all-filter-conbox, .conbox-contents-view').find('.filter-title-closebtn, .filter-conbox-contentswrap').find('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button, button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]');
+                    var con_range = document.querySelectorAll('.section, header').forEach(function(element) {
+                                        element.querySelectorAll('.menu_btn, .nav_wrap, .nav_mobile_wrap').forEach(function(innerElement) {
+                                            innerElement.querySelectorAll('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button, button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]').forEach(function(anchor) {
+                                            console.log(anchor);
+                                            // You can perform operations on each element here if needed
+                                            });
+                                        });
+                                    });
                     var con_first = con_range.eq(0);
                     var con_last = con_range.eq(con_range.length-1);
                     
@@ -391,7 +415,14 @@
                 filter_conbox_contentswrap.addEventListener('keydown', function(e){
                     var this_on_focus;
 
-                    var con_range = $('.all-filter-conbox, .conbox-contents-view').find('.filter-title-closebtn, .filter-conbox-contentswrap').find('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button, button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]');
+                    var con_range = document.querySelectorAll('.section, header').forEach(function(element) {
+                                        element.querySelectorAll('.menu_btn, .nav_wrap, .nav_mobile_wrap').forEach(function(innerElement) {
+                                            innerElement.querySelectorAll('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button, button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]').forEach(function(anchor) {
+                                            console.log(anchor);
+                                            // You can perform operations on each element here if needed
+                                            });
+                                        });
+                                    });
                     var con_first = con_range.eq(0);
                     var con_last = con_range.eq(con_range.length-1);
                     
