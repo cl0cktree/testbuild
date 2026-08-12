@@ -362,7 +362,7 @@
                 // $('#all-filter-conbox').find('[tabindex]').attr('tabindex','0');
                 // $('#all-filter-conbox').find('[tabindex]').eq(0).focus();
 
-                document.querySelectorAll('.section, header, footer [tabindex]').forEach(function(item) {
+                document.querySelectorAll('.section, .header, footer [tabindex]').forEach(function(item) {
                     item.setAttribute('tabindex', '-1');
                 });
 
@@ -377,7 +377,7 @@
                 conbox_contentswrap.addEventListener('keydown', function(e){
                     var this_on_focus;
 
-                    var con_range = document.querySelectorAll('.section, header').forEach(function(element) {
+                    var con_range = document.querySelectorAll('.section, .header').forEach(function(element) {
                                         element.querySelectorAll('.menu_btn, .nav_wrap, .nav_mobile_wrap').forEach(function(innerElement) {
                                             innerElement.querySelectorAll('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button, button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]').forEach(function(anchor) {
                                             console.log(anchor);
@@ -415,7 +415,7 @@
                 filter_conbox_contentswrap.addEventListener('keydown', function(e){
                     var this_on_focus;
 
-                    var con_range = document.querySelectorAll('.section, header').forEach(function(element) {
+                    var con_range = document.querySelectorAll('.section, .header').forEach(function(element) {
                                         element.querySelectorAll('.menu_btn, .nav_wrap, .nav_mobile_wrap').forEach(function(innerElement) {
                                             innerElement.querySelectorAll('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button, button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]').forEach(function(anchor) {
                                             console.log(anchor);
