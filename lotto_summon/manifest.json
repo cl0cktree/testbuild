@@ -1,0 +1,30 @@
+{
+"manifest_version": 2,
+
+"name": "Welcome to Clocktree Portfolio Site",
+
+"version": "1.0",
+
+"icons": [
+    {
+        "src": "./images/favicon.png",
+        "sizes": "16x16",
+        "type": "image/webp"
+    },
+    {
+        "src": "./images/favicon.png",
+        "sizes": "48x48",
+        "type": "image/webp"
+    },
+    {
+        "src": "./images/favicon.png",
+        "sizes": "64x64",
+        "type": "image/webp"
+    },
+    {
+        "src": "./images/favicon.png",
+        "sizes": "128x128",
+        "type": "image/webp"
+    }
+]
+}
